@@ -6,14 +6,14 @@
 ** Creative Commons, either version 4 of the License, or (at your
 ** option) any later version.
 ******************************************************************/
-#include "learn-opengl/Game.h"
+#include "Game.h"
 
 SpriteRenderer *Renderer;
 GameObject *Player;
 BallObject *Ball;
 
 Game::Game(unsigned int width, unsigned int height)
-    : State(GAME_ACTIVE), Keys(), Width(width), Height(height)
+    : State(GAME_ACTIVE), Keys(), Width(width), Height(height), Button_left(false)
 {
 }
 
@@ -83,13 +83,25 @@ glm::vec2 Game::InitialVelocity()
 
 void Game::Update(float dt)
 {
-    for (auto &eachBall : Balls)
+    for (auto it = Balls.begin(); it != Balls.end();)
     {
-        if (eachBall->Destroyed)
-            continue;
+        auto &eachBall = *it;
         eachBall->Move(dt, this->Width);
         DoCollisions(eachBall);
+        if (eachBall->Destroyed)
+        {
+            delete eachBall;
+            it = Balls.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
     }
+    glm::vec2 ballPos = Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
+    Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
+                          ResourceManager::GetTexture("face"));
+    Balls.push_back(Ball);
 }
 
 void Game::ProcessInput(float dt)
@@ -111,7 +123,7 @@ void Game::ProcessInput(float dt)
         }
         if (this->Keys[GLFW_KEY_W])
         {
-            if (Player->Position.y >= this->Height - 10 * Player->Size.y)
+            if (Player->Position.y >= 0.0f)
                 dir.y -= 1;
         }
         if (this->Keys[GLFW_KEY_S])
@@ -122,19 +134,10 @@ void Game::ProcessInput(float dt)
         if (dir != glm::vec2(0.0f, 0.0f))
         {
             Player->Position += glm::normalize(dir) * velocity;
-            if (Ball->Stuck)
-            {
-                Ball->Position += glm::normalize(dir) * velocity;
-            }
-        }
-        // unpin
-        if (this->Keys[GLFW_KEY_SPACE])
-        {
-            Ball->Stuck = false;
-            glm::vec2 ballPos = Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
-            Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
-                                  ResourceManager::GetTexture("face"));
-            Balls.push_back(Ball);
+            // if (Ball->Stuck)
+            // {
+            //     Ball->Position += glm::normalize(dir) * velocity;
+            // }
         }
     }
 }
@@ -153,8 +156,8 @@ void Game::Render()
         // draw ball
         for (auto &eachBall : Balls)
         {
-            if (eachBall->Destroyed)
-                continue;
+            // if (eachBall->Destroyed)
+            //     continue;
             eachBall->Draw(*Renderer);
         }
     }
@@ -178,6 +181,8 @@ void Game::DoCollisions(BallObject *thisBall)
                 {
                     box.Destroyed = true;
                     thisBall->Destroyed = true;
+                    // delete thisBall;
+                    // thisBall = nullptr;
                     return;
                 }
                 Direction dir = std::get<1>(collision);
@@ -214,21 +219,21 @@ void Game::DoCollisions(BallObject *thisBall)
             ResetLevel();
         }
     }
-    // with player
-    Collision result = CheckCollision(*thisBall, *Player);
-    if (!thisBall->Stuck && std::get<0>(result))
-    {
-        // check where it hit the board, and change velocity based on where it hit the board
-        float centerBoard = Player->Position.x + Player->Size.x / 2.0f;
-        float distance = (thisBall->Position.x + thisBall->Radius) - centerBoard;
-        float percentage = distance / (Player->Size.x / 2.0f);
-        // then move accordingly
-        float strength = 2.0f;
-        glm::vec2 oldVelocity = thisBall->Velocity;
-        thisBall->Velocity.x = RUNTIME_BALL_VELOCITY.x * percentage * strength;
-        thisBall->Velocity.y = -1 * abs(thisBall->Velocity.y);
-        thisBall->Velocity = glm::normalize(thisBall->Velocity) * glm::length(oldVelocity);
-    }
+    // // with player
+    // Collision result = CheckCollision(*thisBall, *Player);
+    // if (!thisBall->Stuck && std::get<0>(result))
+    // {
+    //     // check where it hit the board, and change velocity based on where it hit the board
+    //     float centerBoard = Player->Position.x + Player->Size.x / 2.0f;
+    //     float distance = (thisBall->Position.x + thisBall->Radius) - centerBoard;
+    //     float percentage = distance / (Player->Size.x / 2.0f);
+    //     // then move accordingly
+    //     float strength = 2.0f;
+    //     glm::vec2 oldVelocity = thisBall->Velocity;
+    //     thisBall->Velocity.x = RUNTIME_BALL_VELOCITY.x * percentage * strength;
+    //     thisBall->Velocity.y = -1 * abs(thisBall->Velocity.y);
+    //     thisBall->Velocity = glm::normalize(thisBall->Velocity) * glm::length(oldVelocity);
+    // }
 }
 
 Direction VectorDirection(glm::vec2 target)

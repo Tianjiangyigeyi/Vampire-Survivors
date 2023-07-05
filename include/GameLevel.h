@@ -1,11 +1,3 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #ifndef GAMELEVEL_H
 #define GAMELEVEL_H
 #include <vector>
@@ -13,9 +5,9 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "learn-opengl/GameObject.h"
-#include "learn-opengl/SpriteRenderer.h"
-#include "learn-opengl/ResourceManager.h"
+#include "GameObject.h"
+#include "SpriteRenderer.h"
+#include "ResourceManager.h"
 
 
 /// GameLevel holds all Tiles as part of a Breakout level and 

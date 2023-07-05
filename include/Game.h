@@ -1,21 +1,13 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #ifndef GAME_H
 #define GAME_H
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "learn-opengl/ResourceManager.h"
-#include "learn-opengl/SpriteRenderer.h"
-#include "learn-opengl/GameLevel.h"
-#include "learn-opengl/GameObject.h"
-#include "learn-opengl/BallObject.h"
+#include "ResourceManager.h"
+#include "SpriteRenderer.h"
+#include "GameLevel.h"
+#include "GameObject.h"
+#include "BallObject.h"
 
 // Represents the current state of the game
 enum GameState
@@ -41,6 +33,7 @@ const glm::vec2 RUNTIME_BALL_VELOCITY(100.0f, -350.f);
 // Radius of the ball object
 const float BALL_RADIUS = 12.5f;
 
+
 extern SpriteRenderer *Renderer;
 extern GameObject *Player;
 extern BallObject *Ball;
@@ -58,6 +51,7 @@ public:
     // game state
     GameState State;
     bool Keys[1024];
+    bool Button_left;
     unsigned int Width, Height;
     std::vector<GameLevel> Levels;
     std::vector<BallObject*> Balls;

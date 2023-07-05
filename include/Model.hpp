@@ -10,8 +10,8 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
-#include <learn-opengl/Mesh.hpp>
-#include <learn-opengl/Shader.h>
+#include <Mesh.hpp>
+#include <Shader.h>
 
 #include <string>
 #include <fstream>

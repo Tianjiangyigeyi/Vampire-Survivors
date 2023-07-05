@@ -9,8 +9,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-#include "learn-opengl/Game.h"
-#include "learn-opengl/ResourceManager.h"
+#include "Game.h"
+#include "ResourceManager.h"
 
 #include <iostream>
 

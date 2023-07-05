@@ -8,7 +8,7 @@
 ******************************************************************/
 #include <iostream>
 
-#include "learn-opengl/Texture.h"
+#include "Texture.h"
 
 
 Texture2D::Texture2D()

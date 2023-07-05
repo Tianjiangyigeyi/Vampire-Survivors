@@ -1,19 +1,11 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #ifndef GAMEOBJECT_H
 #define GAMEOBJECT_H
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "learn-opengl/Texture.h"
-#include "learn-opengl/SpriteRenderer.h"
+#include "Texture.h"
+#include "SpriteRenderer.h"
 
 // Container object for holding all state relevant for a single
 // game object entity. Each object in the game likely needs the

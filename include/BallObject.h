@@ -1,19 +1,11 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #ifndef BALLOBJECT_H
 #define BALLOBJECT_H
 
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 
-#include "learn-opengl/GameObject.h"
-#include "learn-opengl/Texture.h"
+#include "GameObject.h"
+#include "Texture.h"
 
 
 // BallObject holds the state of the Ball object inheriting
@@ -25,7 +17,6 @@ class BallObject : public GameObject
 public:
     // ball state
     float Radius;
-    bool Stuck;
     bool Destroyed;
     // constructor(s)
     BallObject();
