@@ -9,8 +9,9 @@
 #include "Game.h"
 
 SpriteRenderer *Renderer;
-GameObject *Player;
+PlayerObject *Player;
 BallObject *Ball;
+float deltaTime = 0;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height), Button_left(false)
@@ -53,11 +54,11 @@ void Game::Init()
     this->Levels.push_back(three);
     this->Levels.push_back(four);
     this->Level = 0;
-    // 加载挡板
+    // 加载角色
     glm::vec2 playerPos = glm::vec2(
         this->Width / 2.0f - PLAYER_SIZE.x / 2.0f,
         this->Height - PLAYER_SIZE.y);
-    Player = new GameObject(playerPos, PLAYER_SIZE, ResourceManager::GetTexture("paddle"));
+    Player = new PlayerObject(playerPos, PLAYER_SIZE, 1, ResourceManager::GetTexture("paddle"));
     // 加载球
     glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
     Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
@@ -73,6 +74,7 @@ glm::vec2 Game::InitialVelocity()
         if (box.IsSolid || box.Destroyed)
             continue;
         glm::vec2 distance = glm::vec2(box.Position.x - Player->Position.x, box.Position.y - Player->Position.y);
+        box.direction = -glm::normalize(distance);
         if (glm::length(distance) < glm::length(minDistance))
         {
             minDistance = distance;
@@ -83,6 +85,7 @@ glm::vec2 Game::InitialVelocity()
 
 void Game::Update(float dt)
 {
+    // balls move
     for (auto it = Balls.begin(); it != Balls.end();)
     {
         auto &eachBall = *it;
@@ -98,10 +101,21 @@ void Game::Update(float dt)
             ++it;
         }
     }
-    glm::vec2 ballPos = Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
-    Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
-                          ResourceManager::GetTexture("face"));
-    Balls.push_back(Ball);
+    // new ball
+    deltaTime += dt;
+    if (deltaTime * Player->DamageVelocity >= 1)
+    {
+        glm::vec2 ballPos = Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS - PLAYER_SIZE.y / 2);
+        Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
+                              ResourceManager::GetTexture("face"));
+        Balls.push_back(Ball);
+        deltaTime = 0;
+    }
+    // bricks move
+    for (auto &b : Levels[Level].Bricks)
+    {
+        b.Move();
+    }
 }
 
 void Game::ProcessInput(float dt)
@@ -167,7 +181,7 @@ void Game::DoCollisions(BallObject *thisBall)
 {
     // with bricks
     bool AllKill = true;
-    for (GameObject &box : this->Levels[this->Level].Bricks)
+    for (MonsterObject &box : this->Levels[this->Level].Bricks)
     {
         if (!box.Destroyed)
         {
@@ -213,11 +227,19 @@ void Game::DoCollisions(BallObject *thisBall)
     if (AllKill)
     {
         // Next Level
-        if (Level < this->Levels.size() - 1)
-        {
-            ++Level;
-            ResetLevel();
-        }
+        // if (Level < this->Levels.size() - 1)
+        // {
+        //     ++Level;
+        //     ResetLevel();
+        //     Player->Upgrade();
+        // }
+        // else
+        // {
+        //     Level = 0;
+        // }
+        Level = Level < this->Levels.size() - 1 ? Level + 1 : 0;
+        ResetLevel();
+        Player->Upgrade();
     }
     // // with player
     // Collision result = CheckCollision(*thisBall, *Player);

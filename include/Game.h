@@ -8,6 +8,7 @@
 #include "GameLevel.h"
 #include "GameObject.h"
 #include "BallObject.h"
+#include "PlayerObject.h"
 
 // Represents the current state of the game
 enum GameState
@@ -35,7 +36,7 @@ const float BALL_RADIUS = 12.5f;
 
 
 extern SpriteRenderer *Renderer;
-extern GameObject *Player;
+extern PlayerObject *Player;
 extern BallObject *Ball;
 
 Direction VectorDirection(glm::vec2 target);

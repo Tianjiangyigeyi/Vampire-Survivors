@@ -6,6 +6,7 @@
 #include <glm/glm.hpp>
 
 #include "GameObject.h"
+#include "MonsterObject.h"
 #include "SpriteRenderer.h"
 #include "ResourceManager.h"
 
@@ -16,7 +17,7 @@ class GameLevel
 {
 public:
     // level state
-    std::vector<GameObject> Bricks;
+    std::vector<MonsterObject> Bricks;
     // constructor
     GameLevel() { }
     // loads level from file
