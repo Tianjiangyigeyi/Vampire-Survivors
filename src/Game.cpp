@@ -70,7 +70,8 @@ glm::vec2 Game::InitialVelocity()
     glm::vec2 minDistance = glm::vec2(Width, Height);
     for (auto &box : Levels[Level].Bricks)
     {
-        if (box.IsSolid || box.Destroyed) continue;
+        if (box.IsSolid || box.Destroyed)
+            continue;
         glm::vec2 distance = glm::vec2(box.Position.x - Player->Position.x, box.Position.y - Player->Position.y);
         if (glm::length(distance) < glm::length(minDistance))
         {
@@ -84,6 +85,8 @@ void Game::Update(float dt)
 {
     for (auto &eachBall : Balls)
     {
+        if (eachBall->Destroyed)
+            continue;
         eachBall->Move(dt, this->Width);
         DoCollisions(eachBall);
     }
@@ -150,6 +153,8 @@ void Game::Render()
         // draw ball
         for (auto &eachBall : Balls)
         {
+            if (eachBall->Destroyed)
+                continue;
             eachBall->Draw(*Renderer);
         }
     }
@@ -170,8 +175,11 @@ void Game::DoCollisions(BallObject *thisBall)
             {
                 // destroy block if not solid
                 if (!box.IsSolid)
+                {
                     box.Destroyed = true;
-                // collision resolution
+                    thisBall->Destroyed = true;
+                    return;
+                }
                 Direction dir = std::get<1>(collision);
                 glm::vec2 diff_vector = std::get<2>(collision);
                 if (dir == LEFT || dir == RIGHT) // horizontal collision
