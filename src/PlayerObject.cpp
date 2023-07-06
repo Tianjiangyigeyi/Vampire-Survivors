@@ -1,4 +1,5 @@
 #include "PlayerObject.h"
+bool mirror = false;
 
 int count = 0;
 
@@ -40,7 +41,6 @@ void PlayerObject::Upgrade()
     DamageVelocity = INIT_DAMAGE_VELOCITY * lv;
 }
 
-
 void PlayerObject::Move(glm::vec2 &dir)
 {
     count++;
@@ -53,10 +53,16 @@ void PlayerObject::Move(glm::vec2 &dir)
             Sprite = sprites[state];
             count = 0;
         }
+        mirror = dir.x < 0 ? true : false;
     }
     else
     {
         state = 0;
         Sprite = sprites[state];
     }
+}
+
+void PlayerObject::Draw(SpriteRenderer &renderer)
+{
+    renderer.DrawSprite(this->Sprite, this->Position, this->Size, this->Rotation, this->Color, mirror);
 }

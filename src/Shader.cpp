@@ -1,11 +1,3 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #include "Shader.h"
 
 #include <iostream>
@@ -16,7 +8,7 @@ Shader &Shader::Use()
     return *this;
 }
 
-void Shader::Compile(const char* vertexSource, const char* fragmentSource, const char* geometrySource)
+void Shader::Compile(const char *vertexSource, const char *fragmentSource, const char *geometrySource)
 {
     unsigned int sVertex, sFragment, gShader;
     // vertex Shader
@@ -119,8 +111,8 @@ void Shader::checkCompileErrors(unsigned int object, std::string type)
         {
             glGetShaderInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::SHADER: Compile-time error: Type: " << type << "\n"
-                << infoLog << "\n -- --------------------------------------------------- -- "
-                << std::endl;
+                      << infoLog << "\n -- --------------------------------------------------- -- "
+                      << std::endl;
         }
     }
     else
@@ -130,8 +122,8 @@ void Shader::checkCompileErrors(unsigned int object, std::string type)
         {
             glGetProgramInfoLog(object, 1024, NULL, infoLog);
             std::cout << "| ERROR::Shader: Link-time error: Type: " << type << "\n"
-                << infoLog << "\n -- --------------------------------------------------- -- "
-                << std::endl;
+                      << infoLog << "\n -- --------------------------------------------------- -- "
+                      << std::endl;
         }
     }
 }

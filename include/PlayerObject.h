@@ -23,6 +23,8 @@ public:
     void Upgrade();
     ~PlayerObject();
     void Move(glm::vec2 &dir);
+    void Draw(SpriteRenderer &renderer);
+
 };
 
 #endif
