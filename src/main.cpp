@@ -8,7 +8,7 @@
 ******************************************************************/
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-
+#include <windows.h>
 #include "Game.h"
 #include "ResourceManager.h"
 
@@ -72,6 +72,16 @@ int main(int argc, char *argv[])
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        if (deltaTime < 1.0f / 45.0f)
+        {
+            Sleep(1.0f / 45.0f - deltaTime);
+            deltaTime = 1.0f / 45.0f;
+        }
+        else
+        {
+            std::cout << deltaTime << std::endl;
+        }
+        // std::cout << deltaTime << std::endl;
         glfwPollEvents();
 
         // manage user input
