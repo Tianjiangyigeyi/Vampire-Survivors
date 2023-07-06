@@ -4,6 +4,7 @@ SpriteRenderer *Renderer;
 PlayerObject *Player;
 BallObject *Ball;
 float deltaTime = 0;
+const int nTimes = 5;
 
 Game::Game(unsigned int width, unsigned int height)
     : State(GAME_ACTIVE), Keys(), Width(width), Height(height), Button_left(false)
@@ -27,7 +28,7 @@ void Game::Init()
     // 设置专用于渲染的控制
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // 加载纹理
-    ResourceManager::LoadTexture("objects/background.jpg", false, "background");
+    ResourceManager::LoadTexture("objects/R-C.jpg", false, "background");
     ResourceManager::LoadTexture("objects/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("objects/Enemies/Sprite-BAT1.png", true, "block");
     ResourceManager::LoadTexture("objects/block_solid.png", false, "block_solid");
@@ -48,8 +49,7 @@ void Game::Init()
     this->Level = 0;
     // 加载角色
     glm::vec2 playerPos = glm::vec2(
-        this->Width / 2.0f - PLAYER_SIZE.x / 2.0f,
-        this->Height - PLAYER_SIZE.y);
+        this->Width * nTimes / 2.0f, this->Height * nTimes / 2.0f);
     Player = new PlayerObject(playerPos, PLAYER_SIZE, 1, ResourceManager::GetTexture("paddle"));
     // 加载球
     // glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
@@ -62,7 +62,7 @@ void Game::Init()
 
 glm::vec2 Game::InitialVelocity()
 {
-    glm::vec2 minDistance = glm::vec2(Width, Height);
+    glm::vec2 minDistance = glm::vec2(Width * nTimes, Height * nTimes);
     for (auto &box : Levels[Level].Bricks)
     {
         if (box.IsSolid || box.Destroyed)
@@ -84,6 +84,10 @@ void Game::Update(float dt)
     {
         auto &eachBall = *it;
         eachBall->Move(dt, this->Width);
+        if (eachBall->Position.x <= 0 || eachBall->Position.x >= Width * nTimes || eachBall->Position.y <= 0 || eachBall->Position.y >= Height * nTimes)
+        {
+            eachBall->Destroyed = true;
+        }
         DoCollisions(eachBall);
         if (eachBall->Destroyed)
         {
@@ -123,23 +127,23 @@ void Game::ProcessInput(float dt)
         // move playerboard
         if (this->Keys[GLFW_KEY_A])
         {
-            if (Player->Position.x >= 0.0f)
-                dir.x -= 1;
+            // if (Player->Position.x >= 0.0f)
+            dir.x -= 1;
         }
         if (this->Keys[GLFW_KEY_D])
         {
-            if (Player->Position.x <= this->Width - Player->Size.x)
-                dir.x += 1;
+            // if (Player->Position.x <= this->Width - Player->Size.x)
+            dir.x += 1;
         }
         if (this->Keys[GLFW_KEY_W])
         {
-            if (Player->Position.y >= 0.0f)
-                dir.y -= 1;
+            // if (Player->Position.y >= 0.0f)
+            dir.y -= 1;
         }
         if (this->Keys[GLFW_KEY_S])
         {
-            if (Player->Position.y <= this->Height - Player->Size.y)
-                dir.y += 1;
+            // if (Player->Position.y <= this->Height - Player->Size.y)
+            dir.y += 1;
         }
         if (dir != glm::vec2(0.0f, 0.0f))
         {
@@ -156,12 +160,21 @@ void Game::Render()
 {
     if (this->State == GAME_ACTIVE)
     {
-        glm::mat4 projection = glm::ortho(Player->Position.x - Width / 2, static_cast<GLfloat>(this->Width / 2 + Player->Position.x),
-                                          static_cast<GLfloat>(this->Height / 2 + Player->Position.y), Player->Position.y - Height / 2, -1.0f, 1.0f);
+        float left, right, bottom, top;
+        left = Player->Position.x - Width / 2;
+        right = static_cast<float>(Width) / 2 + Player->Position.x;
+        bottom = static_cast<float>(Height) / 2 + Player->Position.y;
+        top = Player->Position.y - Height / 2;
+        glm::mat4 projection = glm::ortho(left, right, bottom, top, -1.0f, 1.0f);
         ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
         // draw background
-        Renderer->DrawSprite(ResourceManager::GetTexture("background"),
-                             glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
+        for (int i = 0; i < nTimes; ++i)
+        {
+            for (int j = 0; j < nTimes; ++j)
+            {
+                Renderer->DrawSprite(ResourceManager::GetTexture("background"), glm::vec2(i * Width, j * Height), glm::vec2(Width, Height), 0.0f);
+            }
+        }
         // draw level
         this->Levels[this->Level].Draw(*Renderer);
         // draw paddle
@@ -178,6 +191,10 @@ void Game::Render()
 
 void Game::DoCollisions(BallObject *thisBall)
 {
+    if (thisBall->Destroyed)
+    {
+        return;
+    }
     // with bricks
     bool AllKill = true;
     for (MonsterObject &box : this->Levels[this->Level].Bricks)
@@ -316,12 +333,4 @@ void Game::ResetLevel()
         this->Levels[2].Load("levels/three.lvl", this->Width, this->Height * 0.5f);
     else if (this->Level == 3)
         this->Levels[3].Load("levels/four.lvl", this->Width, this->Height * 0.5f);
-}
-
-void Game::ResetPlayer()
-{
-    // Reset player/ball stats
-    Player->Size = PLAYER_SIZE;
-    Player->Position = glm::vec2(this->Width / 2 - PLAYER_SIZE.x / 2, this->Height - PLAYER_SIZE.y);
-    Ball->Reset(Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -(BALL_RADIUS * 2)), InitialVelocity());
 }
