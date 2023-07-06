@@ -28,11 +28,15 @@ void Game::Init()
     // 设置专用于渲染的控制
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     // 加载纹理
-    ResourceManager::LoadTexture("objects/R-C.jpg", false, "background");
-    ResourceManager::LoadTexture("objects/awesomeface.png", true, "face");
-    ResourceManager::LoadTexture("objects/Enemies/Sprite-BAT1.png", true, "block");
-    ResourceManager::LoadTexture("objects/block_solid.png", false, "block_solid");
-    ResourceManager::LoadTexture("objects/Player/Animated-Antonio.gif", true, "paddle");
+    ResourceManager::LoadTexture("assets/background/forest/bg_forest.png", true, "background");
+    ResourceManager::LoadTexture("assets/awesomeface.png", true, "face");
+    ResourceManager::LoadTexture("assets/Enemies/Sprite-BAT1.png", true, "monster");
+    ResourceManager::LoadTexture("assets/block_solid.png", false, "block_solid");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio1.png", false, "player1");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio2.png", false, "player2");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", false, "player3");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", false, "player4");
+
     // 加载关卡
     GameLevel one;
     one.Load("levels/one.lvl", this->Width, this->Height / 2);
@@ -50,7 +54,7 @@ void Game::Init()
     // 加载角色
     glm::vec2 playerPos = glm::vec2(
         this->Width * nTimes / 2.0f, this->Height * nTimes / 2.0f);
-    Player = new PlayerObject(playerPos, PLAYER_SIZE, 1, ResourceManager::GetTexture("paddle"));
+    Player = new PlayerObject(playerPos, PLAYER_SIZE, 1, ResourceManager::GetTexture("player4"), ResourceManager::GetTexture("player1"), ResourceManager::GetTexture("player2"), ResourceManager::GetTexture("player3"));
     // 加载球
     // glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
     glm::vec2 ballPos = playerPos;
@@ -127,32 +131,29 @@ void Game::ProcessInput(float dt)
         // move playerboard
         if (this->Keys[GLFW_KEY_A])
         {
-            // if (Player->Position.x >= 0.0f)
-            dir.x -= 1;
+            if (Player->Position.x >= 0.0f)
+                dir.x -= 1;
         }
         if (this->Keys[GLFW_KEY_D])
         {
-            // if (Player->Position.x <= this->Width - Player->Size.x)
-            dir.x += 1;
+            if (Player->Position.x <= this->Width * nTimes)
+                dir.x += 1;
         }
         if (this->Keys[GLFW_KEY_W])
         {
-            // if (Player->Position.y >= 0.0f)
-            dir.y -= 1;
+            if (Player->Position.y >= 0.0f)
+                dir.y -= 1;
         }
         if (this->Keys[GLFW_KEY_S])
         {
-            // if (Player->Position.y <= this->Height - Player->Size.y)
-            dir.y += 1;
+            if (Player->Position.y <= this->Height * nTimes)
+                dir.y += 1;
         }
         if (dir != glm::vec2(0.0f, 0.0f))
         {
-            Player->Position += glm::normalize(dir) * velocity;
-            // if (Ball->Stuck)
-            // {
-            //     Ball->Position += glm::normalize(dir) * velocity;
-            // }
+            dir = glm::normalize(dir) * velocity;
         }
+        Player->Move(dir);
     }
 }
 
@@ -177,7 +178,7 @@ void Game::Render()
         }
         // draw level
         this->Levels[this->Level].Draw(*Renderer);
-        // draw paddle
+        // draw player
         Player->Draw(*Renderer);
         // draw ball
         for (auto &eachBall : Balls)

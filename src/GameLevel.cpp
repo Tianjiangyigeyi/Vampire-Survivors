@@ -86,7 +86,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned i
 
                 glm::vec2 pos(unit_width * x, unit_height * y);
                 glm::vec2 size(unit_width, unit_height);
-                this->Bricks.push_back(MonsterObject(pos, size, ResourceManager::GetTexture("block")));
+                this->Bricks.push_back(MonsterObject(pos, size, ResourceManager::GetTexture("monster")));
             }
         }
     }
