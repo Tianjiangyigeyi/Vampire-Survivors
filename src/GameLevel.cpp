@@ -57,7 +57,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned i
     // calculate dimensions
     unsigned int height = tileData.size();
     unsigned int width = tileData[0].size(); // note we can index vector at [0] since this function is only called if height > 0
-    float unit_width = levelWidth / static_cast<float>(width), unit_height = levelHeight / height; 
+    float unit_width = 100.0f, unit_height = 100.0f; 
     // initialize level tiles based on tileData		
     for (unsigned int y = 0; y < height; ++y)
     {
@@ -86,7 +86,7 @@ void GameLevel::init(std::vector<std::vector<unsigned int>> tileData, unsigned i
 
                 glm::vec2 pos(unit_width * x, unit_height * y);
                 glm::vec2 size(unit_width, unit_height);
-                this->Bricks.push_back(MonsterObject(pos, size, ResourceManager::GetTexture("block"), color));
+                this->Bricks.push_back(MonsterObject(pos, size, ResourceManager::GetTexture("block")));
             }
         }
     }

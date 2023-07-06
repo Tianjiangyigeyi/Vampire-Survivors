@@ -1,11 +1,3 @@
-/*******************************************************************
-** This code is part of Breakout.
-**
-** Breakout is free software: you can redistribute it and/or modify
-** it under the terms of the CC BY 4.0 license as published by
-** Creative Commons, either version 4 of the License, or (at your
-** option) any later version.
-******************************************************************/
 #include "Game.h"
 
 SpriteRenderer *Renderer;
@@ -37,9 +29,9 @@ void Game::Init()
     // 加载纹理
     ResourceManager::LoadTexture("objects/background.jpg", false, "background");
     ResourceManager::LoadTexture("objects/awesomeface.png", true, "face");
-    ResourceManager::LoadTexture("objects/block.png", false, "block");
+    ResourceManager::LoadTexture("objects/Enemies/Sprite-BAT1.png", true, "block");
     ResourceManager::LoadTexture("objects/block_solid.png", false, "block_solid");
-    ResourceManager::LoadTexture("objects/paddle.png", true, "paddle");
+    ResourceManager::LoadTexture("objects/Player/Animated-Antonio.gif", true, "paddle");
     // 加载关卡
     GameLevel one;
     one.Load("levels/one.lvl", this->Width, this->Height / 2);
@@ -60,7 +52,9 @@ void Game::Init()
         this->Height - PLAYER_SIZE.y);
     Player = new PlayerObject(playerPos, PLAYER_SIZE, 1, ResourceManager::GetTexture("paddle"));
     // 加载球
-    glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
+    // glm::vec2 ballPos = playerPos + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS * 2);
+    glm::vec2 ballPos = playerPos;
+
     Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
                           ResourceManager::GetTexture("face"));
     Balls.push_back(Ball);
@@ -105,7 +99,9 @@ void Game::Update(float dt)
     deltaTime += dt;
     if (deltaTime * Player->DamageVelocity >= 1)
     {
-        glm::vec2 ballPos = Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS - PLAYER_SIZE.y / 2);
+        // glm::vec2 ballPos = Player->Position + glm::vec2(PLAYER_SIZE.x / 2 - BALL_RADIUS, -BALL_RADIUS - PLAYER_SIZE.y / 2);
+        glm::vec2 ballPos = Player->Position;
+
         Ball = new BallObject(ballPos, BALL_RADIUS, InitialVelocity(),
                               ResourceManager::GetTexture("face"));
         Balls.push_back(Ball);
@@ -160,6 +156,9 @@ void Game::Render()
 {
     if (this->State == GAME_ACTIVE)
     {
+        glm::mat4 projection = glm::ortho(Player->Position.x - Width / 2, static_cast<GLfloat>(this->Width / 2 + Player->Position.x),
+                                          static_cast<GLfloat>(this->Height / 2 + Player->Position.y), Player->Position.y - Height / 2, -1.0f, 1.0f);
+        ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
         // draw background
         Renderer->DrawSprite(ResourceManager::GetTexture("background"),
                              glm::vec2(0.0f, 0.0f), glm::vec2(this->Width, this->Height), 0.0f);
