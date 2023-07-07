@@ -1,7 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 
-#define STB_IMAGE_IMPLEMENTATION
-#include <stb_image.h>
+// The Width of the screen
+const unsigned int SCREEN_WIDTH = 1920;
+// The height of the screen
+const unsigned int SCREEN_HEIGHT = 960;
 
 #endif
