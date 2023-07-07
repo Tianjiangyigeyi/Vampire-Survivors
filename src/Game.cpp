@@ -3,6 +3,7 @@
 SpriteRenderer *Renderer;
 PlayerObject *Player;
 BallObject *Ball;
+
 float deltaTime = 0;
 const int nTimes = 5;
 
@@ -32,10 +33,10 @@ void Game::Init()
     ResourceManager::LoadTexture("assets/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("assets/Enemies/Sprite-BAT1.png", true, "monster");
     ResourceManager::LoadTexture("assets/block_solid.png", false, "block_solid");
-    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio1.png", false, "player1");
-    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio2.png", false, "player2");
-    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", false, "player3");
-    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", false, "player4");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio1.png", true, "player1");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio2.png", true, "player2");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", true, "player3");
+    ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", true, "player4");
 
     // 加载关卡
     GameLevel one;
