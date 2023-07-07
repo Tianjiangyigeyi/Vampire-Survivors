@@ -1,21 +1,21 @@
 #include "PlayerObject.h"
-bool mirror = false;
 
 int count = 0;
 
-PlayerObject::PlayerObject()
-    : GameObject(), DamageVelocity(INIT_DAMAGE_VELOCITY), lv(1), state(0) {}
+
 
 PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, unsigned int level, Texture2D sprite)
-    : GameObject(pos, size, sprite), DamageVelocity(INIT_DAMAGE_VELOCITY * level), lv(level), state(0)
+    : GameObject(pos,  sprite), DamageVelocity(INIT_DAMAGE_VELOCITY * level),  state(0)
 {
     for (int i = 0; i < 4; ++i)
     {
         sprites[i] = sprite;
     }
 }
-PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, unsigned int level, Texture2D sprite1, Texture2D sprite2, Texture2D sprite3, Texture2D sprite4)
-    : GameObject(pos, size, sprite1), DamageVelocity(INIT_DAMAGE_VELOCITY * level), lv(level), state(0)
+
+// 四个纹理对应四种动作样式，其中第一种是站立不动时的姿势，按照顺序依次传参
+PlayerObject::PlayerObject(glm::vec2 pos, Texture2D sprite1, Texture2D sprite2, Texture2D sprite3, Texture2D sprite4)
+    : GameObject(pos,  sprite1), DamageVelocity(INIT_DAMAGE_VELOCITY ),  state(0)
 {
     sprites[0] = sprite1;
     sprites[1] = sprite2;
@@ -28,7 +28,6 @@ void PlayerObject::Reset(glm::vec2 position, glm::vec2 velocity)
 {
     this->Position = position;
     this->DamageVelocity = INIT_DAMAGE_VELOCITY;
-    this->lv = 1;
 }
 
 PlayerObject::~PlayerObject()
@@ -37,8 +36,7 @@ PlayerObject::~PlayerObject()
 
 void PlayerObject::Upgrade()
 {
-    ++lv;
-    DamageVelocity = INIT_DAMAGE_VELOCITY * lv;
+    DamageVelocity = INIT_DAMAGE_VELOCITY;
 }
 
 void PlayerObject::Move(glm::vec2 &dir)
@@ -47,22 +45,18 @@ void PlayerObject::Move(glm::vec2 &dir)
     if (dir != glm::vec2(0.0f, 0.0f))
     {
         Position += dir;
+        // 15 代表15帧更换一次动作
         if (count >= 15)
         {
             state = (state + 1) % 4;
             Sprite = sprites[state];
             count = 0;
         }
-        mirror = dir.x < 0 ? true : false;
+        IsMirrored = dir.x < 0 ? true : false;
     }
     else
     {
         state = 0;
         Sprite = sprites[state];
     }
-}
-
-void PlayerObject::Draw(SpriteRenderer &renderer)
-{
-    renderer.DrawSprite(this->Sprite, this->Position, this->Size, this->Rotation, this->Color, mirror);
 }

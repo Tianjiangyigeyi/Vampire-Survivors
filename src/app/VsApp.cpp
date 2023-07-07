@@ -6,6 +6,11 @@ GLFWwindow *window;
 
 VsApp::VsApp()
 {
+}
+
+// 由于我们只有一个窗口，省略了window层，将窗口的生成一并放入app层中
+bool VsApp::Init()
+{
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -15,13 +20,8 @@ VsApp::VsApp()
 #endif
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "vampire survivor!", nullptr, nullptr);
-    vampireSurvivor = new Game(SCREEN_WIDTH, SCREEN_HEIGHT);
-}
-
-// 由于我们只有一个窗口，省略了window层，将窗口的生成一并放入app层中
-bool VsApp::Init()
-{
+    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "vampire survivor!", nullptr, nullptr);
+    vampireSurvivor = new Game(WINDOW_WIDTH, WINDOW_HEIGHT);
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -33,7 +33,7 @@ bool VsApp::Init()
 
     // OpenGL  cnfiguration
     // --------------------
-    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
+    glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glEnable(GL_BLEND);
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -58,18 +58,16 @@ int VsApp::Run()
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        if (deltaTime < 1.0f / 45.0f)
+        if (deltaTime < 1.0f / MAX_FRAME_PER_SECOND)
         {
-            Sleep(1.0f / 45.0f - deltaTime);
-            deltaTime = 1.0f / 45.0f;
+            Sleep(1.0f / MAX_FRAME_PER_SECOND - deltaTime);
+            deltaTime = 1.0f / MAX_FRAME_PER_SECOND;
         }
         else
         {
             std::cout << deltaTime << std::endl;
         }
-        // std::cout << deltaTime << std::endl;
         glfwPollEvents();
-
         // manage user input
         // -----------------
         vampireSurvivor->ProcessInput(deltaTime);

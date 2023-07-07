@@ -2,8 +2,12 @@
 #define CONFIG_H
 
 // The Width of the screen
-const unsigned int SCREEN_WIDTH = 1920;
+#define WINDOW_WIDTH  1920
 // The height of the screen
-const unsigned int SCREEN_HEIGHT = 960;
+#define WINDOW_HEIGHT 960
+// max fps
+#define MAX_FRAME_PER_SECOND  45
+
+
 
 #endif

@@ -4,7 +4,7 @@
 #include <map>
 #include <string>
 
-#include <glad/glad.h>
+#include "../precomp.h"
 
 #include "../common/config.h"
 #include "Texture.h"
