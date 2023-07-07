@@ -9,11 +9,10 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 #include <windows.h>
-#include "Game.h"
-#include "ResourceManager.h"
+#include "view/Game.h"
+#include "viewmodel/ResourceManager.h"
 
 #include <iostream>
-
 // GLFW function declarations
 void framebuffer_size_callback(GLFWwindow *window, int width, int height);
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode);

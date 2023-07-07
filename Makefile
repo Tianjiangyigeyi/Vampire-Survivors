@@ -53,7 +53,9 @@ LIBS		:= $(patsubst %,-L%, $(LIBDIRS:%/=%))
 
 
 # define the C source files
-SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
+# SOURCES		:= $(wildcard $(patsubst %,%/*.cpp, $(SOURCEDIRS)))
+SOURCES := $(wildcard $(SOURCEDIRS)/*.cpp) $(wildcard $(SOURCEDIRS)/*/*.cpp)
+
 
 # define the C object files 
 OBJECTS		:= $(SOURCES:.cpp=.o)
@@ -72,8 +74,10 @@ all: $(OUTPUT) $(MAIN)
 $(OUTPUT):
 	$(MD) $(OUTPUT)
 
+# $(MAIN): $(OBJECTS) 
+# 	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LFLAGS) $(LIBS) $(LIBRARIES)
 $(MAIN): $(OBJECTS) 
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LFLAGS) $(LIBS) $(LIBRARIES)
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -o $(OUTPUTMAIN) $(OBJECTS) $(LIBS) $(LIBRARIES) $(LFLAGS)
 
 # this is a suffix replacement rule for building .o's from .c's
 # it uses automatic variables $<: the name of the prerequisite of
