@@ -1,12 +1,18 @@
 #include "Game.h"
+#include "Button.h"
 #include <vector>
+#include <iostream>
+#include <unistd.h>
+
+extern double cursor_x, cursor_y;
+extern bool LeftButtonPressed;
 
 PlayerObject *Player;
 
 float deltaTime = 0;
 
 Game::Game(unsigned int width, unsigned int height)
-    : State(GAME_ACTIVE), Keys(), Width(width), Height(height), Button_left(false)
+    : State(GAME_START_MENU), Keys(), Width(width), Height(height), Button_left(false)
 {
 }
 
@@ -74,9 +80,28 @@ void Game::Render()
         // 每次渲染必须reset相机位置, scale是缩放的比例
         float scale = 0.5;
         Utility::ResetCamera(Player->Position, glm::vec2(Width / 2.0f, Height / 2.0f), scale);
+        // std::cout<<Player->Position.x<<" "<<Player->Position.y<<std::endl;
+        // std::cout<<Width<<" "<<Height<<std::endl;
         // draw background
         Utility::DrawBackground();
         Player->Draw();
 
+    }
+    if(this->State == GAME_START_MENU)
+    {
+        Utility::ResetCamera(glm::vec2(Width / 2.0f, Height / 2.0f), glm::vec2(Width / 2.0f, Height / 2.0f), 1.0f);
+        Utility::DrawBackground(std::string("StartMenu"));
+
+ 
+        Button start_button(Width * 0.45, Height * 0.9, Width * 0.1, Height * 0.1, std::string("StartM_start"));
+        start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        if(start_button.pressed)
+        {
+            this->State = GAME_ACTIVE;
+        }
+        
+        // this->State = GAME_ACTIVE;
+        // std::cout <<"here"<<cursor_x<<std::endl;
+        // sleep(1);
     }
 }
