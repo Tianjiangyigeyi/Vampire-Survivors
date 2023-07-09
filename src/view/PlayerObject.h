@@ -9,7 +9,24 @@
 class PlayerObject : public GameObject
 {
 public:
-    float DamageVelocity;
+    float might;//力量
+    float speed;//飞行道具移动速度
+    float move_speed;//人物移动速度
+    float max_health;//最大生命
+    float recovery;//生命恢复
+    float current_health;//当前生命
+    float armor;//护甲
+    float cooldown;//武器攻击间隔
+    float area;//aoe武器攻击范围
+    float duration;//武器持续攻击时间
+    float magnet;//拾取距离
+    float luck;//幸运值
+    float growth;//经验获取提升
+    int amount;//单次发射的武器投射物数目
+    float exp;//当前经验值
+    float next_exp;//下一级所需经验值
+    int level;//等级
+    
     int state;
     Texture2D sprites[4];
     // constructor(s)
