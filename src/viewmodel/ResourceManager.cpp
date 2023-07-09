@@ -5,6 +5,7 @@
 #include <fstream>
 
 #include "../common/stb_image.h"
+#include "../common/stb_image_resize.h"
 
 // Instantiate static variables
 std::map<std::string, Texture2D> ResourceManager::Textures;
@@ -24,6 +25,14 @@ Shader &ResourceManager::GetShader(std::string name)
 Texture2D ResourceManager::LoadTexture(const char *TextureFile, bool alpha, std::string name)
 {
     Textures[name] = loadTextureFromFile(TextureFile, alpha);
+    return Textures[name];
+}
+
+Texture2D ResourceManager::LoadTexture(const char *TextureFile, bool alpha, std::string name, int width, int height)
+{
+    std::cout<<"??" << std::endl;
+    Textures[name] = loadTextureFromFile(TextureFile, alpha, width, height);
+    std::cout<<"??" << std::endl;
     return Textures[name];
 }
 
@@ -102,5 +111,27 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha)
     texture.Generate(width, height, data);
     // and finally free image data
     stbi_image_free(data);
+    return texture;
+}
+
+Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha, int width, int height)
+{
+    // create texture object
+    Texture2D texture;
+    if (alpha)
+    {
+        texture.Internal_Format = GL_RGBA;
+        texture.Image_Format = GL_RGBA;
+    }
+    // load image
+    int bwidth, bheight, nrChannels;
+    unsigned char *data = stbi_load(file, &bwidth, &bheight, &nrChannels, 0);
+    unsigned char* scaledData = new unsigned char[width * height * nrChannels];
+    stbir_resize_uint8(data, bwidth, bheight, 0, scaledData, width, height, 0, nrChannels);
+
+    // std::cout << bwidth << " " << bheight << " " << width <<std::endl;
+    texture.Generate(width, height, scaledData);
+    std::cout<<"here" << std::endl;
+    stbi_image_free(data); 
     return texture;
 }
