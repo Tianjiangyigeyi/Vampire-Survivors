@@ -1,12 +1,16 @@
 #include "VsApp.h"
 
 // 为了满足OpenGL的C特性，它们也不得不设为全局变量
-Game *vampireSurvivor;
-GLFWwindow *window;
+
 
 VsApp::VsApp()
 {
 }
+
+Game *vampireSurvivor;
+GLFWwindow *window;
+double cursor_x, cursor_y;
+bool LeftButtonPressed = false;
 
 // 由于我们只有一个窗口，省略了window层，将窗口的生成一并放入app层中
 bool VsApp::Init()
@@ -28,15 +32,18 @@ bool VsApp::Init()
         std::cout << "Failed to initialize GLAD" << std::endl;
         return false;
     }
+
     glfwSetKeyCallback(window, key_callback);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+
+    glfwSetMouseButtonCallback(window, mouse_button_callback);
 
     // OpenGL  cnfiguration
     // --------------------
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
+    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
+ 
     // initialize game
     // ---------------
     vampireSurvivor->Init();
@@ -117,4 +124,16 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
     // make sure the viewport matches the new window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
+}
+
+void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
+{
+    glfwGetCursorPos(window, &cursor_x, &cursor_y);
+    
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        
+        LeftButtonPressed = true;
+        std::cout << cursor_x << " " << cursor_y << std::endl;
+    }
 }
