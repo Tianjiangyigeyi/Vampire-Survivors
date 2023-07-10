@@ -3,7 +3,7 @@
 
 text_character::text_character(){}
 text_character::~text_character() {}
-
+//参数名：字符串，文本框位置，文本框大小，行数，旋转，颜色，是否镜像
 void text_character::generate_text(std::string data,glm::vec2 position,glm::vec2 size,int lines, float rotate, glm::vec3 color, bool mirror)
 {
     //一行当中的字符数目

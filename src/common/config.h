@@ -2,11 +2,11 @@
 #define CONFIG_H
 
 // The Width of the screen
-#define WINDOW_WIDTH  1920
+#define WINDOW_WIDTH  800
 // The height of the screen
-#define WINDOW_HEIGHT 960
+#define WINDOW_HEIGHT 600
 // max fps
-#define MAX_FRAME_PER_SECOND  45
+#define MAX_FRAME_PER_SECOND  30
 
 
 
