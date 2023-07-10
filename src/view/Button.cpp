@@ -5,12 +5,14 @@ void Button::Render()
     if(hovered)
     {
         std::string hovered_text = Button_text + "_hovered";
-        Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(hovered_text), glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+        //text_character::generate_text(Button_text,glm::vec2(x,y),glm::vec2(width,height),1,0.0f,glm::vec3(1.0f, 1.0f, 1.0f),false);
+        //Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(hovered_text), glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
     }
     else
     {
         std::string normal_text = Button_text + "_normal";
         Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(normal_text), glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+        text_character::generate_text(Button_text,glm::vec2(x,y),glm::vec2(width,height),1,0.0f,glm::vec3(1.0f, 1.0f, 1.0f),false);
     }
 }
 

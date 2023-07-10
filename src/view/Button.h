@@ -1,6 +1,7 @@
 #include "../viewmodel/Texture.h"
 #include "../viewmodel/ResourceManager.h"
 #include "../viewmodel/Utility.h"
+#include "../viewmodel/Text.h"
 #include <string>
 
 class Button

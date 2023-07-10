@@ -22,7 +22,35 @@ void Utility::Init()
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", true, "player4");
     ResourceManager::LoadTexture("assets/background/Start_Menu_bck.png", true, "StartMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
     ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", true, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
-    
+    char load_path[18]="assets/Font/0.png";
+    load_path[17]='\0';
+    char temp[3];
+    temp[2]='\0';
+    for(int i=0;i<10;i++)
+    {
+        load_path[12]=i+'0';
+        temp[0]=i+'0';
+        temp[1]='\0';
+        ResourceManager::LoadTexture(load_path, true, temp);
+    }
+    for(int i=0;i<26;i++)
+    {
+        load_path[12]=i+'A';
+        temp[0]=i+'A';
+        temp[1]='\0';
+        ResourceManager::LoadTexture(load_path, true, temp);
+    }
+    ResourceManager::LoadTexture("assets/Font/space.png", true, "space");
+    ResourceManager::LoadTexture("assets/Font/,.png", true, ",");
+    char load_path1[19]="assets/Font/a1.png";
+    load_path1[18]='\0';
+    for(int i=0;i<26;i++)
+    {
+        load_path[12]=i+'a';
+        temp[0]=i+'a';
+        temp[1]='\0';
+        ResourceManager::LoadTexture(load_path, true, temp);
+    }
 }
 
 void Utility::DrawBackground()

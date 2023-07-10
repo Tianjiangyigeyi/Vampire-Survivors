@@ -93,7 +93,7 @@ void Game::Render()
         Utility::DrawBackground(std::string("StartMenu"));
 
  
-        Button start_button(Width * 0.45, Height * 0.9, Width * 0.1, Height * 0.1, std::string("StartM_start"));
+        Button start_button(Width * 0.45, Height * 0.9, Width * 0.1, Height * 0.05, std::string("StartM    start"));
         start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
         if(start_button.pressed)
         {
