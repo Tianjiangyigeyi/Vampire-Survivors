@@ -1,6 +1,6 @@
 #include "EnemyObject.h"
 
-EnemyObject::EnemyObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite)
+EnemyObject::EnemyObject(glm::vec2 pos,  Texture2D sprite)
         : GameObject(pos,  sprite)
 {
 }

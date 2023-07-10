@@ -15,7 +15,7 @@ public:
     Texture2D sprite;
     // constructor(s)
     EnemyObject() = delete;
-    EnemyObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite);
+    EnemyObject(glm::vec2 pos, Texture2D sprite);
     // resets the ball to original state with given position and velocity
     void Reset(glm::vec2 position, glm::vec2 velocity);
     ~EnemyObject();

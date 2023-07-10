@@ -2,16 +2,14 @@
 
 int count = 0;
 
-
-
-PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, unsigned int level, Texture2D sprite)
-    : GameObject(pos,  sprite),  state(0)
-{
-    for (int i = 0; i < 4; ++i)
-    {
-        sprites[i] = sprite;
-    }
-}
+//PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, unsigned int level, Texture2D sprite)
+//    : GameObject(pos,  sprite),  state(0)
+//{
+//    for (int i = 0; i < 4; ++i)
+//    {
+//        sprites[i] = sprite;
+//    }
+//}
 
 // 四个纹理对应四种动作样式，其中第一种是站立不动时的姿势，按照顺序依次传参
 PlayerObject::PlayerObject(glm::vec2 pos, Texture2D sprite1, Texture2D sprite2, Texture2D sprite3, Texture2D sprite4)

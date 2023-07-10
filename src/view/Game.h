@@ -5,7 +5,7 @@
 #include "../viewmodel/Utility.h"
 #include "../viewmodel/GameObject.h"
 #include "PlayerObject.h"
-#include "../viewmodel/Timer.h"
+#include "EnemyObject.h"
 
 // Represents the current state of the game
 enum GameState
@@ -42,8 +42,8 @@ public:
     bool Keys[1024];
     bool Button_left;
     unsigned int Width, Height;
+    unsigned int BG_Width, BG_Height;
     unsigned int Level;
-    timer Timer;
 
     // constructor/destructor
     Game(unsigned int width, unsigned int height);
