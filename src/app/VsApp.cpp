@@ -26,6 +26,9 @@ bool VsApp::Init()
 
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "vampire survivor!", nullptr, nullptr);
     vampireSurvivor = new Game(WINDOW_WIDTH, WINDOW_HEIGHT);
+    // !bind
+    p_view = new GameView(vampireSurvivor);
+    p_viewmodel = new GameViewModel(vampireSurvivor);
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -46,7 +49,7 @@ bool VsApp::Init()
  
     // initialize game
     // ---------------
-    vampireSurvivor->Init();
+    Utility::Init(vampireSurvivor);
 
     return true;
 }
@@ -77,17 +80,17 @@ int VsApp::Run()
         glfwPollEvents();
         // manage user input
         // -----------------
-        vampireSurvivor->ProcessInput(deltaTime);
+        p_view->ProcessInput(deltaTime);
 
         // update game state
         // -----------------
-        vampireSurvivor->Update(deltaTime);
+        p_viewmodel->Update(deltaTime);
 
         // render
         // ------
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
-        vampireSurvivor->Render();
+        p_view->Render();
 
         glfwSwapBuffers(window);
     }
@@ -95,7 +98,7 @@ int VsApp::Run()
     // delete all resources as loaded using the resource manager
     // ---------------------------------------------------------
     ResourceManager::Clear();
-
+    Utility::DestroyRenderer();
     glfwTerminate();
     return 0;
 }

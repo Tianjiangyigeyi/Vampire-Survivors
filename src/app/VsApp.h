@@ -1,8 +1,10 @@
 #ifndef VSAPP_H
 #define VSAPP_H
 
-#include "../view/Game.h"
 #include "../common/config.h"
+#include "../util/Utility.h"
+#include "../viewmodel/GameViewModel.h"
+#include "../view/GameView.h"
 #include <windows.h>
 #include <iostream>
 
@@ -17,6 +19,8 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 class VsApp
 {
 public:
+    GameView *p_view;
+    GameViewModel *p_viewmodel;
     VsApp();
     VsApp(const VsApp &) = delete;
     VsApp &operator=(const VsApp &) = delete;

@@ -51,3 +51,32 @@ PlayerObject.cpp
 precomp.h
 ```
 
+
+
+----
+
+
+
+## 第二次说明
+
+- 框架有较大变化，**本质没有改变**，希望可以应付过中期检查😊。
+
+- **notification和command**尚未实现，可能需要用到的地方我打上了TODO（目前：1个）。
+
+- **view层已不再包含viewmodel层的头文件**，事实上耦合的问题**并未解决**！只是将矛盾转移到了`Util`和`config`中。
+
+- `Util`该文件夹将所有工具类打包，有以下两个好处：
+
+  - 需要调用诸如纹理等工具时，不需要在include一堆头文件，事实上，任何文件只需要包含以下头文件即可
+
+    ```cpp
+    #include "../common/config.h"
+    #include "../util/Utility.h"
+    #include "../precomp.h"
+    ```
+
+- 你将继续完成编写，工作流稍有变化：
+  1. obj的声明都放在了`/common/config`里面，而实现都在`/viewmodel/Objects_vm`中，由于将声明提前，为了避免头文件循环包含的问题，每个obj的`Sprite`成员都设置为了`std::string`，所以你需要在使用纹理时用到`ResourceManager::GetTexture(Sprite);`
+  2. 原先的`Game.cpp`的代码基本没有改动，而是分布在了`/view/GameView`和`/viewmodel/GameViewmodel`两个cpp文件中，你依然可以按照原来的workflow进行开发，只需要注意“this不再是Game对象，game才是Game对象”。
+
+- 关于闪退：目前发生的闪退问题百分之九十九都是`LoadTexture`时关于第二个参数是`true`还是`false`的问题，建议重点关注这里，原则是当你发现图片为花灰色时肯定要改动这里。

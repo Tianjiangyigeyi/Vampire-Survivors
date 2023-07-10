@@ -1,7 +1,10 @@
 #include "Utility.h"
 #include <iostream>
+#include <unistd.h>
+#include <ctime>
+#include <cstdlib>
 SpriteRenderer *Utility::Renderer;
-void Utility::Init()
+void Utility::Init(Game *game)
 {
     // 加载着色器
     ResourceManager::LoadShader("assets/shaders/sprite.vs", "assets/shaders/sprite.fs", nullptr, "sprite");
@@ -51,6 +54,15 @@ void Utility::Init()
         temp[1]='\0';
         ResourceManager::LoadTexture(load_path, true, temp);
     }
+    ////////////////////////////////////////////////////////////////////////
+    game->BG_Height = ResourceManager::GetTexture("background").Height;
+    
+    game->BG_Width = ResourceManager::GetTexture("background").Width;
+    //std::cout << BG_Height <<  "  " << BG_Width << std::endl;
+    glm::vec2 playerPos = glm::vec2(
+        game->BG_Width / 2.0f, game->BG_Height / 2.0f);
+    game->Player = new PlayerObject(playerPos, "player4", "player1", "player2", "player3");
+    srand(time(NULL));
 }
 
 void Utility::DrawBackground()
@@ -82,4 +94,9 @@ void Utility::ResetCamera(glm::vec2 pos, glm::vec2 center, float scale)
     float factorY = (bottom - top) / 2.0f * (1.0f - 1.0f / scale);
     glm::mat4 projection = glm::ortho(left + factorX, right - factorX, bottom - factorY, top + factorY, -1.0f, 1.0f);
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
+}
+
+void Utility::DestroyRenderer()
+{
+    delete Renderer;
 }

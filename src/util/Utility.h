@@ -7,18 +7,20 @@
 #include "ResourceManager.h"
 #include "Shader.h"
 #include "Texture.h"
+#include "Text.h"
+#include "Timer.h"
 #include <string>
 
 class Utility
 {
 public:
     static SpriteRenderer *Renderer;
-    static void Init();
+    static void Init(Game *game);
     static void DrawBackground();
     static void DrawBackground(const std::string& background);
     static SpriteRenderer *&GetRenderer();
     static void ResetCamera(glm::vec2 pos, glm::vec2 center, float scale);
-
+    static void DestroyRenderer();
 private:
     Utility();
 };

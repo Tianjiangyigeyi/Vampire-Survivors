@@ -21,3 +21,8 @@ void timer::start_timing()
 {
     start_time=time(nullptr)-time_data;
 }
+
+timer::~timer()
+{
+    
+}
