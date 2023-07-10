@@ -21,7 +21,7 @@ void Utility::Init()
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", true, "player3");
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", true, "player4");
     ResourceManager::LoadTexture("assets/background/Start_Menu_bck.png", true, "StartMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
-    ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", true, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
+    ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
     char load_path[18]="assets/Font/0.png";
     load_path[17]='\0';
     char temp[3];

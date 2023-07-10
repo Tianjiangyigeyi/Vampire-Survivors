@@ -49,7 +49,8 @@ void PlayerObject::Move(glm::vec2 &dir)
             Sprite = sprites[state];
             count = 0;
         }
-        IsMirrored = dir.x < 0 ? true : false;
+        if (dir.x != 0)
+            IsMirrored = dir.x < 0 ? true : false;
     }
     else
     {
