@@ -88,12 +88,12 @@ class PlayerObject : public GameObject
 public:
     WeaponObject* the_weapon;
 
-    float might = 50;//力量
+    float might; // 力量
     float speed;//飞行道具移动速度
     float move_speed;//人物移动速度
-    float max_health = 1000;//最大生命
-    float recovery = 10;//生命恢复
-    float current_health = max_health;//当前生命
+    float max_health;   // 最大生命
+    float recovery;     // 生命恢复
+    float current_health; // 当前生命
     float armor;//护甲
     float cooldown;//武器攻击间隔
     float area;//aoe武器攻击范围

@@ -1,20 +1,21 @@
 #include "VsApp.h"
-
-// 为了满足OpenGL的C特性，它们也不得不设为全局变量
-
-
-VsApp::VsApp()
-{
-}
-
-Game *vampireSurvivor;
 GLFWwindow *window;
 double cursor_x, cursor_y;
 bool LeftButtonPressed = false;
+bool* Keys;
+bool notice = false;
+// 为了满足OpenGL的C特性，它们不得不设为全局变量
+
+VsApp::VsApp()
+{
+    p_viewmodel = std::make_shared<GameViewModel>();
+    p_view = std::make_shared<GameView>();
+}
 
 // 由于我们只有一个窗口，省略了window层，将窗口的生成一并放入app层中
 bool VsApp::Init()
 {
+    Keys = new bool[1024];
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -25,10 +26,11 @@ bool VsApp::Init()
     glfwWindowHint(GLFW_RESIZABLE, false);
 
     window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "vampire survivor!", nullptr, nullptr);
-    vampireSurvivor = new Game(WINDOW_WIDTH, WINDOW_HEIGHT);
-    // !bind
-    p_view = new GameView(vampireSurvivor);
-    p_viewmodel = new GameViewModel(vampireSurvivor);
+
+    // bind
+    p_view->SetGamePointer(p_viewmodel->GetGamePointer());
+    Attach(std::bind(&GameViewModel::SetKeys, *p_viewmodel, std::placeholders::_1));
+
     glfwMakeContextCurrent(window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
@@ -45,11 +47,11 @@ bool VsApp::Init()
     // --------------------
     glViewport(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
     glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
- 
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     // initialize game
     // ---------------
-    Utility::Init(vampireSurvivor);
+    Utility::Init(p_viewmodel->GetGamePointer());
 
     return true;
 }
@@ -78,10 +80,11 @@ int VsApp::Run()
             std::cout << deltaTime << std::endl;
         }
         glfwPollEvents();
-        // manage user input
-        // -----------------
-        p_view->ProcessInput(deltaTime);
-
+        if (notice == true)
+        {
+            Notify(Keys, deltaTime);
+            notice = false;
+        } 
         // update game state
         // -----------------
         p_viewmodel->Update(deltaTime);
@@ -105,21 +108,23 @@ int VsApp::Run()
 
 VsApp::~VsApp()
 {
-    delete vampireSurvivor;
+    // 智能指针可以自然析构
+    // delete vampireSurvivor;
+    delete Keys;
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
 {
     // when a user presses the escape key, we set the WindowShouldClose property to true, closing the application
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, true);
     if (key >= 0 && key < 1024)
     {
         if (action == GLFW_PRESS)
-            vampireSurvivor->Keys[key] = true;
+            Keys[key] = true;
         else if (action == GLFW_RELEASE)
-            vampireSurvivor->Keys[key] = false;
+            Keys[key] = false;
     }
+    // Notify observers
+    notice = true;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
@@ -132,10 +137,10 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
     glfwGetCursorPos(window, &cursor_x, &cursor_y);
-    
+
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
-        
+
         LeftButtonPressed = true;
         std::cout << cursor_x << " " << cursor_y << std::endl;
     }

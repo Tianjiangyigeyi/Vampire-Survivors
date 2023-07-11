@@ -4,7 +4,7 @@
 #include <ctime>
 #include <cstdlib>
 SpriteRenderer *Utility::Renderer;
-void Utility::Init(Game *game)
+void Utility::Init(std::shared_ptr<Game> game)
 {
     // 加载着色器
     ResourceManager::LoadShader("assets/shaders/sprite.vs", "assets/shaders/sprite.fs", nullptr, "sprite");

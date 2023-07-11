@@ -4,13 +4,20 @@
 #include "../util/Utility.h"
 #include "../precomp.h"
 #include <map>
+#include <memory>
 class GameView
 {
 public:
-    Game* game;
-    GameView(Game *game) : game(game) {}
-    void ProcessInput(float dt);
+    std::shared_ptr<Game> game;
+    GameView(){}
+    GameView(std::shared_ptr<Game> g) : game(g) {}
+    // Game *game;
+    // GameView(Game *g) : game(g) {}
     void Render();
+    void SetGamePointer(std::shared_ptr<Game> pg)
+    {
+        game = pg;
+    }
 };
 
 class SelectMenu

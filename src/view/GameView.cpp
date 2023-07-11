@@ -12,43 +12,6 @@ std::map<int , Button*> Prop_select_button_map;
 
 
 
-void GameView::ProcessInput(float dt)
-{
-    if (game->State == GAME_ACTIVE)
-    {
-        float velocity = PLAYER_VELOCITY * dt;
-        glm::vec2 dir = glm::vec2(0.0f, 0.0f);
-        // move playerboard
-        if (game->Keys[GLFW_KEY_A])
-        {
-            if (game->Player->Position.x >= 0.0f)
-                dir.x -= 1;
-        }
-        if (game->Keys[GLFW_KEY_D])
-        {
-            if (game->Player->Position.x <= game->BG_Width - ResourceManager::GetTexture(game->Player->Sprite).Width)
-                dir.x += 1;
-        }
-        if (game->Keys[GLFW_KEY_W])
-        {
-            if (game->Player->Position.y >= 0.0f)
-                dir.y -= 1;
-        }
-        if (game->Keys[GLFW_KEY_S])
-        {
-            if (game->Player->Position.y <= game->BG_Height - ResourceManager::GetTexture(game->Player->Sprite).Height)
-                dir.y += 1;
-        }
-        if (dir != glm::vec2(0.0f, 0.0f))
-        {
-            dir = glm::normalize(dir) * velocity;
-        }
-        // TODO : 这里最好用notification实现函数的调用，具体的操作暂时还不会
-        game->Player->Move(dir);
-        game->Player->the_weapon->Move(dir);
-    }
-}
-
 void GameView::Render()
 {
     if (game->State == GAME_ACTIVE)

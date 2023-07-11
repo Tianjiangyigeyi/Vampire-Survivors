@@ -8,12 +8,12 @@
 #include "Shader.h"
 #include "Texture.h"
 #include <string>
-
+#include <memory>
 class Utility
 {
 public:
     static SpriteRenderer *Renderer;
-    static void Init(Game *game);
+    static void Init(std::shared_ptr<Game> game);
     static void DrawBackground();
     static void DrawBackground(const std::string& background);
     static SpriteRenderer *&GetRenderer();

@@ -81,6 +81,10 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     sprites[1] = sprite2;
     sprites[2] = sprite3;
     sprites[3] = sprite4;
+    might = 50;
+    max_health = 1000;
+    recovery = 10;
+    current_health = 1000;
 }
 
 void PlayerObject::InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1){
