@@ -1,5 +1,6 @@
 #include "../common/config.h"
 #include "../util/Utility.h"
+#include "Text.h"
 
 void TextBox::Render()
 {

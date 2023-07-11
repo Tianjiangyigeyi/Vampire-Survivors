@@ -3,8 +3,8 @@
 
 #include <vector>
 #include <string>
-#include "Utility.h"
-#include "ResourceManager.h"
+#include "../util/Utility.h"
+#include "../util/ResourceManager.h"
 class text_character
 {
 public:

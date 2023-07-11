@@ -1,4 +1,5 @@
 #include "../common/config.h"
+#include "Text.h"
 #include "../util/Utility.h"
 void Button::Render()
 {

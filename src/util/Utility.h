@@ -7,8 +7,6 @@
 #include "ResourceManager.h"
 #include "Shader.h"
 #include "Texture.h"
-#include "Text.h"
-#include "Timer.h"
 #include <string>
 
 class Utility
