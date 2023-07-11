@@ -62,7 +62,7 @@ bool GameObject::CheckCollision(GameObject &other)
     return Position.x + Size.x >= other.Position.x && Position.x <= other.Position.x + other.Size.x && Position.y + Size.y >= other.Position.y && Position.y <= other.Position.y + other.Size.y;
 }
 
-int count = 0;
+int Pcount = 0;
 
 //PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, unsigned int level, Texture2D sprite)
 //    : GameObject(pos,  sprite),  state(0)
@@ -83,6 +83,12 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     sprites[3] = sprite4;
 }
 
+void PlayerObject::InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1){
+    glm::vec2 W_position = glm::vec2(this->Position.x , this->Position.y );
+    the_weapon = new WeaponObject(W_position , Weapon_tra0, Weapon_tra1);
+}
+
+
 // resets the ball to initial Stuck Position (if ball is outside window bounds)
 void PlayerObject::Reset(glm::vec2 position, glm::vec2 velocity)
 {
@@ -100,16 +106,16 @@ void PlayerObject::Upgrade()
 
 void PlayerObject::Move(glm::vec2 &dir)
 {
-    count++;
+    Pcount++;
     if (dir != glm::vec2(0.0f, 0.0f))
     {
         Position += dir;
         // 15 代表15帧更换一次动作
-        if (count >= 15)
+        if (Pcount >= 90)
         {
             state = (state + 1) % 4;
             Sprite = sprites[state];
-            count = 0;
+            Pcount = 0;
         }
         if (dir.x != 0)
             IsMirrored = dir.x < 0 ? true : false;
@@ -122,9 +128,20 @@ void PlayerObject::Move(glm::vec2 &dir)
 }
 
 
-WeaponObject::WeaponObject(glm::vec2 pos, glm::vec2 size, std::string sprite)
-        : GameObject(pos,  sprite)
+int Wcount = 0;
+
+// WeaponObject::WeaponObject(glm::vec2 pos, glm::vec2 size, Texture2D sprite)
+//         : GameObject(pos,  sprite)
+// {
+// }
+
+WeaponObject::WeaponObject(glm::vec2 pos, std::string sprite0, std::string sprite1)
+        : GameObject(pos,  sprite0), state(0)
 {
+    sprites[0] = sprite0;
+    sprites[1] = sprite1;
+    SetSize(glm::vec2(ResourceManager::GetTexture(sprite0).Width*1.8, ResourceManager::GetTexture(sprite0).Height*1.8));
+    IsMirrored = true;
 }
 
 
@@ -136,4 +153,23 @@ void WeaponObject::Reset(glm::vec2 position, glm::vec2 velocity)
 
 WeaponObject::~WeaponObject()
 {
+}
+
+void WeaponObject::Move(glm::vec2 &dir)
+{
+    Wcount++;
+    Position += dir;
+    if (Wcount >= 200)
+    {
+        Wcount = 0;
+        state = (state + 1) % 2;
+        Sprite = sprites[state];
+        if(!state){
+            Position.x += ResourceManager::GetTexture(this->Sprite).Width*1.4;
+        }
+        else{
+            Position.x -= ResourceManager::GetTexture(this->Sprite).Width*1.4;
+        }
+
+    }
 }

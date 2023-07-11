@@ -36,6 +36,7 @@ void GameView::ProcessInput(float dt)
         }
         // TODO : 这里最好用notification实现函数的调用，具体的操作暂时还不会
         game->Player->Move(dir);
+        game->Player->the_weapon->Move(dir);
     }
 }
 
@@ -51,6 +52,7 @@ void GameView::Render()
         // draw background
         Utility::DrawBackground();
         game->Player->Draw();
+        game->Player->the_weapon->Draw();
         for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
             (*it)->Draw();
     }

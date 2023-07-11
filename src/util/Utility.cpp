@@ -25,6 +25,9 @@ void Utility::Init(Game *game)
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", true, "player4");
     ResourceManager::LoadTexture("assets/background/Start_Menu_bck.png", true, "StartMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
     ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
+    ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra0.png", true, "Weapon_tra0");
+    ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra1.png", true, "Weapon_tra1");
+
     char load_path[18]="assets/Font/0.png";
     load_path[17]='\0';
     char temp[3];
@@ -62,6 +65,7 @@ void Utility::Init(Game *game)
     glm::vec2 playerPos = glm::vec2(
         game->BG_Width / 2.0f, game->BG_Height / 2.0f);
     game->Player = new PlayerObject(playerPos, "player4", "player1", "player2", "player3");
+    game->Player->InitWeapon("Weapon_tra0", "Weapon_tra1");
     srand(time(NULL));
 }
 
