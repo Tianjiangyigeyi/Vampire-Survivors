@@ -35,6 +35,10 @@ void GameViewModel::Update(float dt)
 
         for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
         {
+            if((*it)->CheckCollision(*game->Player->the_weapon)){
+                game->Enemy.erase(it, it+1);
+                continue;
+            }
             glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
             dir1 = glm::normalize(dir1);
             (*it)->Move(dir1);
