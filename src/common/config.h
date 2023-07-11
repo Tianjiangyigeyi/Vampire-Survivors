@@ -1,6 +1,9 @@
 #ifndef CONFIG_H
 #define CONFIG_H
 #include "../precomp.h"
+//for Texture2D
+#include "../util/Texture.h"
+
 #include <vector>
 #include <iostream>
 // The Width of the screen
@@ -17,7 +20,9 @@ enum GameState
     GAME_MENU,
     GAME_WIN,
     GAME_OVER,
-    GAME_START_MENU
+    GAME_START_MENU,
+    GAME_SELECT_MENU,
+    GAME_SETTING_MENU
 };
 
 const glm::vec2 PLAYER_SIZE(10.0f, 10.0f);
@@ -183,6 +188,33 @@ public:
     void Check_Hover_Press(float cursor_x, float cursor_y, bool button_left);
 
     void DrawButton(float cursor_x, float cursor_y, bool button_left);
+};
+
+class TextBox
+{
+public:
+    std::string text;
+    std::string texture_text;
+    float x,y;
+    float width,height;
+    Texture2D bckgrnd_texture;
+    bool bckgrnd;
+    glm::vec3 bckgrnd_color;
+
+    TextBox(float x,float y,float width,float height,glm::vec3 color,std::string text)
+        :x(x),y(y),width(width),height(height),bckgrnd_color(color), text(text) 
+        {bckgrnd = true;};
+
+    TextBox(float x,float y,float width,float height,std::string text, std::string texture_text)
+        :x(x),y(y),width(width),height(height), text(text) , texture_text(texture_text)
+        {bckgrnd = false;};
+
+    void Render();
+    void setText(std::string new_text);
+
+    void DrawRect(float x, float y, float width, float height, float r, float g, float b);
+
+
 };
 
 #endif
