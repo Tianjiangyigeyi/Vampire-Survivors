@@ -16,6 +16,7 @@ enum GameState
     GAME_ACTIVE,
     GAME_MENU,
     GAME_WIN,
+    GAME_OVER,
     GAME_START_MENU
 };
 
@@ -56,7 +57,7 @@ class WeaponObject : public GameObject
 public:
     int level;          // 等级
     float rarity;       // 稀有度
-    float base_damage;  // 基础伤害
+    float base_damage =  10;  // 基础伤害
     float area;         // 攻击范围
     float speed;        // 移动速度
     float amount;       // 同时出现的数量
@@ -82,12 +83,12 @@ class PlayerObject : public GameObject
 public:
     WeaponObject* the_weapon;
 
-    float might;//力量
+    float might = 50;//力量
     float speed;//飞行道具移动速度
     float move_speed;//人物移动速度
-    float max_health;//最大生命
-    float recovery;//生命恢复
-    float current_health;//当前生命
+    float max_health = 1000;//最大生命
+    float recovery = 10;//生命恢复
+    float current_health = max_health;//当前生命
     float armor;//护甲
     float cooldown;//武器攻击间隔
     float area;//aoe武器攻击范围
@@ -112,14 +113,15 @@ public:
     void Upgrade();
     ~PlayerObject();
     void Move(glm::vec2 &dir);
+    bool health_adjust(float health_damage);
 };
 
 class EnemyObject : public GameObject
 {
 public:
     float speed;  // 怪物移动速度
-    float power;  // 怪物攻击力
-    float health; // 怪物当前血量
+    float power = 100;  // 怪物攻击力
+    float health = 200; // 怪物当前血量
     std::string sprite;
     // constructor(s)
     EnemyObject() = delete;
@@ -128,6 +130,7 @@ public:
     void Reset(glm::vec2 position, glm::vec2 velocity);
     ~EnemyObject();
     void Move(glm::vec2 &dir);
+    bool health_adjust(float health_damage);
 };
 
 class Game

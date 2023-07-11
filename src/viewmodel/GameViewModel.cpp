@@ -2,6 +2,7 @@
 int Ecount;
 void GameViewModel::Update(float dt)
 {
+    int total_dam = 0;
     Ecount++;
     if (Ecount >= 90)
     {
@@ -33,15 +34,25 @@ void GameViewModel::Update(float dt)
         EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
         game->Enemy.push_back(temp);
 
+
         for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
         {
             if((*it)->CheckCollision(*game->Player->the_weapon)){
-                game->Enemy.erase(it, it+1);
-                continue;
+                if(!(*it)->health_adjust(game->Player->might+game->Player->the_weapon->base_damage)){
+                    game->Enemy.erase(it, it+1);
+                    continue;
+                }
+            }
+            if((*it)->CheckCollision(*game->Player)){
+                total_dam += (*it)->power;
             }
             glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
             dir1 = glm::normalize(dir1);
             (*it)->Move(dir1);
         }
+    }
+
+    if(!game->Player->health_adjust(total_dam)){
+        game->State = GAME_OVER;
     }
 }

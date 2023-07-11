@@ -13,6 +13,15 @@ void EnemyObject::Reset(glm::vec2 position, glm::vec2 velocity)
     this->Position = position;
 }
 
+bool EnemyObject::health_adjust(float health_damage){
+    health -= health_damage;
+    //current_health += recovery;
+    if(health <= 0){
+        return false;
+    }
+    return true;
+}
+
 EnemyObject::~EnemyObject()
 {
 }
@@ -64,15 +73,6 @@ bool GameObject::CheckCollision(GameObject &other)
 
 int Pcount = 0;
 
-//PlayerObject::PlayerObject(glm::vec2 pos, glm::vec2 size, unsigned int level, Texture2D sprite)
-//    : GameObject(pos,  sprite),  state(0)
-//{
-//    for (int i = 0; i < 4; ++i)
-//    {
-//        sprites[i] = sprite;
-//    }
-//}
-
 // 四个纹理对应四种动作样式，其中第一种是站立不动时的姿势，按照顺序依次传参
 PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprite2, std::string sprite3, std::string sprite4)
     : GameObject(pos,  sprite1),  state(0)
@@ -87,7 +87,6 @@ void PlayerObject::InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1){
     glm::vec2 W_position = glm::vec2(this->Position.x , this->Position.y );
     the_weapon = new WeaponObject(W_position , Weapon_tra0, Weapon_tra1);
 }
-
 
 // resets the ball to initial Stuck Position (if ball is outside window bounds)
 void PlayerObject::Reset(glm::vec2 position, glm::vec2 velocity)
@@ -125,6 +124,16 @@ void PlayerObject::Move(glm::vec2 &dir)
         state = 0;
         Sprite = sprites[state];
     }
+}
+
+bool PlayerObject::health_adjust(float health_damage){
+    current_health -= health_damage;
+    //current_health += recovery;
+    if(current_health <= 0){
+        return false;
+    }
+    std::cout << current_health << std::endl;
+    return true;
 }
 
 
