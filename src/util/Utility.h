@@ -19,6 +19,8 @@ public:
     static SpriteRenderer *&GetRenderer();
     static void ResetCamera(glm::vec2 pos, glm::vec2 center, float scale);
     static void DestroyRenderer();
+    static void generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b);
+    static void ClearBckGnd(std::string Bck_gnd);
 private:
     Utility();
 };
