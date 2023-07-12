@@ -104,3 +104,52 @@ void Utility::DestroyRenderer()
 {
     delete Renderer;
 }
+
+void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b)
+{
+    // 创建Texture2D对象
+    Texture2D texture;
+    texture.Width = width;
+    texture.Height = height;
+    texture.Internal_Format = GL_RGB;
+    texture.Image_Format = GL_RGB;
+    texture.Wrap_S = GL_REPEAT;
+    texture.Wrap_T = GL_REPEAT;
+    texture.Filter_Min = GL_LINEAR;
+    texture.Filter_Max = GL_LINEAR;
+    
+    glGenTextures(1, &texture.ID);
+    
+    // 创建纯色背景像素数据
+    unsigned char* pixels = new unsigned char[width * height * 3];
+    for (unsigned int i = 0; i < width * height; ++i)
+    {
+        pixels[i * 3] = static_cast<unsigned char>(r * 255);
+        pixels[i * 3 + 1] = static_cast<unsigned char>(g * 255);
+        pixels[i * 3 + 2] = static_cast<unsigned char>(b * 255);
+    }
+    
+    // 生成纹理
+    glBindTexture(GL_TEXTURE_2D, texture.ID);
+    glTexImage2D(GL_TEXTURE_2D, 0, texture.Internal_Format, width, height, 0, texture.Image_Format, GL_UNSIGNED_BYTE, pixels);
+    
+    // 设置纹理参数
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, texture.Wrap_S);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, texture.Wrap_T);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, texture.Filter_Min);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, texture.Filter_Max);
+    
+    // 解绑纹理对象
+    glBindTexture(GL_TEXTURE_2D, 0);
+    
+    // 释放像素数据
+    delete[] pixels;
+    
+    Renderer->DrawSprite(texture, glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(r, g, b), false);
+}
+
+void Utility::ClearBckGnd(std::string Bck_gnd)
+{
+    Utility::ResetCamera(glm::vec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f), glm::vec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT / 2.0f), 1.0f);
+    Utility::DrawBackground(Bck_gnd);
+}

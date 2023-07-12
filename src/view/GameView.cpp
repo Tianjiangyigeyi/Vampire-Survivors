@@ -167,19 +167,39 @@ void GameView::Render()
 
 void SelectMenu::RenderPeopleSelect(double x, double y, bool button_left)
 {
+    Utility::ClearBckGnd(std::string("StartMenu"));
+    Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128);
+  
+
     std::string tmp = "temp";
-    for(int i = 1; i <= 20; i++)
-        {
-            People_select_button_map[i] = new Button(0.12*(i % 5)*WINDOW_WIDTH, 0.12*(i / 5)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp);
-            People_select_button_map[i]->DrawButton(x, y, button_left);
-        }
-    std::string P_name = "Name";
-    TextBox P_namebox(0.12*WINDOW_WIDTH, 0.12*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, glm::vec3(255,255,255), P_name);
-    P_namebox.Render();
+    for(int i = 0; i < 6; i++)
+    {
+        People_select_button_map[i] = new Button(0.25*((i % 2) + 1)*WINDOW_WIDTH, 0.25*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp);
+        People_select_button_map[i]->DrawButton(x, y, button_left);
+    }
+
+
+    std::map<int, std::string> People_select_texts;
+    People_select_texts[0] = "Name :";
+    People_select_texts[1] = "HP :";
+    People_select_texts[2] = "MP :";
+    People_select_texts[3] = "ATK :";
+
+
+    std::map<int, TextBox*> People_select_TextBoxes;
+    std::map<int, TextBox*> People_select_Changing_Boxes;
+
+    for(int i = 0; i < 4; i++)
+    {
+        People_select_TextBoxes[i] = new TextBox(0.86*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
+        People_select_TextBoxes[i]->Render();
+    }
+
 }
 
 void SelectMenu::RenderWeaponSelect(double x, double y, bool button_left)
 {
+    Utility::ClearBckGnd(std::string("StartMenu"));
     std::string tmp = "temp";
     for(int i = 1; i <= 20; i++)
         {
