@@ -154,11 +154,11 @@ void GameView::Render()
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"));
 
-        Button start_button(game->Width * 0.45, game->Height * 0.9, game->Width * 0.1, game->Height * 0.05, std::string("StartM    start"));
+        Button start_button(game->Width * 0.4, game->Height * 0.4, game->Width * 0.2, game->Height * 0.1, std::string("GAME OVER!"));
         start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
         if (start_button.pressed)
         {
-            game->State = GAME_ACTIVE;
+            game->State = GAME_START_MENU;
             start_button.pressed = false;
         }
     }
