@@ -1,5 +1,9 @@
 #include "GameView.h"
 
+#include <windows.h>
+#include <mmsystem.h>
+#pragma comment(lib,"winmm.lib")
+
 extern double cursor_x, cursor_y;
 extern bool LeftButtonPressed;
 
@@ -23,14 +27,24 @@ void GameView::Render()
         // std::cout<<Width<<" "<<Height<<std::endl;
         // draw background
         Utility::DrawBackground();
-        game->Player->Draw();
+        if(game->Player->Destroyed){
+            game->Player->Destroyed--;
+            game->Player->Draw(glm::vec3(255, 255, 255));
+        }
+        else    game->Player->Draw();
+
         game->Player->the_weapon->Draw();
-        for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
-            (*it)->Draw();
+
+        for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++) {
+            if ((*it)->Destroyed) {
+                (*it)->Destroyed--;
+                (*it)->Draw(glm::vec3(255, 255, 255));
+            } else (*it)->Draw();
+        }
     }
 
 
-    if (game->State == GAME_START_MENU)
+    if (game->State == GAME_START_MENU) //!
     {
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"));
@@ -71,6 +85,9 @@ void GameView::Render()
 
     if(game->State == GAME_SELECT_MENU)
     {
+//        mciSendString(TEXT("open ../bgm/bgm_forest.mp3 alias mp3"), 0, 0, 0);
+//        mciSendString(TEXT("play mp3 repeat"), 0, 0, 0);
+
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"));
 
@@ -151,6 +168,9 @@ void GameView::Render()
 
     if(game->State == GAME_OVER)
     {
+//        mciSendString("stop mp3", NULL, 0, NULL);
+//        mciSendString("close mp3", NULL, 0, NULL);
+
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"));
 

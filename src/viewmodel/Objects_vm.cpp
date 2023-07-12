@@ -33,16 +33,19 @@ void EnemyObject::Move(glm::vec2 &dir)
 }
 
 GameObject::GameObject(glm::vec2 pos, std::string sprite)
-    : Position(pos), Color(glm::vec3(1.0f)), Rotation(0.0f), Sprite(sprite), IsSolid(false), Destroyed(false), IsMirrored(false)
+    : Position(pos), Color(glm::vec3(1.0f)), Rotation(0.0f), Sprite(sprite), IsSolid(false), Destroyed(0), IsMirrored(false)
 {
-    
     Size = glm::vec2(ResourceManager::GetTexture(sprite).Width, ResourceManager::GetTexture(sprite).Height);
+    Coll_Size = glm::vec2(ResourceManager::GetTexture(sprite).Width/2, ResourceManager::GetTexture(sprite).Height/2);
 }
 
 void GameObject::Draw()
 {
-    
     Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(Sprite), this->Position, this->Size, this->Rotation, this->Color, IsMirrored);
+}
+
+void GameObject::Draw( glm::vec3 color){
+    Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(Sprite), this->Position, this->Size, this->Rotation, color, IsMirrored);
 }
 
 GameObject::~GameObject()
@@ -53,6 +56,11 @@ void GameObject::SetSize(glm::vec2 size)
 {
     Size = size;
 }
+
+void GameObject::SetColl_Size(glm::vec2 size){
+    Coll_Size = size;
+}
+
 glm::vec2& GameObject::GetSize()
 {
     return Size;
@@ -68,7 +76,7 @@ glm::vec2& GameObject::GetPosition()
 
 bool GameObject::CheckCollision(GameObject &other)
 {
-    return Position.x + Size.x >= other.Position.x && Position.x <= other.Position.x + other.Size.x && Position.y + Size.y >= other.Position.y && Position.y <= other.Position.y + other.Size.y;
+    return Position.x + Coll_Size.x >= other.Position.x && Position.x <= other.Position.x + other.Coll_Size.x && Position.y + Coll_Size.y >= other.Position.y && Position.y <= other.Position.y + other.Coll_Size.y;
 }
 
 int Pcount = 0;
@@ -112,7 +120,7 @@ void PlayerObject::Move(glm::vec2 &dir)
     Pcount++;
     if (dir != glm::vec2(0.0f, 0.0f))
     {
-        Position += dir;
+        Position += glm::vec2(dir.x*0.8, dir.y*0.8);
         // 15 代表15帧更换一次动作
         if (Pcount >= 90)
         {
@@ -136,7 +144,7 @@ bool PlayerObject::health_adjust(float health_damage){
     if(current_health <= 0){
         return false;
     }
-    std::cout << current_health << std::endl;
+    //std::cout << current_health << std::endl;
     return true;
 }
 
@@ -153,8 +161,11 @@ WeaponObject::WeaponObject(glm::vec2 pos, std::string sprite0, std::string sprit
 {
     sprites[0] = sprite0;
     sprites[1] = sprite1;
-    SetSize(glm::vec2(ResourceManager::GetTexture(sprite0).Width*1.8, ResourceManager::GetTexture(sprite0).Height*1.8));
+    glm::vec2 wsize = glm::vec2(ResourceManager::GetTexture(sprite0).Width*1.8, ResourceManager::GetTexture(sprite0).Height*1.8);
+    SetSize(wsize);
+    SetColl_Size(wsize);
     IsMirrored = true;
+
 }
 
 
@@ -171,7 +182,7 @@ WeaponObject::~WeaponObject()
 void WeaponObject::Move(glm::vec2 &dir)
 {
     Wcount++;
-    Position += dir;
+    Position += glm::vec2(dir.x*0.8, dir.y*0.8);
     if (Wcount >= 200)
     {
         Wcount = 0;

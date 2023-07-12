@@ -37,9 +37,9 @@ class GameObject
 public:
     // object state
     bool IsSolid;
-    bool Destroyed;
+    int  Destroyed ;
     bool IsMirrored;
-    glm::vec2 Position, Size;
+    glm::vec2 Position, Size, Coll_Size;
     glm::vec3 Color;
     float Rotation;
     std::string Sprite;
@@ -48,9 +48,11 @@ public:
     // 如果size不合适直接set
     GameObject(glm::vec2 pos, std::string sprite);
     // draw sprite
-    virtual void Draw();
+    void Draw();
+    void Draw( glm::vec3 color);
     virtual ~GameObject();
     void SetSize(glm::vec2 size);
+    void SetColl_Size(glm::vec2 size);
     glm::vec2 &GetSize();
     void SetPosition(glm::vec2 pos);
     glm::vec2 &GetPosition();
@@ -88,7 +90,7 @@ class PlayerObject : public GameObject
 public:
     WeaponObject* the_weapon;
 
-    float might; // 力量
+    float might = 100; // 力量
     float speed;//飞行道具移动速度
     float move_speed;//人物移动速度
     float max_health;   // 最大生命
@@ -124,9 +126,9 @@ public:
 class EnemyObject : public GameObject
 {
 public:
-    float speed;  // 怪物移动速度
+    float speed = 8;  // 怪物移动速度
     float power = 100;  // 怪物攻击力
-    float health = 200; // 怪物当前血量
+    float health = 100; // 怪物当前血量
     std::string sprite;
     // constructor(s)
     EnemyObject() = delete;

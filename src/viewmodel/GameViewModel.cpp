@@ -85,6 +85,7 @@ void GameViewModel::Update(float dt)
         {
             if ((*it)->CheckCollision(*game->Player->the_weapon))
             {
+                (*it)->Destroyed = 90;
                 if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage))
                 {
                     game->Enemy.erase(it, it + 1);
@@ -97,8 +98,11 @@ void GameViewModel::Update(float dt)
             }
             glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
             dir1 = glm::normalize(dir1);
+            dir1 = glm::vec2(dir1.x * (*it)->speed, dir1.y * (*it)->speed);
             (*it)->Move(dir1);
         }
+
+        if(total_dam)   game->Player->Destroyed = 90;
     }
 
     if (!game->Player->health_adjust(total_dam))
