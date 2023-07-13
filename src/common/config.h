@@ -5,6 +5,8 @@
 #include "../util/Texture.h"
 
 #include <vector>
+#include <string>
+#include <map>
 #include <iostream>
 // The Width of the screen
 #define WINDOW_WIDTH 1600
@@ -12,17 +14,39 @@
 #define WINDOW_HEIGHT 800
 // max fps
 #define MAX_FRAME_PER_SECOND 30
+// To be select in the select menu
+#define MAX_INT 2147483647
+
+
+class static_Player{
+public:
+    std::string name;
+    float might;
+    float max_health;
+    float attack;
+    float speed;
+    float armor;
+
+    static_Player(std::string name, float might, float max_health, float attack, float speed, float armor)
+        : name(name), might(might), max_health(max_health), attack(attack), speed(speed), armor(armor){};
+};
+
 
 // Represents the current state of the game
 enum GameState
 {
     GAME_ACTIVE,
+    GAME_PAUSE,
     GAME_MENU,
     GAME_WIN,
     GAME_OVER,
     GAME_START_MENU,
     GAME_SELECT_MENU,
-    GAME_SETTING_MENU
+    GAME_SETTING_MENU,
+    GAME_PEOPLE_SELECT,
+    GAME_WEAPON_SELECT,
+    GAME_MAP_SELECT
+
 };
 
 const glm::vec2 PLAYER_SIZE(10.0f, 10.0f);
@@ -189,7 +213,7 @@ public:
     void Render();
     void Check_Hover_Press(float cursor_x, float cursor_y, bool button_left);
 
-    void DrawButton(float cursor_x, float cursor_y, bool button_left);
+    void DrawButton(float cursor_x, float cursor_y, bool &button_left);
 };
 
 class TextBox

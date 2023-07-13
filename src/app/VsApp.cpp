@@ -1,9 +1,18 @@
 #include "VsApp.h"
 GLFWwindow *window;
+
 double cursor_x, cursor_y;
 bool LeftButtonPressed = false;
 bool* Keys;
 bool notice = false;
+
+bool shouldswap = true;
+
+std::vector<glm::vec4> areas_to_check;
+int button_id = MAX_INT;
+
+
+
 // 为了满足OpenGL的C特性，它们不得不设为全局变量
 
 VsApp::VsApp()
@@ -65,37 +74,45 @@ int VsApp::Run()
 
     while (!glfwWindowShouldClose(window))
     {
-        // calculate delta time
-        // --------------------
-        float currentFrame = glfwGetTime();
-        deltaTime = currentFrame - lastFrame;
-        lastFrame = currentFrame;
-        if (deltaTime < 1.0f / MAX_FRAME_PER_SECOND)
-        {
-            Sleep(1.0f / MAX_FRAME_PER_SECOND - deltaTime);
-            deltaTime = 1.0f / MAX_FRAME_PER_SECOND;
-        }
-        else
-        {
-            std::cout << deltaTime << std::endl;
-        }
-        glfwPollEvents();
-        if (notice == true)
-        {
-            Notify(Keys, deltaTime);
-            notice = false;
-        } 
-        // update game state
-        // -----------------
-        p_viewmodel->Update(deltaTime);
+        if(shouldswap){
+            // calculate delta time
+            // --------------------
+            float currentFrame = glfwGetTime();
+            deltaTime = currentFrame - lastFrame;
+            lastFrame = currentFrame;
+            if (deltaTime < 1.0f / MAX_FRAME_PER_SECOND)
+            {
+                Sleep(1.0f / MAX_FRAME_PER_SECOND - deltaTime);
+                deltaTime = 1.0f / MAX_FRAME_PER_SECOND;
+            }
+            else
+            {
+                std::cout << deltaTime << std::endl;
+            }
+            glfwPollEvents();
+            if (notice == true)
+            {
+                Notify(Keys, deltaTime);
+                notice = false;
+            } 
+            // update game state
+            // -----------------
+            p_viewmodel->Update(deltaTime);
 
-        // render
-        // ------
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
-        p_view->Render();
+            // render
+            // ------
+            glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+            glClear(GL_COLOR_BUFFER_BIT);
+            p_view->Render();
+            glfwSwapBuffers(window);
 
-        glfwSwapBuffers(window);
+        } else {
+            
+            shouldswap = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
+            glfwPollEvents();
+
+        }
+ 
     }
 
     // delete all resources as loaded using the resource manager
@@ -144,4 +161,23 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
         LeftButtonPressed = true;
         std::cout << cursor_x << " " << cursor_y << std::endl;
     }
+}
+
+bool check_should_render(std::vector<glm::vec4> areas, double cursor_x, double cursor_y, bool button_left)
+{
+    int id = 0;
+    for (auto area : areas)
+    {
+        if (cursor_x >= area.x && cursor_x <= area.x + area.z && cursor_y >= area.y && cursor_y <= area.y + area.w)
+        {
+            if (button_left)
+            {
+                button_id = id;
+                return true;
+            }
+        }
+        id ++;
+    }
+    button_id  = MAX_INT;
+    return false;
 }
