@@ -115,7 +115,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     might = 50;
     max_health = current_health =  1000;
     recovery = 1;
-    magnet = glm::vec2(Size.x*100, Size.x*100);
+    magnet = glm::vec2(Size.x*30, Size.x*30);
 }
 
 void PlayerObject::InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1){
@@ -173,7 +173,7 @@ bool PlayerObject::health_adjust(float health_damage){
 
 bool PlayerObject::CheckColl(GameObject &other)
 {
-    return Position.x + magnet.x >= other.Position.x && Position.x <= other.Position.x + other.Coll_Size.x && Position.y + magnet.y >= other.Position.y && Position.y <= other.Position.y + other.Coll_Size.y;
+    return Position.x + magnet.x >= other.Position.x && Position.x - magnet.x <= other.Position.x  && Position.y + magnet.y >= other.Position.y && Position.y - magnet.y <= other.Position.y ;
 }
 
 int Wcount = 0;
