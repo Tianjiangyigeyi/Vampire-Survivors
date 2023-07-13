@@ -5,6 +5,7 @@
 #include "../util/Texture.h"
 
 #include <vector>
+#include <memory>
 #include <iostream>
 // The Width of the screen
 #define WINDOW_WIDTH 1600
@@ -63,7 +64,6 @@ class WeaponObject : public GameObject
 {
 public:
     int level;          // 等级
-    float rarity;       // 稀有度
     float base_damage =  10;  // 基础伤害
     float area;         // 攻击范围
     float speed;        // 移动速度
@@ -83,6 +83,342 @@ public:
     void Reset(glm::vec2 position, glm::vec2 velocity);
     ~WeaponObject();
     void Move(glm::vec2 &dir);
+};
+
+class Item
+{
+public:
+    int itemID;
+    int level=0;//0级表示未持有
+    std::shared_ptr<std::string> ItemName;
+    static std::vector<std::vector<std::shared_ptr<std::string>>> itemIntroduction;//外层为id，内层为等级，储存了0~7级的文本的二维智能指针vector
+    Item(int ID,std::shared_ptr<std::string> ItemName):itemID(ID),ItemName(ItemName){};
+};
+
+class WeaponItem:public Item
+{
+public:
+    WeaponItem(int ID,std::shared_ptr<std::string> ItemName,float damage,float area,float speed,float amount,int pierece,float cool_down,int knock_back,float duration,std::shared_ptr<std::string> context)
+    : Item(ID,ItemName),damage(damage),area(area),speed(speed),amount(amount),pierece(pierece),cool_down(cool_down),knock_back(knock_back),duration(duration),context(context){};
+    float damage;//伤害
+    float area;//攻击范围
+    float speed;//弹道飞行速度
+    float amount;//弹道发射数量
+    int pierece;//穿透数目，-1表示可以任意穿透
+    float cool_down;//冷却时间，单位为秒
+    int knock_back;//击退距离
+    float duration;//单次攻击持续时间，-1表示攻击持续固定时间
+    std::shared_ptr<std::string> context;//说明文本
+    void LevelUP()//升级时同时更新下一级的升级文本
+    {
+        if(itemID==0)//鞭子
+        {
+            if(level==1)
+            {
+                amount++;
+            }else if(level==2)
+            {
+                damage+=5;
+            }else if(level==3)
+            {
+                area*=1.1;
+                damage+=5;
+            }else if(level==4)
+            {
+                damage+=5;
+            }else if(level==5)
+            {
+                area*=1.1;
+                damage+=5;
+            }else if(level==6)
+            {
+                damage+=5;
+            }else if(level==7)
+            {
+                damage+=5;
+            }
+        }else if(itemID==1)//魔杖
+        {
+            if(level==1)
+            {
+                amount++;
+            }else if(level==2)
+            {
+                cool_down-=0.2;
+            }else if(level==3)
+            {
+                amount++;
+            }else if(level==4)
+            {
+                damage+=10;
+            }else if(level==5)
+            {
+                amount++;
+            }else if(level==6)
+            {
+                pierece++;
+            }else if(level==7)
+            {
+                damage+=10;
+            }
+        }else if(itemID==2)//小刀
+        {
+            if(level==1)
+            {
+                amount++;
+            }else if(level==2)
+            {
+                amount++;
+                damage+=5;
+            }else if(level==3)
+            {
+                amount++;
+            }else if(level==4)
+            {
+                pierece++;
+            }else if(level==5)
+            {
+                amount++;
+            }else if(level==6)
+            {
+                amount++;
+                damage+=5;
+            }else if(level==7)
+            {
+                pierece++;
+            }
+        }else if(itemID==3)//斧头
+        {
+            if(level==1)
+            {
+                amount++;
+            }else if(level==2)
+            {
+                damage+=20;
+            }else if(level==3)
+            {
+                pierece+=2;
+            }else if(level==4)
+            {
+                amount++;
+            }else if(level==5)
+            {
+                damage+=20;
+            }else if(level==6)
+            {
+                pierece+=2;
+            }else if(level==7)
+            {
+                damage+=20;
+            }
+        }else if(itemID==4)//十字架
+        {
+            if(level==1)
+            {
+                damage+=10;
+            }else if(level==2)
+            {
+                area*=1.1;
+                speed*=1.25;
+            }else if(level==3)
+            {
+                amount++;
+            }else if(level==4)
+            {
+                damage+=10;
+            }else if(level==5)
+            {
+                area*=1.1;
+                speed*=1.25;
+            }else if(level==6)
+            {
+                amount++;
+            }else if(level==7)
+            {
+                damage+=10;
+            }
+        }else if(itemID==5)//国王圣经
+        {
+            if(level==1)
+            {
+                amount++;
+            }else if(level==2)
+            {
+                area*=1.25;
+                speed*=1.3;
+            }else if(level==3)
+            {
+                duration+=0.5;
+                damage+=10;
+            }else if(level==4)
+            {
+                amount++;
+            }else if(level==5)
+            {
+                area*=1.25;
+                speed*=1.3;
+            }else if(level==6)
+            {
+                duration+=0.5;
+                damage+=10;
+            }else if(level==7)
+            {
+                amount++;
+            }
+        }else if(itemID==6)//火焰魔杖
+        {
+            if(level==1)
+            {
+                damage+=10;
+            }else if(level==2)
+            {
+                damage+=10;
+                speed*=1.2;
+            }else if(level==3)
+            {
+                damage+=10;
+            }else if(level==4)
+            {
+                damage+=10;
+                speed*=1.2;
+            }else if(level==5)
+            {
+                damage+=10;
+            }else if(level==6)
+            {
+                damage+=10;
+                speed*=1.2;
+            }else if(level==7)
+            {
+                damage+=10;
+            }
+        }else if(itemID==7)//大蒜
+        {
+            if(level==1)
+            {
+                area*=1.4;
+                damage+=2;
+            }else if(level==2)
+            {
+                cool_down-=0.1;
+                damage+=1;
+            }else if(level==3)
+            {
+                area*=1.2;
+                damage+=1;
+            }else if(level==4)
+            {
+                cool_down-=0.1;
+                damage+=2;
+            }else if(level==5)
+            {
+                area*=1.2;
+                damage+=1;
+            }else if(level==6)
+            {
+                cool_down-=0.1;
+                damage+=1;
+            }else if(level==7)
+            {
+                area*=1.2;
+                damage+=1;
+            }
+        }else if(itemID==8)//圣徒水
+        {
+            if(level==1)
+            {
+                amount++;
+                area*=1.2;
+            }else if(level==2)
+            {
+                duration+=0.5;
+                damage+=10;
+            }else if(level==3)
+            {
+                amount++;
+                area*=1.2;
+            }else if(level==4)
+            {
+                duration+=0.3;
+                damage+=10;
+            }else if(level==5)
+            {
+                amount++;
+                area*=1.2;
+            }else if(level==6)
+            {
+                duration+=0.3;
+                damage+=5;
+            }else if(level==7)
+            {
+                area*=1.2;
+                damage+=5;
+            }
+        }else if(itemID==9)//卢恩石
+        {
+            if(level==1)
+            {
+                damage+=5;
+                speed*=1.2;
+            }else if(level==2)
+            {
+                duration+=0.3;
+                damage+=5;
+            }else if(level==3)
+            {
+                amount++;
+            }else if(level==4)
+            {
+                damage+=5;
+                speed*=1.2;
+            }else if(level==5)
+            {
+                duration+=0.3;
+                damage+=5;
+            }else if(level==6)
+            {
+                amount++;
+            }else if(level==7)
+            {
+                duration+=0.5;
+            }
+        }else if(itemID==10)//雷电指环
+        {
+            if(level==1)
+            {
+                amount++;
+            }else if(level==2)
+            {
+                area*=2;
+                damage+=10;
+            }else if(level==3)
+            {
+                amount++;
+            }else if(level==4)
+            {
+                area*=2;
+                damage+=20;
+            }else if(level==5)
+            {
+                amount++;
+            }else if(level==6)
+            {
+                area*=2;
+                damage+=20;
+            }else if(level==7)
+            {
+                amount++;
+            }
+        }
+        ++level;
+        if(level<8) context=itemIntroduction[itemID][level];
+    }
+};
+
+class PassiveItem:public Item
+{
+    //被动道具直接影响玩家的属性
+    //故此处结构有待调整
 };
 
 class PlayerObject : public GameObject
@@ -109,6 +445,10 @@ public:
     int level;//等级
 
     int state;
+
+    std::vector<WeaponItem*> WeaponPackage;
+    std::vector<PassiveItem*> PassivePackage;
+
     std::string sprites[4];
     // constructor(s)
     PlayerObject() = delete;
@@ -140,6 +480,8 @@ public:
     bool health_adjust(float health_damage);
 };
 
+
+
 class Game
 {
 public:
@@ -150,12 +492,15 @@ public:
     unsigned int BG_Width, BG_Height;
     unsigned int Level;
     PlayerObject *Player;
+    std::vector<WeaponItem*> WeaponItemPool;
+    std::vector<PassiveItem*> PassiveItemPool;
     std::vector<EnemyObject *> Enemy;
 
     // constructor/destructor
     Game(unsigned int width, unsigned int height)
             : State(GAME_START_MENU), Keys(), Width(width), Height(height), Button_left(false)
     {
+
     }
 
     ~Game()

@@ -67,6 +67,130 @@ void Utility::Init(std::shared_ptr<Game> game)
     game->Player = new PlayerObject(playerPos, "player4", "player1", "player2", "player3");
     game->Player->InitWeapon("Weapon_tra0", "Weapon_tra1");
     srand(time(NULL));
+    //初始化文本属性
+    std::vector<std::shared_ptr<std::string>> temp_vector;
+    temp_vector.push_back(std::make_shared<std::string>("Attacks horizontally, passes through enemies."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 10%. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 10%. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 5."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Fires at the nearest enemy."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Cooldown reduced by 0.2 seconds."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Passes through 1 more enemy."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Fires quickly in the faced direction."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Passes through 1 more enemy."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Passes through 1 more enemy."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("High damage, high Area scaling."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 20."));
+    temp_vector.push_back(std::make_shared<std::string>("Passes through 2 more enemies."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 20."));
+    temp_vector.push_back(std::make_shared<std::string>("Passes through 2 more enemies."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 20."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Aims at nearest enemy, has boomerang effect."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 10%. Base Speed up by 25%."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 10%. Base Speed up by 25%."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Orbits around the character."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 25%. Base Speed up by 30%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.5 seconds longer. Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 25%. Base Speed up by 30%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.5 seconds longer. Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Fires at a random enemy, deals heavy damage."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10. Base Speed up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10. Base Speed up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10. Base Speed up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 10."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Damages nearby enemies. Reduces resistance to knockback and freeze."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 40%. Base Damage up by 2."));
+    temp_vector.push_back(std::make_shared<std::string>("Cooldown reduced by 0.1 seconds. Base Damage up by 1."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 20%. Base Damage up by 1."));
+    temp_vector.push_back(std::make_shared<std::string>("Cooldown reduced by 0.1 seconds. Base Damage up by 2."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 20%. Base Damage up by 1."));
+    temp_vector.push_back(std::make_shared<std::string>("Cooldown reduced by 0.1 seconds. Base Damage up by 1."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 20%. Base Damage up by 1."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Generates damaging zones."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile. Base Area up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.5 seconds longer. Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile. Base Area up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.3 seconds longer. Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile. Base Area up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.3 seconds longer. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 20%. Base Damage up by 5."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Passes through enemies, bounces around."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 5. Base Speed up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.3 seconds longer. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Damage up by 5. Base Speed up by 20%."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.3 seconds longer. Base Damage up by 5."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 0.5 seconds longer."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Strikes at random enemies."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 100%. Base Damage up by 10."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 100%. Base Damage up by 20."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    temp_vector.push_back(std::make_shared<std::string>("Base Area up by 100%. Base Damage up by 20."));
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    std::shared_ptr<WeaponItem> weapon_item=std::make_shared<WeaponItem>(0,std::make_shared<std::string>("Whip"),10,1,1,1,-1,1.35,1,-1,Item::itemIntroduction[0][0]);
 }
 
 void Utility::DrawBackground()
