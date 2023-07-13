@@ -105,10 +105,11 @@ void Utility::DestroyRenderer()
     delete Renderer;
 }
 
-void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b)
+void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b, bool should_gen)
 {
     // 创建Texture2D对象
-    Texture2D texture;
+    static Texture2D texture;
+    if(should_gen) {
     texture.Width = width;
     texture.Height = height;
     texture.Internal_Format = GL_RGB;
@@ -144,7 +145,7 @@ void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, u
     
     // 释放像素数据
     delete[] pixels;
-    
+    }
     Renderer->DrawSprite(texture, glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(r, g, b), false);
 }
 
