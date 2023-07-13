@@ -89,8 +89,10 @@ void GameViewModel::Update(float dt)
                 if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage))
                 {
                     PickupObject *temp1 = new PickupObject ((*it)->Position, "Experience");
+                    //EnemyObject *temp2 = *it;
                     game->Enemy.erase(it, it + 1);
-                    //EnemyObject *temp1 = new PickupObject (enemyPos, "Experience");
+                    //delete temp2;
+
                     game->Exp.push_back(temp1);
                     continue;
                 }
@@ -107,7 +109,9 @@ void GameViewModel::Update(float dt)
 
         for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
             if((*it1)->CheckCollision(*game->Player)){
+                //PickupObject *temp3 = *it1;
                 game->Exp.erase(it1, it1 + 1);
+                //delete temp3;
                 continue;
             }
             if(game->Player->CheckColl(**it1)){

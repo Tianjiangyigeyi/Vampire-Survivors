@@ -465,7 +465,7 @@ public:
 class PickupObject : public GameObject
 {
 public:
-    float speed = 24;  // 怪物移动速度
+    float speed = 60;
     std::string sprite;
     // constructor(s)
     PickupObject() = delete;

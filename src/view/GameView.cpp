@@ -65,6 +65,10 @@ void GameView::Render()
                 (*it)->Draw(glm::vec3(255, 255, 255));
             } else (*it)->Draw();
         }
+        for (auto it = game->Exp.begin(); it != game->Exp.end(); it++) {
+            (*it)->Draw();
+        }
+
         int posx, posy;
         posx = game->Player->Position.x;
         posy = game->Player->Position.y;

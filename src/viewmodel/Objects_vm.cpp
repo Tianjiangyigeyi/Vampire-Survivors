@@ -35,8 +35,8 @@ void EnemyObject::Move(glm::vec2 &dir)
 PickupObject::PickupObject(glm::vec2 pos,  std::string sprite)
         : GameObject(pos,  sprite)
 {
-    SetSize(glm::vec2(10, 10));
-    SetColl_Size(glm::vec2(10, 10));
+    SetSize(glm::vec2(Size.x*0.4, Size.y*0.4));
+    SetColl_Size(Size);
 }
 
 
@@ -115,7 +115,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     might = 50;
     max_health = current_health =  1000;
     recovery = 1;
-    magnet = glm::vec2(Size.x*7, Size.y*7);
+    magnet = glm::vec2(Size.x*100, Size.x*100);
 }
 
 void PlayerObject::InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1){
