@@ -69,6 +69,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     game->Player->InitWeapon("Weapon_tra0", "Weapon_tra1");
     srand(time(NULL));
     //初始化文本属性
+
     std::vector<std::shared_ptr<std::string>> temp_vector;
     temp_vector.push_back(std::make_shared<std::string>("Attacks horizontally, passes through enemies."));
     temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
@@ -191,7 +192,73 @@ void Utility::Init(std::shared_ptr<Game> game)
     Item::itemIntroduction.push_back(temp_vector);
     temp_vector.clear();
 
+    temp_vector.push_back(std::make_shared<std::string>("Base damage up by 10%"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Reduces incoming damage by 1."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Max health increases by 20%"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Health recovery increases by 0.2 HP per second."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Cooldown reduced by 8.0%"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Base area up by 10%"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Base speed up by 10%"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Effect lasts 10% longer"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Fires 1 more projectile."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("Movement speed increases by 10%"));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
+    temp_vector.push_back(std::make_shared<std::string>("XP gain increases by 8%."));
+    Item::itemIntroduction.push_back(temp_vector);
+    temp_vector.clear();
+
     std::shared_ptr<WeaponItem> weapon_item=std::make_shared<WeaponItem>(0,std::make_shared<std::string>("Whip"),10,1,1,1,-1,1.35,1,-1,Item::itemIntroduction[0][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(1,std::make_shared<std::string>("Magic Wand"),10,1,1,1,1,1.2,1,-1,Item::itemIntroduction[1][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(2,std::make_shared<std::string>("Knife"),6.5,1,1,1,1,1.0f,0.5,-1,Item::itemIntroduction[2][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(3,std::make_shared<std::string>("Axe"),20,1,1,1,3,4,1,2,Item::itemIntroduction[3][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(4,std::make_shared<std::string>("Cross"),5,1,1,1,1,2,1,-1,Item::itemIntroduction[4][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(5,std::make_shared<std::string>("King Bible"),10,1,1,1,1,3,1,3,Item::itemIntroduction[5][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(6,std::make_shared<std::string>("Fire Wand"),20,1,0.75,3,1,3,1,-1,Item::itemIntroduction[6][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(7,std::make_shared<std::string>("Garlic"),5,1,1,1,1,1.3,1,-1,Item::itemIntroduction[7][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(8,std::make_shared<std::string>("Santa Water"),10,1,1,1,1,4.5,1,2,Item::itemIntroduction[8][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(9,std::make_shared<std::string>("Runetracer"),10,1,1,1,1,3,1,2.25,Item::itemIntroduction[9][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+    weapon_item=std::make_shared<WeaponItem>(10,std::make_shared<std::string>("Lightning Ring"),15,1,1,2,1,4.5,1,-1,Item::itemIntroduction[10][0]);
+    game->WeaponItemPool.push_back(weapon_item);
+
 }
 
 void Utility::DrawBackground()

@@ -118,6 +118,7 @@ public:
     static std::vector<std::vector<std::shared_ptr<std::string>>> itemIntroduction;//外层为id，内层为等级，储存了0~7级的文本的二维智能指针vector
     Item(int ID,std::shared_ptr<std::string> ItemName):itemID(ID),ItemName(ItemName){};
 };
+std::vector<std::vector<std::shared_ptr<std::string>>> Item::itemIntroduction;
 
 class WeaponItem:public Item
 {
@@ -443,6 +444,9 @@ class PassiveItem:public Item
 {
     //被动道具直接影响玩家的属性
     //故此处结构有待调整
+public:
+    //PassiveItem(play);
+
 };
 
 class EnemyObject : public GameObject
@@ -531,8 +535,8 @@ public:
     unsigned int BG_Width, BG_Height;
     unsigned int Level;
     PlayerObject *Player;
-    std::vector<WeaponItem*> WeaponItemPool;
-    std::vector<PassiveItem*> PassiveItemPool;
+    std::vector<std::shared_ptr<WeaponItem>> WeaponItemPool;
+    std::vector<std::shared_ptr<PassiveItem>> PassiveItemPool;
     std::vector<EnemyObject *> Enemy;
     std::vector<PickupObject *> Exp;
 
