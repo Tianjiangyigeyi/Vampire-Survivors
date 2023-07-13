@@ -13,6 +13,7 @@ extern bool shouldswap;
 
 extern std::vector<glm::vec4> areas_to_check;
 extern int button_id;
+extern bool render_in_game;
 
 std::map<int , Button*> People_select_button_map;
 std::map<int , Button*> Weapon_select_button_map;
@@ -29,6 +30,8 @@ void GameView::Render()
 {
     if (game->State == GAME_ACTIVE)
     {
+        areas_to_check.clear();
+        render_in_game = true;
         shouldswap = true;
         // 每次渲染必须reset相机位置, scale是缩放的比例
         float scale = 0.5;
@@ -51,23 +54,36 @@ void GameView::Render()
                 (*it)->Draw(glm::vec3(255, 255, 255));
             } else (*it)->Draw();
         }
+        int posx, posy;
+        posx = game->Player->Position.x;
+        posy = game->Player->Position.y;
 
-        Button ExitGame(0.9*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Exit"));
+        // std::cout<<"player pos: "<<posx<<" "<<posy<<std::endl;
+
+        Button ExitGame( posx-0.3*WINDOW_WIDTH/scale, posy - 0.4*WINDOW_HEIGHT/scale, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Exit"));
         ExitGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        // std::cout<<"ExitGame pos: "<<ExitGame.x<<" "<<ExitGame.y<<std::endl;
 
-        Button PauseGame(0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Pause"));
+        Button PauseGame(0.3*WINDOW_WIDTH/scale + posx, 0.3*WINDOW_HEIGHT/scale + posy, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Pause"));
         PauseGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
 
-        if(ExitGame.pressed)
+        areas_to_check.push_back(glm::vec4(scale* (ExitGame.x-posx)+0.5*WINDOW_WIDTH, scale*(ExitGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (ExitGame.x+ExitGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (ExitGame.y+ExitGame.height-posy)+0.5*WINDOW_HEIGHT));
+        areas_to_check.push_back(glm::vec4(scale* (PauseGame.x-posx)+0.5*WINDOW_WIDTH, scale*(PauseGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (PauseGame.x+PauseGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (PauseGame.y+PauseGame.height-posy)+0.5*WINDOW_HEIGHT));
+
+        if(button_id == 0)
         {
             game->State = GAME_OVER;
             ExitGame.pressed = false;
         }
-        if(PauseGame.pressed)
+        if(button_id == 1)
         {
             game->State = GAME_PAUSE;
             PauseGame.pressed = false;
         }
+
+        ValLine BloodLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-10, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
+        BloodLine.Render();
+
     }
 
 
@@ -210,6 +226,7 @@ void GameView::Render()
 
     if(game->State == GAME_OVER)
     {
+        std::cout<<"In func GAME_OVER"<<std::endl;
 //        mciSendString("stop mp3", NULL, 0, NULL);
 //        mciSendString("close mp3", NULL, 0, NULL);
 

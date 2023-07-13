@@ -243,4 +243,22 @@ public:
 
 };
 
+class ValLine
+{
+public:
+    int actual_length;
+    int actual_height;
+    int posx, posy;
+    int val_left;
+    int max_val;
+    glm::vec3 color_left;
+    glm::vec3 color_right;
+
+    ValLine(int act_len, int act_hgt, int posx, int posy, int val_left, int max_val, glm::vec3 color_left, glm::vec3 color_right)
+        : actual_length(act_len), actual_height(act_hgt), posx(posx), posy(posy), val_left(val_left), max_val(max_val), color_left(color_left), color_right(color_right){};
+
+    void Render();
+
+};
+
 #endif

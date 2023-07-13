@@ -11,6 +11,7 @@ bool shouldswap = true;
 std::vector<glm::vec4> areas_to_check;
 int button_id = MAX_INT;
 
+bool render_in_game = false;
 
 
 // 为了满足OpenGL的C特性，它们不得不设为全局变量
@@ -90,6 +91,20 @@ int VsApp::Run()
                 std::cout << deltaTime << std::endl;
             }
             glfwPollEvents();
+            if(render_in_game) 
+            {
+                // static int j = 0;
+                // for(int i= 0;i<areas_to_check.size();i++)
+                // {
+                //     std::cout<<"area_to_check:";
+                //     std::cout<<areas_to_check[i].x<<" "<<areas_to_check[i].y<<" "<<areas_to_check[i].z<<" "<<areas_to_check[i].w<<std::endl;
+                // }
+                // std::cout<<cursor_x<<" "<<cursor_y<<" "<<LeftButtonPressed<<std::endl;
+                bool tmp = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
+                // std::cout<<button_id<<std::endl;
+                // std::cout<<j<<std::endl;
+                // j++;
+            }
             if (notice == true)
             {
                 Notify(Keys, deltaTime);
