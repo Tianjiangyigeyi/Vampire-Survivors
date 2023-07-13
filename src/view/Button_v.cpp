@@ -1,7 +1,7 @@
 #include "../common/config.h"
 #include "Text.h"
 #include "../util/Utility.h"
-void Button::Render()
+void Button::Render(bool have_texture)
 {
     if(hovered)
     {
@@ -12,8 +12,9 @@ void Button::Render()
     else
     {
         std::string normal_text = Button_text + "_normal";
-        Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(normal_text), glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
-        text_character::generate_text(Button_text,glm::vec2(x,y),glm::vec2(width,height),1,0.0f,glm::vec3(1.0f, 1.0f, 1.0f),false);
+        Utility::GetRenderer()->DrawSprite(ResourceManager::GetTexture(Button_text), glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(1.0f, 1.0f, 1.0f));
+        if(!have_texture)
+            text_character::generate_text(Button_text,glm::vec2(x,y),glm::vec2(width,height),1,0.0f,glm::vec3(1.0f, 1.0f, 1.0f),false);
     }
 }
 
@@ -41,9 +42,9 @@ void Button::Check_Hover_Press(float cursor_x, float cursor_y, bool button_left)
     }
 }
 
-void Button::DrawButton(float cursor_x, float cursor_y, bool &button_left)
+void Button::DrawButton(float cursor_x, float cursor_y, bool &button_left, bool have_texture)
 {
     Check_Hover_Press(cursor_x, cursor_y, button_left);
-    Render();
+    Render(have_texture);
     button_left = false;
 }

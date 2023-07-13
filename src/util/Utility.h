@@ -15,7 +15,7 @@ public:
     static SpriteRenderer *Renderer;
     static void Init(std::shared_ptr<Game> game);
     static void DrawBackground();
-    static void DrawBackground(const std::string& background);
+    static void DrawBackground(const std::string& background, glm::vec2 pos = glm::vec2(0,0));
     static SpriteRenderer *&GetRenderer();
     static void ResetCamera(glm::vec2 pos, glm::vec2 center, float scale);
     static void DestroyRenderer();

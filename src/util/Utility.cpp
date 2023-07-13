@@ -25,10 +25,20 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", true, "player3");
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", true, "player4");
     ResourceManager::LoadTexture("assets/background/Start_Menu_bck.png", true, "StartMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
-    ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
+    // ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra0.png", true, "Weapon_tra0");
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra1.png", true, "Weapon_tra1");
     ResourceManager::LoadTexture("assets/Pickups/Sprite-Experience_Gem.png", true, "Experience");
+
+    ResourceManager::LoadTexture("assets/Menu/confirm.png", true, "Confirm_button");
+    ResourceManager::LoadTexture("assets/Menu/Antonio.png", true, "Sel_Antonio");
+    ResourceManager::LoadTexture("assets/Menu/Arca.png", true, "Sel_Arca");
+
+    ResourceManager::LoadTexture("assets/buttons/1-1.jpg", false, "1-1", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/1-2.png", false, "1-2", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/1-3.png", false, "1-3", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+
+    ResourceManager::LoadTexture("assets/background/2-2.png", false, "2-2", WINDOW_WIDTH*0.5, WINDOW_HEIGHT*0.8);
 
     char load_path[18]="assets/Font/0.png";
     load_path[17]='\0';
@@ -268,10 +278,10 @@ void Utility::DrawBackground()
     Renderer->DrawSprite(tmp, glm::vec2(0, 0), glm::vec2(tmp.Width,tmp.Height), 0.0f);
 }
 
-void Utility::DrawBackground(const std::string& background)
+void Utility::DrawBackground(const std::string& background, glm::vec2 pos)
 {
     auto tmp = ResourceManager::GetTexture(background);
-    Renderer->DrawSprite(tmp, glm::vec2(0, 0), glm::vec2(tmp.Width,tmp.Height), 0.0f);
+    Renderer->DrawSprite(tmp, pos, glm::vec2(tmp.Width,tmp.Height), 0.0f);
 }
 
 SpriteRenderer *&Utility::GetRenderer()

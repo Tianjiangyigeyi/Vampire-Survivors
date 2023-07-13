@@ -30,7 +30,7 @@ void GameView::Render()
 {
     if (game->State == GAME_ACTIVE)
     {
-        static bool blood_change = true;
+        bool blood_change = true;
         static int blood = -1;
         if(blood != game->Player->current_health)
         {
@@ -96,27 +96,29 @@ void GameView::Render()
             PauseGame.pressed = false;
         }
 
-        ValLine BloodLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-10, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
+        ValLine BloodLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-15, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
         BloodLine.Render(blood_change);
+        ValLine ExpLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-5, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
+        ExpLine.Render(blood_change);
 
     }
 
 
     if (game->State == GAME_START_MENU) 
     {
-        game->State = GAME_ACTIVE;
+        // game->State = GAME_ACTIVE;
         std::cout<<"In func GAME_START_MENU"<<std::endl;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"));
 
-        Button start_button(game->Width * 0.45, game->Height * 0.9, game->Width * 0.1, game->Height * 0.05, std::string("StartM start"));
-        Button exit_button(game->Width * 0.1, game->Height * 0.1, game->Width * 0.1, game->Height * 0.1, std::string("StartM exit"));
-        Button setting_button(game->Width * 0.9, game->Height * 0.1, game->Width * 0.1, game->Height * 0.1, std::string("StartM setting"));
+        Button start_button(game->Width * 0.45, game->Height * 0.9, game->Width * 0.1, game->Height * 0.05, std::string("1-1"));
+        Button exit_button(game->Width * 0.1, game->Height * 0.1, game->Width * 0.1, game->Height * 0.1, std::string("1-2"));
+        Button setting_button(game->Width * 0.9, game->Height * 0.1, game->Width * 0.1, game->Height * 0.1, std::string("1-3"));
 
 
-        start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
-        exit_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
-        setting_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        exit_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed,true);
+        setting_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
 
         areas_to_check.push_back(glm::vec4(start_button.x, start_button.y, start_button.width, start_button.height));
         areas_to_check.push_back(glm::vec4(exit_button.x, exit_button.y, exit_button.width, exit_button.height));
@@ -158,10 +160,12 @@ void GameView::Render()
 
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"));
+        Utility::DrawBackground(std::string("2-2"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.1));
 
         bool People_select;
         bool Weapon_select;
         bool Map_select;
+        
         bool Prop_select;
         bool Start_game;
 
@@ -237,6 +241,8 @@ void GameView::Render()
         }
 
         shouldswap = false;
+        if(game->State == GAME_ACTIVE)
+            shouldswap = true;
 
     }
 
@@ -268,8 +274,8 @@ void GameView::Render()
 
 
         areas_to_check.clear();
-        players_to_select[0] = new static_Player(std::string("Alan"), 100, 200, 100, 100, 50);
-        players_to_select[1] = new static_Player(std::string("Tom"), 200, 100, 50, 60, 100);
+        players_to_select[0] = new static_Player(std::string("Antonio"), 100, 200, 100, 100, 50);
+        players_to_select[1] = new static_Player(std::string("Arca"), 200, 100, 50, 60, 100);
         players_to_select[2] = new static_Player(std::string("Tony"), 150, 130, 40, 50,100);
         players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
 
@@ -296,14 +302,13 @@ void GameView::Render()
 
         for(int i = 0; i < 4; i++)
         {
-            std::string tmp_name = players_to_select[i]->name;
+            std::string tmp_name = "Sel_" + players_to_select[i]->name;
             People_select_button_map[i] = new Button(0.25*((i % 2) + 1)*WINDOW_WIDTH, 0.25*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp_name);
-            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
             areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
 
-            std::cout<<"In func RenderPeopleSelect after Button"<<std::endl;
+        
         }
-
         for(int i = 0; i < 4; i++)
         {
             People_select_Changing_Boxes[i] = new TextBox(0.91*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
@@ -322,8 +327,8 @@ void GameView::Render()
             People_select_Changing_Boxes[i]->Render();
         }
 
-        Button Confirm(0.9*WINDOW_WIDTH, 0.9*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        Button Confirm(0.4*WINDOW_WIDTH, 0.8*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
+        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
         areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
 
         if(button_id == 4) {
@@ -345,8 +350,8 @@ void GameView::Render()
         std::cout<<"----------------------------------------"<<std::endl;
 
         areas_to_check.clear();
-        players_to_select[0] = new static_Player(std::string("Alan"), 100, 200, 100, 100, 50);
-        players_to_select[1] = new static_Player(std::string("Tom"), 200, 100, 50, 60, 100);
+        players_to_select[0] = new static_Player(std::string("Antonio"), 100, 200, 100, 100, 50);
+        players_to_select[1] = new static_Player(std::string("Arca"), 200, 100, 50, 60, 100);
         players_to_select[2] = new static_Player(std::string("Tony"), 150, 130, 40, 50,100);
         players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
 
@@ -373,9 +378,9 @@ void GameView::Render()
 
         for(int i = 0; i < 4; i++)
         {
-            std::string tmp_name = players_to_select[i]->name;
+            std::string tmp_name = "Sel_" + players_to_select[i]->name;
             People_select_button_map[i] = new Button(0.25*((i % 2) + 1)*WINDOW_WIDTH, 0.25*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp_name);
-            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
             areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
 
         
@@ -399,8 +404,8 @@ void GameView::Render()
             People_select_Changing_Boxes[i]->Render();
         }
 
-        Button Confirm(0.9*WINDOW_WIDTH, 0.9*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        Button Confirm(0.4*WINDOW_WIDTH, 0.8*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
+        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
         areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
 
         if(button_id == 4) {
@@ -472,8 +477,8 @@ void GameView::Render()
             People_select_Changing_Boxes[i]->Render();
         }
 
-        Button Confirm(0.9*WINDOW_WIDTH, 0.9*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        Button Confirm(0.4*WINDOW_WIDTH, 0.8*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
+        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
         areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
 
         if(button_id == 4) {
