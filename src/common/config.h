@@ -6,6 +6,8 @@
 
 #include <vector>
 #include <memory>
+#include <string>
+#include <map>
 #include <iostream>
 // The Width of the screen
 #define WINDOW_WIDTH 1600
@@ -13,17 +15,39 @@
 #define WINDOW_HEIGHT 800
 // max fps
 #define MAX_FRAME_PER_SECOND 30
+// To be select in the select menu
+#define MAX_INT 2147483647
+
+
+class static_Player{
+public:
+    std::string name;
+    float might;
+    float max_health;
+    float attack;
+    float speed;
+    float armor;
+
+    static_Player(std::string name, float might, float max_health, float attack, float speed, float armor)
+        : name(name), might(might), max_health(max_health), attack(attack), speed(speed), armor(armor){};
+};
+
 
 // Represents the current state of the game
 enum GameState
 {
     GAME_ACTIVE,
+    GAME_PAUSE,
     GAME_MENU,
     GAME_WIN,
     GAME_OVER,
     GAME_START_MENU,
     GAME_SELECT_MENU,
-    GAME_SETTING_MENU
+    GAME_SETTING_MENU,
+    GAME_PEOPLE_SELECT,
+    GAME_WEAPON_SELECT,
+    GAME_MAP_SELECT
+
 };
 
 const glm::vec2 PLAYER_SIZE(10.0f, 10.0f);
@@ -421,12 +445,43 @@ class PassiveItem:public Item
     //故此处结构有待调整
 };
 
+class EnemyObject : public GameObject
+{
+public:
+    float speed = 8;  // 怪物移动速度
+    float power = 100;  // 怪物攻击力
+    float health = 100; // 怪物当前血量
+    std::string sprite;
+    // constructor(s)
+    EnemyObject() = delete;
+    EnemyObject(glm::vec2 pos, std::string sprite);
+    // resets the ball to original state with given position and velocity
+    void Reset(glm::vec2 position, glm::vec2 velocity);
+    ~EnemyObject();
+    void Move(glm::vec2 &dir);
+    bool health_adjust(float health_damage);
+};
+
+class PickupObject : public GameObject
+{
+public:
+    float speed = 24;  // 怪物移动速度
+    std::string sprite;
+    // constructor(s)
+    PickupObject() = delete;
+    PickupObject(glm::vec2 pos, std::string sprite);
+    // resets the ball to original state with given position and velocity
+    void Reset(glm::vec2 position, glm::vec2 velocity);
+    ~PickupObject();
+    void Move(glm::vec2 &dir);
+};
+
 class PlayerObject : public GameObject
 {
 public:
     WeaponObject* the_weapon;
 
-    float might = 100; // 力量
+    float might ; // 力量
     float speed;//飞行道具移动速度
     float move_speed;//人物移动速度
     float max_health;   // 最大生命
@@ -436,7 +491,7 @@ public:
     float cooldown;//武器攻击间隔
     float area;//aoe武器攻击范围
     float duration;//武器持续攻击时间
-    float magnet;//拾取距离
+    glm::vec2 magnet;//拾取距离
     float luck;//幸运值
     float growth;//经验获取提升
     int amount;//单次发射的武器投射物数目
@@ -461,23 +516,7 @@ public:
     ~PlayerObject();
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
-};
-
-class EnemyObject : public GameObject
-{
-public:
-    float speed = 8;  // 怪物移动速度
-    float power = 100;  // 怪物攻击力
-    float health = 100; // 怪物当前血量
-    std::string sprite;
-    // constructor(s)
-    EnemyObject() = delete;
-    EnemyObject(glm::vec2 pos, std::string sprite);
-    // resets the ball to original state with given position and velocity
-    void Reset(glm::vec2 position, glm::vec2 velocity);
-    ~EnemyObject();
-    void Move(glm::vec2 &dir);
-    bool health_adjust(float health_damage);
+    bool CheckColl(GameObject &other);
 };
 
 
@@ -495,6 +534,7 @@ public:
     std::vector<WeaponItem*> WeaponItemPool;
     std::vector<PassiveItem*> PassiveItemPool;
     std::vector<EnemyObject *> Enemy;
+    std::vector<PickupObject *> Exp;
 
     // constructor/destructor
     Game(unsigned int width, unsigned int height)
@@ -508,6 +548,10 @@ public:
         delete Player->the_weapon;
         delete Player;
         for (auto it = Enemy.begin(); it != Enemy.end(); it++)
+        {
+            delete *it;
+        }
+        for (auto it = Exp.begin(); it != Exp.end(); it++)
         {
             delete *it;
         }
@@ -534,7 +578,7 @@ public:
     void Render();
     void Check_Hover_Press(float cursor_x, float cursor_y, bool button_left);
 
-    void DrawButton(float cursor_x, float cursor_y, bool button_left);
+    void DrawButton(float cursor_x, float cursor_y, bool &button_left);
 };
 
 class TextBox
@@ -561,6 +605,24 @@ public:
 
     void DrawRect(float x, float y, float width, float height, float r, float g, float b);
 
+
+};
+
+class ValLine
+{
+public:
+    int actual_length;
+    int actual_height;
+    int posx, posy;
+    int val_left;
+    int max_val;
+    glm::vec3 color_left;
+    glm::vec3 color_right;
+
+    ValLine(int act_len, int act_hgt, int posx, int posy, int val_left, int max_val, glm::vec3 color_left, glm::vec3 color_right)
+        : actual_length(act_len), actual_height(act_hgt), posx(posx), posy(posy), val_left(val_left), max_val(max_val), color_left(color_left), color_right(color_right){};
+
+    void Render(bool Is_Changed);
 
 };
 

@@ -19,6 +19,9 @@ void Button::Render()
 
 void Button::Check_Hover_Press(float cursor_x, float cursor_y, bool button_left)
 {
+
+    // std::cout<<"In Check_Hover_Press"<<std::endl;
+    // std::cout<<"cursor_x: "<<cursor_x<<"cursor_y: "<<cursor_y<<"button_left: "<<button_left<<std::endl;
     if(cursor_x >= x && cursor_x <= x + width && cursor_y >= y && cursor_y <= y + height)
     {
         hovered = true;
@@ -38,8 +41,9 @@ void Button::Check_Hover_Press(float cursor_x, float cursor_y, bool button_left)
     }
 }
 
-void Button::DrawButton(float cursor_x, float cursor_y, bool button_left)
+void Button::DrawButton(float cursor_x, float cursor_y, bool &button_left)
 {
     Check_Hover_Press(cursor_x, cursor_y, button_left);
     Render();
+    button_left = false;
 }

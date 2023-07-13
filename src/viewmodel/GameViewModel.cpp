@@ -88,13 +88,16 @@ void GameViewModel::Update(float dt)
                 (*it)->Destroyed = 90;
                 if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage))
                 {
+                    PickupObject *temp1 = new PickupObject ((*it)->Position, "Experience");
                     game->Enemy.erase(it, it + 1);
+                    //EnemyObject *temp1 = new PickupObject (enemyPos, "Experience");
+                    game->Exp.push_back(temp1);
                     continue;
                 }
             }
             if ((*it)->CheckCollision(*game->Player))
             {
-                total_dam += (*it)->power;
+                if((*it)->power>total_dam)  total_dam = (*it)->power;
             }
             glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
             dir1 = glm::normalize(dir1);
@@ -102,11 +105,29 @@ void GameViewModel::Update(float dt)
             (*it)->Move(dir1);
         }
 
+        for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
+            if((*it1)->CheckCollision(*game->Player)){
+                game->Exp.erase(it1, it1 + 1);
+                continue;
+            }
+            if(game->Player->CheckColl(**it1)){
+                glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x, game->Player->Position.y - (*it1)->Position.y);
+                dir1 = glm::normalize(dir1);
+                dir1 = glm::vec2(dir1.x * (*it1)->speed, dir1.y * (*it1)->speed);
+                (*it1)->Move(dir1);
+            }
+        }
+
         if(total_dam)   game->Player->Destroyed = 90;
+        if (!game->Player->health_adjust(total_dam))
+        {
+            game->State = GAME_OVER;
+        }
+
     }
 
-    if (!game->Player->health_adjust(total_dam))
-    {
-        game->State = GAME_OVER;
-    }
+//    if (!game->Player->health_adjust(total_dam))
+//    {
+//        game->State = GAME_OVER;
+//    }
 }

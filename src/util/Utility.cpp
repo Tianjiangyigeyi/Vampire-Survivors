@@ -15,7 +15,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     // 设置专用于渲染的控制
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
-    ResourceManager::LoadTexture("assets/background/forest/dummy1.png", true, "background", WINDOW_WIDTH*8.0, WINDOW_HEIGHT*8.0);
+    ResourceManager::LoadTexture("assets/background/forest/dummy1.png", true, "background", WINDOW_WIDTH*4.0, WINDOW_HEIGHT*4.0);
     ResourceManager::LoadTexture("assets/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("assets/Enemies/Sprite-BAT1.png", true, "enemy");
     ResourceManager::LoadTexture("assets/block_solid.png", false, "block_solid");
@@ -27,6 +27,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra0.png", true, "Weapon_tra0");
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra1.png", true, "Weapon_tra1");
+    ResourceManager::LoadTexture("assets/Pickups/Sprite-Experience_Gem.png", true, "Experience");
 
     char load_path[18]="assets/Font/0.png";
     load_path[17]='\0';
@@ -229,10 +230,11 @@ void Utility::DestroyRenderer()
     delete Renderer;
 }
 
-void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b)
+void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b, bool should_gen)
 {
     // 创建Texture2D对象
-    Texture2D texture;
+    static Texture2D texture;
+    if(should_gen) {
     texture.Width = width;
     texture.Height = height;
     texture.Internal_Format = GL_RGB;
@@ -268,7 +270,7 @@ void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, u
     
     // 释放像素数据
     delete[] pixels;
-    
+    }
     Renderer->DrawSprite(texture, glm::vec2(x, y), glm::vec2(width, height), 0.0f, glm::vec3(r, g, b), false);
 }
 

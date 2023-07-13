@@ -21,6 +21,7 @@ void TextBox::Render()
 void TextBox::setText(std::string new_text)
 {
     text = new_text;
+    this->Render();
 }
 
 void TextBox::DrawRect(float x, float y, float width, float height, float r, float g, float b)
