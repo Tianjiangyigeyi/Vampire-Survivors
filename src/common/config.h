@@ -579,10 +579,10 @@ public:
     Button(float x, float y, float width, float height, std::string button_text)
         : x(x), y(y), width(width), height(height), hovered(false), pressed(false), Button_text(button_text){};
 
-    void Render();
+    void Render(bool have_texture = false);
     void Check_Hover_Press(float cursor_x, float cursor_y, bool button_left);
 
-    void DrawButton(float cursor_x, float cursor_y, bool &button_left);
+    void DrawButton(float cursor_x, float cursor_y, bool &button_left, bool have_texture = false);
 };
 
 class TextBox
