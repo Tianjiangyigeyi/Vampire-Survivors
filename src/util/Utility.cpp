@@ -15,7 +15,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::GetShader("sprite").SetMatrix4("projection", projection);
     // 设置专用于渲染的控制
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
-    ResourceManager::LoadTexture("assets/background/forest/dummy1.png", true, "background", WINDOW_WIDTH*8.0, WINDOW_HEIGHT*8.0);
+    ResourceManager::LoadTexture("assets/background/forest/dummy1.png", true, "background", WINDOW_WIDTH*4.0, WINDOW_HEIGHT*4.0);
     ResourceManager::LoadTexture("assets/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("assets/Enemies/Sprite-BAT1.png", true, "enemy");
     ResourceManager::LoadTexture("assets/block_solid.png", false, "block_solid");
@@ -27,6 +27,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra0.png", true, "Weapon_tra0");
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra1.png", true, "Weapon_tra1");
+    ResourceManager::LoadTexture("assets/Pickups/Sprite-Experience_Gem.png", true, "Experience");
 
     char load_path[18]="assets/Font/0.png";
     load_path[17]='\0';

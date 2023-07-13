@@ -32,6 +32,29 @@ void EnemyObject::Move(glm::vec2 &dir)
     IsMirrored = dir.x < 0 ? true : false;
 }
 
+PickupObject::PickupObject(glm::vec2 pos,  std::string sprite)
+        : GameObject(pos,  sprite)
+{
+    SetSize(glm::vec2(10, 10));
+    SetColl_Size(glm::vec2(10, 10));
+}
+
+
+// resets the ball to initial Stuck Position (if ball is outside window bounds)
+void PickupObject::Reset(glm::vec2 position, glm::vec2 velocity)
+{
+    this->Position = position;
+}
+
+PickupObject::~PickupObject()
+{
+}
+
+void PickupObject::Move(glm::vec2 &dir)
+{
+    Position += dir;
+}
+
 GameObject::GameObject(glm::vec2 pos, std::string sprite)
     : Position(pos), Color(glm::vec3(1.0f)), Rotation(0.0f), Sprite(sprite), IsSolid(false), Destroyed(0), IsMirrored(false)
 {
@@ -90,9 +113,9 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     sprites[2] = sprite3;
     sprites[3] = sprite4;
     might = 50;
-    max_health = 1000;
-    recovery = 10;
-    current_health = 1000;
+    max_health = current_health =  1000;
+    recovery = 1;
+    magnet = glm::vec2(Size.x*7, Size.y*7);
 }
 
 void PlayerObject::InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1){
@@ -140,14 +163,18 @@ void PlayerObject::Move(glm::vec2 &dir)
 
 bool PlayerObject::health_adjust(float health_damage){
     current_health -= health_damage;
-    //current_health += recovery;
     if(current_health <= 0){
         return false;
     }
-    //std::cout << current_health << std::endl;
+    if(current_health<max_health) current_health += recovery;
+    std::cout << current_health << std::endl;
     return true;
 }
 
+bool PlayerObject::CheckColl(GameObject &other)
+{
+    return Position.x + magnet.x >= other.Position.x && Position.x <= other.Position.x + other.Coll_Size.x && Position.y + magnet.y >= other.Position.y && Position.y <= other.Position.y + other.Coll_Size.y;
+}
 
 int Wcount = 0;
 

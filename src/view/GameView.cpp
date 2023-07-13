@@ -252,6 +252,10 @@ void GameView::Render()
             game->State = GAME_START_MENU;
             start_button.pressed = false;
         }
+
+        for (auto it = game->Exp.begin(); it != game->Exp.end(); it++) {
+            (*it)->Draw();
+        }
     }
 
     if(game->State == GAME_PEOPLE_SELECT)

@@ -87,7 +87,6 @@ class WeaponObject : public GameObject
 {
 public:
     int level;          // 等级
-    float rarity;       // 稀有度
     float base_damage =  10;  // 基础伤害
     float area;         // 攻击范围
     float speed;        // 移动速度
@@ -109,12 +108,43 @@ public:
     void Move(glm::vec2 &dir);
 };
 
+class EnemyObject : public GameObject
+{
+public:
+    float speed = 8;  // 怪物移动速度
+    float power = 100;  // 怪物攻击力
+    float health = 100; // 怪物当前血量
+    std::string sprite;
+    // constructor(s)
+    EnemyObject() = delete;
+    EnemyObject(glm::vec2 pos, std::string sprite);
+    // resets the ball to original state with given position and velocity
+    void Reset(glm::vec2 position, glm::vec2 velocity);
+    ~EnemyObject();
+    void Move(glm::vec2 &dir);
+    bool health_adjust(float health_damage);
+};
+
+class PickupObject : public GameObject
+{
+public:
+    float speed = 24;  // 怪物移动速度
+    std::string sprite;
+    // constructor(s)
+    PickupObject() = delete;
+    PickupObject(glm::vec2 pos, std::string sprite);
+    // resets the ball to original state with given position and velocity
+    void Reset(glm::vec2 position, glm::vec2 velocity);
+    ~PickupObject();
+    void Move(glm::vec2 &dir);
+};
+
 class PlayerObject : public GameObject
 {
 public:
     WeaponObject* the_weapon;
 
-    float might = 100; // 力量
+    float might ; // 力量
     float speed;//飞行道具移动速度
     float move_speed;//人物移动速度
     float max_health;   // 最大生命
@@ -124,7 +154,7 @@ public:
     float cooldown;//武器攻击间隔
     float area;//aoe武器攻击范围
     float duration;//武器持续攻击时间
-    float magnet;//拾取距离
+    glm::vec2 magnet;//拾取距离
     float luck;//幸运值
     float growth;//经验获取提升
     int amount;//单次发射的武器投射物数目
@@ -145,23 +175,7 @@ public:
     ~PlayerObject();
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
-};
-
-class EnemyObject : public GameObject
-{
-public:
-    float speed = 8;  // 怪物移动速度
-    float power = 100;  // 怪物攻击力
-    float health = 100; // 怪物当前血量
-    std::string sprite;
-    // constructor(s)
-    EnemyObject() = delete;
-    EnemyObject(glm::vec2 pos, std::string sprite);
-    // resets the ball to original state with given position and velocity
-    void Reset(glm::vec2 position, glm::vec2 velocity);
-    ~EnemyObject();
-    void Move(glm::vec2 &dir);
-    bool health_adjust(float health_damage);
+    bool CheckColl(GameObject &other);
 };
 
 class Game
@@ -175,6 +189,7 @@ public:
     unsigned int Level;
     PlayerObject *Player;
     std::vector<EnemyObject *> Enemy;
+    std::vector<PickupObject *> Exp;
 
     // constructor/destructor
     Game(unsigned int width, unsigned int height)
@@ -187,6 +202,10 @@ public:
         delete Player->the_weapon;
         delete Player;
         for (auto it = Enemy.begin(); it != Enemy.end(); it++)
+        {
+            delete *it;
+        }
+        for (auto it = Exp.begin(); it != Exp.end(); it++)
         {
             delete *it;
         }
