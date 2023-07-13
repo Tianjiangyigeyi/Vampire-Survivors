@@ -118,7 +118,7 @@ public:
     static std::vector<std::vector<std::shared_ptr<std::string>>> itemIntroduction;//外层为id，内层为等级，储存了0~7级的文本的二维智能指针vector
     Item(int ID,std::shared_ptr<std::string> ItemName):itemID(ID),ItemName(ItemName){};
 };
-std::vector<std::vector<std::shared_ptr<std::string>>> Item::itemIntroduction;
+
 
 class WeaponItem:public Item
 {

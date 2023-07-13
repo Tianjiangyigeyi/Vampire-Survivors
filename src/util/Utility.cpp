@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <ctime>
 #include <cstdlib>
+std::vector<std::vector<std::shared_ptr<std::string>>> Item::itemIntroduction;
 SpriteRenderer *Utility::Renderer;
 void Utility::Init(std::shared_ptr<Game> game)
 {
