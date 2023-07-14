@@ -33,12 +33,34 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/Menu/confirm.png", true, "Confirm_button");
     ResourceManager::LoadTexture("assets/Menu/Antonio.png", true, "Sel_Antonio");
     ResourceManager::LoadTexture("assets/Menu/Arca.png", true, "Sel_Arca");
+    ResourceManager::LoadTexture("assets/Menu/Genn.png", false, "Sel_Genn", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
+    ResourceManager::LoadTexture("assets/Menu/Pasq.png", false, "Sel_Pasq", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
+    ResourceManager::LoadTexture("assets/Menu/Arc-ski.png", true, "Arc-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
+    ResourceManager::LoadTexture("assets/Menu/Ant-ski.png", true, "Ant-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
+    ResourceManager::LoadTexture("assets/Menu/Gen-ski.png", false, "Gen-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
+    ResourceManager::LoadTexture("assets/Menu/Pas-ski.png", false, "Pas-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
+
 
     ResourceManager::LoadTexture("assets/buttons/1-1.jpg", false, "1-1", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
     ResourceManager::LoadTexture("assets/buttons/1-2.png", false, "1-2", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
     ResourceManager::LoadTexture("assets/buttons/1-3.png", false, "1-3", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/achs.png", false, "achs", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/cols.png", false, "cols", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/cres.png", false, "cres", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/T.png", false, "sure", WINDOW_WIDTH * 0.03, WINDOW_HEIGHT * 0.05);
+    ResourceManager::LoadTexture("assets/buttons/F.png", false, "not", WINDOW_WIDTH * 0.03, WINDOW_HEIGHT * 0.05);
+    ResourceManager::LoadTexture("assets/buttons/quit.png", false, "quit", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
+    ResourceManager::LoadTexture("assets/buttons/yes.png", false, "yes", WINDOW_WIDTH * 0.15, WINDOW_HEIGHT * 0.12);
 
     ResourceManager::LoadTexture("assets/background/2-2.png", false, "2-2", WINDOW_WIDTH*0.5, WINDOW_HEIGHT*0.8);
+
+    ResourceManager::LoadTexture("assets/background/1-2.png", false, "b1-2", WINDOW_WIDTH, WINDOW_HEIGHT);
+    ResourceManager::LoadTexture("assets/background/bkg-2.png", false, "bkg2", WINDOW_WIDTH, WINDOW_HEIGHT);
+    ResourceManager::LoadTexture("assets/background/gg.png", false, "bgg", 0.25*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT);
+    ResourceManager::LoadTexture("assets/background/opt.png", false, "opt", WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.75);
+    ResourceManager::LoadTexture("assets/background/cre-bck.png", false, "bcre", WINDOW_WIDTH*0.4, WINDOW_HEIGHT*0.6);
+    ResourceManager::LoadTexture("assets/Menu/head.png", false, "head", WINDOW_WIDTH, WINDOW_HEIGHT*0.1);
+    ResourceManager::LoadTexture("assets/background/lev-up.png", false, "lev-up", WINDOW_WIDTH*0.4, WINDOW_HEIGHT*0.6);
 
     char load_path[18]="assets/Font/0.png";
     load_path[17]='\0';

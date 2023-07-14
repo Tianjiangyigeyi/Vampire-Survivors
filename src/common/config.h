@@ -52,7 +52,8 @@ enum GameState
     GAME_SETTING_MENU,
     GAME_PEOPLE_SELECT,
     GAME_WEAPON_SELECT,
-    GAME_MAP_SELECT
+    GAME_MAP_SELECT,
+    GAME_CREDITS
 
 };
 
@@ -600,7 +601,7 @@ public:
     void Render(bool have_texture = false);
     void Check_Hover_Press(float cursor_x, float cursor_y, bool button_left);
 
-    void DrawButton(float cursor_x, float cursor_y, bool &button_left, bool have_texture = false);
+    void DrawButton(float cursor_x, float cursor_y, bool& button_left, bool have_texture = false);
 };
 
 class TextBox
@@ -652,14 +653,21 @@ class Voice
 {
 public:
     std::map<int, std::string> voices;
-    std::map<int, PROCESS_INFORMATION> processes;
+    std::map<int, PROCESS_INFORMATION> processes_sound;
+    std::map<int, PROCESS_INFORMATION> processes_music;
+
+    bool sound;
+    bool music;
+    bool vfx;
+    bool vis;
+    bool dam;
 
     Voice();
     ~Voice();
-    void play(int id);
-    void stop_play(int id);
+    void play(int id, int type);
+    void stop_play(int id, int type);
 
 };
-static Voice v;
+//static Voice v;
 
 #endif

@@ -1,4 +1,5 @@
 #include "VsApp.h"
+// #include "../common/config.cpp"
 GLFWwindow *window;
 
 double cursor_x, cursor_y;
@@ -12,6 +13,7 @@ std::vector<glm::vec4> areas_to_check;
 int button_id = MAX_INT;
 
 bool render_in_game = false;
+extern Voice v;
 
 
 // 为了满足OpenGL的C特性，它们不得不设为全局变量
@@ -69,7 +71,7 @@ bool VsApp::Init()
 int VsApp::Run()
 {
     
-    v.play(0);
+    v.play(0, 1);
     // deltaTime variables
     // -------------------
     float deltaTime = 0.0f;
@@ -95,7 +97,7 @@ int VsApp::Run()
             glfwPollEvents();
             if(render_in_game) 
             {
-                v.stop_play(0);
+                // v.stop_play(0, 1);
                 
                 // static int j = 0;
                 // for(int i= 0;i<areas_to_check.size();i++)
