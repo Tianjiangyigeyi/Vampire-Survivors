@@ -40,6 +40,8 @@ void reset_render()
 
 void GameView::Render()
 {
+    static int cblood = 0;
+    static int cexp = 0;
     if (game->State == GAME_ACTIVE)
     {
         
@@ -50,19 +52,26 @@ void GameView::Render()
             music_change = false;
         }
     
-        static bool blood_change = false;
         static bool render_blood = true;
+        static bool render_exp = true;
         static int blood = -1;
+        static int exp = -1;
         if(blood != game->Player->current_health)
         {
             //std::cout<<"blood change"<< blood <<game->Player->current_health<<std::endl;
             if(blood > game->Player->current_health)
                 v.play(3, 0);
             
-            blood_change = true;
+ 
             render_blood = true;
             blood = game->Player->current_health;
-            blood_change = false;
+    
+        }
+        if(exp != game->Player->exp)
+        {
+            //std::cout<<"exp change"<<std::endl;
+            exp = game->Player->exp;
+            render_exp = true;
         }
         areas_to_check.clear();
         render_in_game = true;
@@ -70,9 +79,7 @@ void GameView::Render()
         // 每次渲染必须reset相机位置, scale是缩放的比例
         float scale = 0.5;
         Utility::ResetCamera(game->Player->Position, glm::vec2(game->Width / 2.0f, game->Height / 2.0f), scale);
-        // std::cout<<Player->Position.x<<" "<<Player->Position.y<<std::endl;
-        // std::cout<<Width<<" "<<Height<<std::endl;
-        // draw background
+
         Utility::DrawBackground();
         if(game->Player->Destroyed){
             game->Player->Destroyed--;
@@ -98,39 +105,50 @@ void GameView::Render()
 
         // std::cout<<"player pos: "<<posx<<" "<<posy<<std::endl;
 
-        Button ExitGame( posx-0.3*WINDOW_WIDTH/scale, posy - 0.4*WINDOW_HEIGHT/scale, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Exit"));
-        ExitGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
-        // std::cout<<"ExitGame pos: "<<ExitGame.x<<" "<<ExitGame.y<<std::endl;
+        // Button ExitGame( posx-0.3*WINDOW_WIDTH/scale, posy - 0.4*WINDOW_HEIGHT/scale, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Exit"));
+        // ExitGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        // // std::cout<<"ExitGame pos: "<<ExitGame.x<<" "<<ExitGame.y<<std::endl;
 
-        Button PauseGame(-0.3*WINDOW_WIDTH/scale + posx, -0.3*WINDOW_HEIGHT/scale + posy, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Pause"));
-        PauseGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        Button PauseGame(0.4*WINDOW_WIDTH/scale + posx, posy-0.46*WINDOW_HEIGHT/scale, 0.16*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT/scale, std::string("1-3"));
+        PauseGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
 
-        areas_to_check.push_back(glm::vec4(scale* (ExitGame.x-posx)+0.5*WINDOW_WIDTH, scale*(ExitGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (ExitGame.x+ExitGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (ExitGame.y+ExitGame.height-posy)+0.5*WINDOW_HEIGHT));
+        // areas_to_check.push_back(glm::vec4(scale* (ExitGame.x-posx)+0.5*WINDOW_WIDTH, scale*(ExitGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (ExitGame.x+ExitGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (ExitGame.y+ExitGame.height-posy)+0.5*WINDOW_HEIGHT));
         areas_to_check.push_back(glm::vec4(scale* (PauseGame.x-posx)+0.5*WINDOW_WIDTH, scale*(PauseGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (PauseGame.x+PauseGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (PauseGame.y+PauseGame.height-posy)+0.5*WINDOW_HEIGHT));
 
         if(button_id == 0)
         {
-            game->State = GAME_OVER;
-            ExitGame.pressed = false;
-        }
-        if(button_id == 1)
-        {
+            cblood = game->Player->current_health;
+            cexp = game->Player->exp;
+
             game->State = GAME_PAUSE;
-            PauseGame.pressed = false;
+            reset_render();
+
         }
 
         ValLine BloodLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-15, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
         BloodLine.Render(render_blood, 3);
         render_blood = false;
-        std::cout<<"Exp:"<<game->Player->exp<<std::endl;
-        ValLine ExpLine(0.8*WINDOW_WIDTH/scale, 0.05*WINDOW_HEIGHT/scale, posx-0.45*WINDOW_WIDTH/scale, posy-0.45*WINDOW_HEIGHT/scale, game->Player->current_health, game->Player->max_health, glm::vec3(0,0,255), glm::vec3(128,128,128));
-        ExpLine.Render(render_blood, 4);
+        // std::cout<<"Exp:"<<game->Player->exp<<std::endl;
+        ValLine ExpLine(0.8*WINDOW_WIDTH/scale, 0.05*WINDOW_HEIGHT/scale, posx-0.45*WINDOW_WIDTH/scale, posy-0.45*WINDOW_HEIGHT/scale, game->Player->exp, game->Player->next_exp, glm::vec3(0,0,255), glm::vec3(128,128,128));
+        ExpLine.Render(render_exp, 4);
+        render_exp = false;
+        // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
+
+        if(game->Player->exp >=  0.95 * game->Player->next_exp) {
+            // std::cout<<"----------------Level Up!------------------"<<std::endl;
+            game->Player->Upgrade();
+            game->Player->next_exp = game->Player->next_exp * 4;
+            game->State = GAME_LEVEL_UP;
+            reset_render();
+
+        }
 
     }
 
     else if (game->State == GAME_START_MENU) 
     {
-
+        // std::cout<<"------In func GAME_START_MENU-------"<<std::endl;
+        shouldswap = false;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
@@ -158,6 +176,7 @@ void GameView::Render()
         {
             reset_render();
             game->State = GAME_SETTING_MENU;
+            //game->State = GAME_OVER;
         }
 
         if(button_id == 1)
@@ -179,14 +198,12 @@ void GameView::Render()
             game->State = GAME_CREDITS;
         }
         
-
     }
 
     else if(game->State == GAME_SETTING_MENU)
     {
         Button *Sound, *Music, *VFX, *Vis, *Dam;
         
-        std::cout<<"--------------------------------------------------------------"<<std::endl;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
@@ -232,13 +249,7 @@ void GameView::Render()
         areas_to_check.push_back(glm::vec4(VFX->x, VFX->y, VFX->width, VFX->height));
         areas_to_check.push_back(glm::vec4(Vis->x, Vis->y, Vis->width, Vis->height));
         areas_to_check.push_back(glm::vec4(Dam->x, Dam->y, Dam->width, Dam->height));
-        
-        //cout push_back here
-        // for(int i = 0; i<areas_to_check.size(); i++)
-        // {
-        //     std::cout<<"area_to_check:";
-        //     std::cout<<areas_to_check[i].x<<" "<<areas_to_check[i].y<<" "<<areas_to_check[i].z<<" "<<areas_to_check[i].w<<std::endl;
-        // }
+    
         
         shouldswap = false;
         if(button_id == 0) {
@@ -246,14 +257,13 @@ void GameView::Render()
             game->State = GAME_START_MENU;
         }
         if(button_id == 1) {
-            //std::cout<<"button_id == 1"<<cursor_x<<" "<<cursor_y<<" "<<LeftButtonPressed<<std::endl;
+         
             reset_render();
             v.sound = !v.sound;
             
         }
         if(button_id == 2) {
-            //std::cout<<"button_id == 2"<<cursor_x<<" "<<cursor_y<<" "<<LeftButtonPressed<<std::endl;
-            std::cout<<"v.music: "<<v.music<<std::endl;
+        
             reset_render();
             v.music = !v.music;
             if(!v.music) {
@@ -282,7 +292,7 @@ void GameView::Render()
 
     else if(game->State == GAME_SELECT_MENU)
     {
-        std::cout<<"------In func GAME_SELECT_MENU-------"<<std::endl;
+        // std::cout<<"------In func GAME_SELECT_MENU-------"<<std::endl;
         shouldswap = false;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("b1-2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
@@ -333,7 +343,7 @@ void GameView::Render()
         areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
 
         if(button_id != MAX_INT && button_id != 4 && button_id != 5) {
-            std::cout<<"button_id: "<<button_id<<std::endl;
+            // std::cout<<"button_id: "<<button_id<<std::endl;
             shouldswap = true;
             player_id = button_id;
             areas_to_check.clear();
@@ -349,7 +359,7 @@ void GameView::Render()
 
         if(button_id == 5) 
         {
-            std::cout<<"button_id == 5"<<std::endl;
+            // std::cout<<"button_id == 5"<<std::endl;
             reset_render();
             game->State = GAME_START_MENU;
         }
@@ -358,25 +368,205 @@ void GameView::Render()
 
     else if(game->State == GAME_OVER)
     {
-        std::cout<<"In func GAME_OVER"<<std::endl;
-//        mciSendString("stop mp3", NULL, 0, NULL);
-//        mciSendString("close mp3", NULL, 0, NULL);
+        shouldswap = false;
+        v.stop_play(2, 1);
+        v.play(5, 0);
 
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
-        Utility::DrawBackground(std::string("StartMenu"));
-        Utility::DrawBackground(std::string("bgg"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.35));
+        Utility::DrawBackground(std::string("StartMenu"), glm::vec2(0, WINDOW_HEIGHT*0.1));
+        Utility::DrawBackground(std::string("head"));
+        Utility::DrawBackground(std::string("bgg"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.35));
 
         Button start_button(game->Width * 0.4, game->Height * 0.6, game->Width * 0.2, game->Height * 0.1, std::string("quit"));
         start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        if (start_button.pressed)
+        areas_to_check.push_back(glm::vec4(start_button.x, start_button.y, start_button.width, start_button.height));
+        // std::cout<<"button_id: "<<button_id<<std::endl;
+        if (button_id == 1)
         {
-            game->State = GAME_START_MENU;
-            start_button.pressed = false;
+            // std::cout<<"State from GAME_OVER to GAME_START_MENU"<<std::endl;
+            game->State = GAME_RESULT;
+            reset_render();
         }
 
-        for (auto it = game->Exp.begin(); it != game->Exp.end(); it++) {
-            (*it)->Draw();
+        // for (auto it = game->Exp.begin(); it != game->Exp.end(); it++) {
+        //     (*it)->Draw();
+        // }
+    }
+
+    
+    else if(game->State == GAME_PAUSE)
+    {
+        Button *Sound, *Music, *VFX, *Vis, *Dam;
+        
+        Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
+        Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
+        Utility::DrawBackground(std::string("head"));
+        Utility::DrawBackground(std::string("opt"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.12));
+
+        Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
+        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+        if(v.sound)
+            Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+        else
+            Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+        Sound->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+        if(v.music)
+            Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+        else
+            Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+        Music->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);  
+
+        if(v.vfx)
+            VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+        else
+            VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+        VFX->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+        if(v.vis)
+            Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+        else
+            Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+        Vis->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+        if(v.dam)
+            Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+        else
+            Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+        Dam->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+
+        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        areas_to_check.push_back(glm::vec4(Sound->x, Sound->y, Sound->width, Sound->height));
+        areas_to_check.push_back(glm::vec4(Music->x, Music->y, Music->width, Music->height));
+        areas_to_check.push_back(glm::vec4(VFX->x, VFX->y, VFX->width, VFX->height));
+        areas_to_check.push_back(glm::vec4(Vis->x, Vis->y, Vis->width, Vis->height));
+        areas_to_check.push_back(glm::vec4(Dam->x, Dam->y, Dam->width, Dam->height));
+    
+        
+        shouldswap = false;
+        if(button_id == 0) {
+            reset_render();
+            game->State = GAME_ACTIVE;
         }
+        if(button_id == 1) {
+         
+            reset_render();
+            v.sound = !v.sound;
+            
+        }
+        if(button_id == 2) {
+        
+            reset_render();
+            v.music = !v.music;
+            if(!v.music) {
+                v.stop_play(2, 1);
+            }
+            else {
+                v.play(2, 1);
+            }
+        }
+        if(button_id == 3) {
+ 
+            reset_render();
+            v.vfx = !v.vfx;
+        }
+        if(button_id == 4) {
+            reset_render();
+            v.vis = !v.vis;
+        }
+        if(button_id == 5) {
+            reset_render();
+            v.dam = !v.dam;
+        }
+    }
+
+    else if(game->State == GAME_LEVEL_UP) {
+
+        v.stop_play(2, 1);
+        v.play(4, 0);
+        Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
+        Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
+        Utility::DrawBackground(std::string("head"));
+        Utility::DrawBackground(std::string("lev-up"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.12));
+
+        Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
+        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+
+        shouldswap = false;
+        game->Player->exp = 0;
+
+        if(button_id == 0) {
+            v.play(2, 1);
+            reset_render();
+            game->State = GAME_ACTIVE;
+        }
+
+    }
+
+    else if(game->State == GAME_CREDITS) 
+    {
+        shouldswap = false;
+        Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
+        Utility::DrawBackground(std::string("StartMenu"), glm::vec2(0, WINDOW_HEIGHT*0.1));
+        Utility::DrawBackground(std::string("head"));
+        Utility::DrawBackground(std::string("bcre"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.12));
+
+        Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
+        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+
+        if(button_id == 0) {
+            reset_render();
+            game->State = GAME_START_MENU;
+        }
+
+        std::string Infomats = "CREDITS";
+        std::string Instructor = "Instructor   Dr Xin Yuan";
+        std::string s1 = "S1   Zuoquan Lin";
+        std::string s2 = "S2   Shengyuan Huang";
+        std::string s3 = "S3   Yang Xie";
+        std::string s4 = "S4   Hangqi Li";
+        std::string ver = "Version 2";
+        TextBox Infos(0.32*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, 0.11*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, glm::vec3(127,127,127), Infomats);
+        TextBox Ins(0.34*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), Instructor);
+        TextBox S1(0.34*WINDOW_WIDTH, 0.27*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s1);
+        TextBox S2(0.34*WINDOW_WIDTH, 0.34*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s2);
+        TextBox S3(0.34*WINDOW_WIDTH, 0.41*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s3);
+        TextBox S4(0.34*WINDOW_WIDTH, 0.48*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s4);
+        TextBox Ver(0.34*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.11*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), ver);
+        
+        Infos.Render();
+        Ins.Render();
+        S1.Render();
+        S2.Render();
+        S3.Render();
+        S4.Render();
+        Ver.Render();
+
+    }
+
+    else if(game->State == GAME_RESULT)
+    {
+        Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
+        Utility::DrawBackground(std::string("StartMenu"), glm::vec2(0, WINDOW_HEIGHT*0.1));
+        Utility::DrawBackground(std::string("head"));
+        Utility::DrawBackground(std::string("result"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.12));
+
+        Button Done(0.4*WINDOW_WIDTH, 0.85*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("done"));
+        Done.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        areas_to_check.push_back(glm::vec4(Done.x, Done.y, Done.width, Done.height));
+
+        shouldswap = false;
+        if(button_id == 0) {
+            reset_render();
+            game->State = GAME_START_MENU;
+        }
+
+
     }
 
     else if(game->State == GAME_PEOPLE_SELECT)
@@ -446,7 +636,7 @@ void GameView::Render()
 
             areas_to_check.clear();
             button_id = MAX_INT;
-            game->State = GAME_WEAPON_SELECT;
+            game->State = GAME_PEOPLE_SELECT;
             
         }
         shouldswap = false;
@@ -454,210 +644,5 @@ void GameView::Render()
 
     }
 
-    else if(game->State == GAME_WEAPON_SELECT)
-    {
-        //static bool selected = false;
-        std::cout<<"In func GAME_WEAPON_SELECT"<<std::endl;
-        std::cout<<"----------------------------------------"<<std::endl;
-
-        areas_to_check.clear();
-        players_to_select[0] = new static_Player(std::string("Antonio"), 100, 200, 100, 100, 50);
-        players_to_select[1] = new static_Player(std::string("Arca"), 200, 100, 50, 60, 100);
-        players_to_select[2] = new static_Player(std::string("Tony"), 150, 130, 40, 50,100);
-        players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
-
-        Utility::ClearBckGnd(std::string("StartMenu"));
-        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true, 1);
- 
-        std::map<int, std::string> People_select_texts;
-        People_select_texts[0] = "Type ";
-        People_select_texts[1] = "Power ";
-        People_select_texts[2] = "MPadd ";
-        People_select_texts[3] = "ATK ";
-
-
-        std::map<int, TextBox*> People_select_TextBoxes;
-        std::map<int, TextBox*> People_select_Changing_Boxes;
-
-        for(int i = 0; i < 4; i++)
-        {
-            People_select_TextBoxes[i] = new TextBox(0.86*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
-            People_select_TextBoxes[i]->Render();
-  
-        }
-
-
-        for(int i = 0; i < 4; i++)
-        {
-            std::string tmp_name = "Sel_" + players_to_select[i]->name;
-            People_select_button_map[i] = new Button(0.25*((i % 2) + 1)*WINDOW_WIDTH, 0.25*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp_name);
-            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-            areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
-
-        
-        }
-
-        for(int i = 0; i < 4; i++)
-        {
-            People_select_Changing_Boxes[i] = new TextBox(0.91*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
-            if(button_id != MAX_INT && button_id != 4) {
-                player_id = button_id;
-
-                if(i == 0)
-                People_select_Changing_Boxes[0]->setText(players_to_select[button_id]->name);
-                if(i == 1)
-                People_select_Changing_Boxes[1]->setText(std::to_string(players_to_select[button_id]->max_health));
-                if(i == 2)
-                People_select_Changing_Boxes[2]->setText(std::to_string(players_to_select[button_id]->attack));
-                if(i == 3)
-                People_select_Changing_Boxes[3]->setText(std::to_string(players_to_select[button_id]->speed));
-            }
-            People_select_Changing_Boxes[i]->Render();
-        }
-
-        Button Confirm(0.4*WINDOW_WIDTH, 0.8*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
-
-        if(button_id == 4) {
-
-            game->State = GAME_MAP_SELECT;
-            areas_to_check.clear();
-            button_id = MAX_INT;
-        }
-        
-        shouldswap = false;
-    }
-    else if(game->State == GAME_MAP_SELECT)
-    {
-        std::cout<<"In func GAME_MAP_SELECT"<<std::endl;
-        std::cout<<"----------------------------------------"<<std::endl;
-
-        areas_to_check.clear();
-        players_to_select[0] = new static_Player(std::string("Alan"), 100, 200, 100, 100, 50);
-        players_to_select[1] = new static_Player(std::string("Tom"), 200, 100, 50, 60, 100);
-        players_to_select[2] = new static_Player(std::string("Tony"), 150, 130, 40, 50,100);
-        players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
-
-        Utility::ClearBckGnd(std::string("StartMenu"));
-        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true, 2);
- 
-        std::map<int, std::string> People_select_texts;
-        People_select_texts[0] = "Type ";
-        People_select_texts[1] = "Power ";
-        People_select_texts[2] = "MPadd ";
-        People_select_texts[3] = "ATK ";
-
-
-        std::map<int, TextBox*> People_select_TextBoxes;
-        std::map<int, TextBox*> People_select_Changing_Boxes;
-
-        for(int i = 0; i < 4; i++)
-        {
-            People_select_TextBoxes[i] = new TextBox(0.86*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
-            People_select_TextBoxes[i]->Render();
-  
-        }
-
-
-        for(int i = 0; i < 4; i++)
-        {
-            std::string tmp_name = players_to_select[i]->name;
-            People_select_button_map[i] = new Button(0.25*((i % 2) + 1)*WINDOW_WIDTH, 0.25*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp_name);
-            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed);
-            areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
-
-        
-        }
-
-        for(int i = 0; i < 4; i++)
-        {
-            People_select_Changing_Boxes[i] = new TextBox(0.91*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
-            if(button_id != MAX_INT && button_id != 4) {
-                player_id = button_id;
-
-                if(i == 0)
-                People_select_Changing_Boxes[0]->setText(players_to_select[button_id]->name);
-                if(i == 1)
-                People_select_Changing_Boxes[1]->setText(std::to_string(players_to_select[button_id]->max_health));
-                if(i == 2)
-                People_select_Changing_Boxes[2]->setText(std::to_string(players_to_select[button_id]->attack));
-                if(i == 3)
-                People_select_Changing_Boxes[3]->setText(std::to_string(players_to_select[button_id]->speed));
-            }
-            People_select_Changing_Boxes[i]->Render();
-        }
-
-        Button Confirm(0.4*WINDOW_WIDTH, 0.8*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
-
-        if(button_id == 4) {
-
-            game->State = GAME_ACTIVE;
-            areas_to_check.clear();
-            button_id = MAX_INT;
-        }
-        
-        shouldswap = false;
-        if(game->State == GAME_ACTIVE)
-            shouldswap = true;
-
-    }
-
-    else if(game->State == GAME_PAUSE)
-    {
-        Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
-        Utility::DrawBackground(std::string("opt"), glm::vec2(WINDOW_WIDTH*0.2, WINDOW_HEIGHT*0.1));
-
-        Button start_button(game->Width * 0.4, game->Height * 0.4, game->Width * 0.2, game->Height * 0.1, std::string("GAME PAUSE!"));
-        start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
-        if (start_button.pressed)
-        {
-            game->State = GAME_ACTIVE;
-            start_button.pressed = false;
-        }
-    }
-    else if(game->State == GAME_CREDITS) 
-    {
-        shouldswap = false;
-        Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
-        Utility::DrawBackground(std::string("StartMenu"), glm::vec2(0, WINDOW_HEIGHT*0.1));
-        Utility::DrawBackground(std::string("head"));
-        Utility::DrawBackground(std::string("bcre"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.12));
-
-        Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
-        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
-
-        if(button_id == 0) {
-            reset_render();
-            game->State = GAME_START_MENU;
-        }
-
-        std::string Infomats = "CREDITS";
-        std::string Instructor = "Instructor   Dr Xin Yuan";
-        std::string s1 = "S1   Zuoquan Lin";
-        std::string s2 = "S2   Shengyuan Huang";
-        std::string s3 = "S3   Yang Xie";
-        std::string s4 = "S4   Hangqi Li";
-        std::string ver = "Version 2";
-        TextBox Infos(0.32*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, 0.11*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, glm::vec3(127,127,127), Infomats);
-        TextBox Ins(0.34*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), Instructor);
-        TextBox S1(0.34*WINDOW_WIDTH, 0.27*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s1);
-        TextBox S2(0.34*WINDOW_WIDTH, 0.34*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s2);
-        TextBox S3(0.34*WINDOW_WIDTH, 0.41*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s3);
-        TextBox S4(0.34*WINDOW_WIDTH, 0.48*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), s4);
-        TextBox Ver(0.34*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.11*WINDOW_WIDTH, 0.04*WINDOW_HEIGHT, glm::vec3(127,127,127), ver);
-        
-        Infos.Render();
-        Ins.Render();
-        S1.Render();
-        S2.Render();
-        S3.Render();
-        S4.Render();
-        Ver.Render();
-
-    }
 
 }
