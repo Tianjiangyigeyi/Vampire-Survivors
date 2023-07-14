@@ -154,7 +154,7 @@ void PlayerObject::Upgrade()
 //TODO: 添加对应的弹道生成函数
 void PlayerObject::Attack(int frame_count,std::vector<GameObject *>* bullets)
 {
-    for(int i=0;i<6;i++)
+    for(int i=0;i<weapon_count;i++)
     {
         if(frame_count%int (WeaponPackage[i]->cool_down*MAX_FRAME_PER_SECOND)==0)
             WeaponPackage[i]->ShootBullet(bullets);

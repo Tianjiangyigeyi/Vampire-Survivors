@@ -52,7 +52,7 @@ void GameViewModel::Update(float dt)
     if (game->State == GAME_ACTIVE)
     {
         game->frame_counter++;
-        if (game->frame_counter % 90 == 0) {
+        if (game->frame_counter % 10 == 0) {
             glm::vec2 enemyPos, dir;
             unsigned int len = rand() % (game->Height * 2 + game->Width * 2);
 
@@ -88,7 +88,7 @@ void GameViewModel::Update(float dt)
                     {
                         if ((*it)->CheckCollision(**iterator))
                         {
-                            if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage))
+                            if (!(*it)->health_adjust(game->Player->might/100 * game->Player->the_weapon->base_damage))
                             {
                                 PickupObject *temp1 = new PickupObject((*it)->Position, "Experience");
                                 EnemyObject *temp2 = *it;

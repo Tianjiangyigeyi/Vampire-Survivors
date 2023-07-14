@@ -518,8 +518,10 @@ public:
 
     int state;
 
+    int weapon_count=0;
+    int passive_count=0;
     std::shared_ptr<WeaponItem> WeaponPackage[6];
-    std::shared_ptr<PassiveItem>PassivePackage[6];
+    std::shared_ptr<PassiveItem> PassivePackage[6];
 
     std::string sprites[4];
     // constructor(s)
