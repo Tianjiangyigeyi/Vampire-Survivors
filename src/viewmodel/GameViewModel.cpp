@@ -111,13 +111,23 @@ void GameViewModel::Update(float dt)
                 (*it)->Move(dir1);
             }
 
-            for (auto it1 = game->Exp.begin(); it1 != game->Exp.end(); it1++) {
-                if (game->Player->CheckColl(**it1)) {
-                    glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x,
-                                               game->Player->Position.y - (*it1)->Position.y);
+            for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
+                if(game->Player->CheckColl(**it1)){
+                    glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x, game->Player->Position.y - (*it1)->Position.y);
                     dir1 = glm::normalize(dir1);
                     dir1 = glm::vec2(dir1.x * (*it1)->speed, dir1.y * (*it1)->speed);
                     (*it1)->Move(dir1);
+                }
+                if((*it1)->CheckCollision(*game->Player)) {
+                    //PickupObject *temp3 = *it1;
+                    game->Player->exp+=5;
+                    if(game->Player->exp >= game->Player->next_exp){
+                        game->Player->exp = 0;
+                    }
+                    std::cout << game->Player->exp;
+                    //game->Exp.erase(it1, it1 + 1);
+                    //delete temp3;
+
                 }
             }
 

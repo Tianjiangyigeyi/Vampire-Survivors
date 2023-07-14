@@ -107,6 +107,8 @@ glm::vec2& GameObject::GetPosition()
 
 bool GameObject::CheckCollision(GameObject &other)
 {
+    //return ( (Position.x + Coll_Size.x/2) >= (other.Position.x - other.Coll_Size.x/2) && (Position.x - Coll_Size.x/2) <= (other.Position.x + other.Coll_Size.x/2 ) ) && ( (Position.y + Coll_Size.y/2 >= other.Position.y - other.Coll_Size.y/2) && (Position.y - Coll_Size.y/2 <= other.Position.y + other.Coll_Size.y/2) );
+    //return ( (Position.x + Coll_Size.x/2) >= (other.Position.x - other.Coll_Size.x/2) || (Position.x - Coll_Size.x/2) <= (other.Position.x + other.Coll_Size.x/2 ) ) && ( (Position.y + Coll_Size.y/2 >= other.Position.y - other.Coll_Size.y/2) || (Position.y - Coll_Size.y/2 <= other.Position.y + other.Coll_Size.y/2) );
     return Position.x + Coll_Size.x >= other.Position.x && Position.x <= other.Position.x + other.Coll_Size.x && Position.y + Coll_Size.y >= other.Position.y && Position.y <= other.Position.y + other.Coll_Size.y;
 }
 
@@ -124,6 +126,8 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     might = 50;
     max_health = current_health =  1000;
     recovery = 1;
+    exp = 0;
+    next_exp = 100;
     magnet = glm::vec2(Size.x*30, Size.x*30);
 }
 
