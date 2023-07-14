@@ -39,6 +39,14 @@ PickupObject::PickupObject(glm::vec2 pos,  std::string sprite)
     SetColl_Size(Size);
 }
 
+void EnemyObject::Set_hit(std::shared_ptr<WeaponItem> *weapons)
+{
+    for(int i=0;i<6;i++)
+    {
+        can_hit[i]=int(weapons[i]->duration*MAX_FRAME_PER_SECOND);
+        hit_count[i]=0;
+    }
+}
 
 // resets the ball to initial Stuck Position (if ball is outside window bounds)
 void PickupObject::Reset(glm::vec2 position, glm::vec2 velocity)
@@ -138,6 +146,16 @@ void PlayerObject::Upgrade()
     
 }
 
+//TODO: 添加对应的弹道生成函数
+void PlayerObject::Attack(int frame_count)
+{
+    for(int i=0;i<6;i++)
+    {
+        if(frame_count%(WeaponPackage[i]->cool_down*MAX_FRAME_PER_SECOND)==0)
+            WeaponPackage[i]->ShootBullet();
+    }
+}
+
 void PlayerObject::Move(glm::vec2 &dir)
 {
     Pcount++;
@@ -223,4 +241,8 @@ void WeaponObject::Move(glm::vec2 &dir)
         }
 
     }
+}
+
+void WeaponItem::ShootBullet() {
+
 }

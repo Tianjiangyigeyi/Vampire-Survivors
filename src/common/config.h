@@ -9,12 +9,6 @@
 #include <string>
 #include <map>
 #include <iostream>
-
-#include <Windows.h>
-#include <mmsystem.h>
-
-#pragma comment(lib, "winmm.lib")
-
 // The Width of the screen
 #define WINDOW_WIDTH 1600
 // The height of the screen
@@ -444,6 +438,7 @@ public:
         ++level;
         if(level<8) context=itemIntroduction[itemID][level];
     }
+    void ShootBullet();
 };
 
 class PassiveItem:public Item
@@ -452,7 +447,7 @@ class PassiveItem:public Item
     //故此处结构有待调整
 public:
     //PassiveItem(play);
-
+    PassiveItem(int ID,std::shared_ptr<std::string> ItemName):Item(ID,ItemName){};
 };
 
 class EnemyObject : public GameObject
@@ -461,12 +456,17 @@ public:
     float speed = 8;  // 怪物移动速度
     float power = 100;  // 怪物攻击力
     float health = 100; // 怪物当前血量
+    //记录怪物重新被攻击的间隔
+    int can_hit[6];//两次攻击之间的间隔帧
+    int hit_count[6];//离受到下一次攻击还剩多少帧，为0时说明可以再一次受到攻击
+
     std::string sprite;
     // constructor(s)
     EnemyObject() = delete;
     EnemyObject(glm::vec2 pos, std::string sprite);
     // resets the ball to original state with given position and velocity
     void Reset(glm::vec2 position, glm::vec2 velocity);
+    void Set_hit(std::shared_ptr<WeaponItem>* weapons);
     ~EnemyObject();
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
@@ -511,8 +511,8 @@ public:
 
     int state;
 
-    std::vector<WeaponItem*> WeaponPackage;
-    std::vector<PassiveItem*> PassivePackage;
+    std::shared_ptr<WeaponItem> WeaponPackage[6];
+    std::shared_ptr<PassiveItem>PassivePackage[6];
 
     std::string sprites[4];
     // constructor(s)
@@ -527,6 +527,7 @@ public:
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
     bool CheckColl(GameObject &other);
+    void Attack(int frame_count);
 };
 
 
@@ -545,7 +546,7 @@ public:
     std::vector<std::shared_ptr<PassiveItem>> PassiveItemPool;
     std::vector<EnemyObject *> Enemy;
     std::vector<PickupObject *> Exp;
-
+    int frame_counter=0;//计时器，记录帧的变化
     // constructor/destructor
     Game(unsigned int width, unsigned int height)
             : State(GAME_START_MENU), Keys(), Width(width), Height(height), Button_left(false)
@@ -585,10 +586,10 @@ public:
     Button(float x, float y, float width, float height, std::string button_text)
         : x(x), y(y), width(width), height(height), hovered(false), pressed(false), Button_text(button_text){};
 
-    void Render(bool have_texture = false);
+    void Render();
     void Check_Hover_Press(float cursor_x, float cursor_y, bool button_left);
 
-    void DrawButton(float cursor_x, float cursor_y, bool &button_left, bool have_texture = false);
+    void DrawButton(float cursor_x, float cursor_y, bool &button_left);
 };
 
 class TextBox
@@ -632,22 +633,8 @@ public:
     ValLine(int act_len, int act_hgt, int posx, int posy, int val_left, int max_val, glm::vec3 color_left, glm::vec3 color_right)
         : actual_length(act_len), actual_height(act_hgt), posx(posx), posy(posy), val_left(val_left), max_val(max_val), color_left(color_left), color_right(color_right){};
 
-    void Render(bool Is_Changed, int id);
+    void Render(bool Is_Changed);
 
 };
-
-class Voice
-{
-public:
-    std::map<int, std::string> voices;
-    std::map<int, PROCESS_INFORMATION> processes;
-
-    Voice();
-    ~Voice();
-    void play(int id);
-    void stop_play(int id);
-
-};
-static Voice v;
 
 #endif
