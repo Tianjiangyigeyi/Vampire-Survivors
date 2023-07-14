@@ -30,15 +30,26 @@ void GameView::Render()
 {
     if (game->State == GAME_ACTIVE)
     {
-        bool blood_change = true;
+        
+        static bool music_change = true;
+        if(music_change) {
+            v.stop_play(0);
+            v.play(2);
+            music_change = false;
+        }
+    
+        static bool blood_change = false;
+        static bool render_blood = true;
         static int blood = -1;
         if(blood != game->Player->current_health)
         {
+            //std::cout<<"blood change"<< blood <<game->Player->current_health<<std::endl;
+            if(blood > game->Player->current_health)
+                v.play(3);
+            
             blood_change = true;
+            render_blood = true;
             blood = game->Player->current_health;
-        }
-        else
-        {
             blood_change = false;
         }
         areas_to_check.clear();
@@ -97,9 +108,11 @@ void GameView::Render()
         }
 
         ValLine BloodLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-15, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
-        BloodLine.Render(blood_change);
-        ValLine ExpLine(0.1*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, posx, posy-5, game->Player->current_health, game->Player->max_health, glm::vec3(255,0,0), glm::vec3(128,128,128));
-        ExpLine.Render(blood_change);
+        BloodLine.Render(render_blood, 3);
+        render_blood = false;
+        std::cout<<"Exp:"<<game->Player->exp<<std::endl;
+        ValLine ExpLine(0.8*WINDOW_WIDTH/scale, 0.05*WINDOW_HEIGHT/scale, posx-0.45*WINDOW_WIDTH/scale, posy-0.45*WINDOW_HEIGHT/scale, game->Player->current_health, game->Player->max_health, glm::vec3(0,0,255), glm::vec3(128,128,128));
+        ExpLine.Render(render_blood, 4);
 
     }
 
@@ -280,7 +293,7 @@ void GameView::Render()
         players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
 
         Utility::ClearBckGnd(std::string("StartMenu"));
-        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true);
+        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true, 0);
         std::cout<<"In func RenderPeopleSelect after bckgnd"<<std::endl;
         std::map<int, std::string> People_select_texts;
         People_select_texts[0] = "Name ";
@@ -356,7 +369,7 @@ void GameView::Render()
         players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
 
         Utility::ClearBckGnd(std::string("StartMenu"));
-        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true);
+        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true, 1);
  
         std::map<int, std::string> People_select_texts;
         People_select_texts[0] = "Type ";
@@ -429,7 +442,7 @@ void GameView::Render()
         players_to_select[3] = new static_Player(std::string("Mary"), 100, 200, 30, 40, 20);
 
         Utility::ClearBckGnd(std::string("StartMenu"));
-        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true);
+        Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true, 2);
  
         std::map<int, std::string> People_select_texts;
         People_select_texts[0] = "Type ";

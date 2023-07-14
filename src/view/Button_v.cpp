@@ -17,7 +17,7 @@ void Button::Render(bool have_texture)
             text_character::generate_text(Button_text,glm::vec2(x,y),glm::vec2(width,height),1,0.0f,glm::vec3(1.0f, 1.0f, 1.0f),false);
     }
 }
-
+// extern Voice v;
 void Button::Check_Hover_Press(float cursor_x, float cursor_y, bool button_left)
 {
 
@@ -28,6 +28,7 @@ void Button::Check_Hover_Press(float cursor_x, float cursor_y, bool button_left)
         hovered = true;
         if(button_left)
         {
+            v.play(1);
             pressed = true;
         }
         else

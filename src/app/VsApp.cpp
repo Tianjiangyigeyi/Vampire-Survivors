@@ -68,6 +68,8 @@ bool VsApp::Init()
 
 int VsApp::Run()
 {
+    
+    v.play(0);
     // deltaTime variables
     // -------------------
     float deltaTime = 0.0f;
@@ -93,6 +95,8 @@ int VsApp::Run()
             glfwPollEvents();
             if(render_in_game) 
             {
+                v.stop_play(0);
+                
                 // static int j = 0;
                 // for(int i= 0;i<areas_to_check.size();i++)
                 // {

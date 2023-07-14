@@ -9,6 +9,12 @@
 #include <string>
 #include <map>
 #include <iostream>
+
+#include <Windows.h>
+#include <mmsystem.h>
+
+#pragma comment(lib, "winmm.lib")
+
 // The Width of the screen
 #define WINDOW_WIDTH 1600
 // The height of the screen
@@ -626,8 +632,22 @@ public:
     ValLine(int act_len, int act_hgt, int posx, int posy, int val_left, int max_val, glm::vec3 color_left, glm::vec3 color_right)
         : actual_length(act_len), actual_height(act_hgt), posx(posx), posy(posy), val_left(val_left), max_val(max_val), color_left(color_left), color_right(color_right){};
 
-    void Render(bool Is_Changed);
+    void Render(bool Is_Changed, int id);
 
 };
+
+class Voice
+{
+public:
+    std::map<int, std::string> voices;
+    std::map<int, PROCESS_INFORMATION> processes;
+
+    Voice();
+    ~Voice();
+    void play(int id);
+    void stop_play(int id);
+
+};
+static Voice v;
 
 #endif
