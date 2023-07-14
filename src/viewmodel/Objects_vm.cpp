@@ -120,6 +120,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     sprites[1] = sprite2;
     sprites[2] = sprite3;
     sprites[3] = sprite4;
+    exp=0;
     might = 50;
     max_health = current_health =  1000;
     recovery = 1;
@@ -147,12 +148,12 @@ void PlayerObject::Upgrade()
 }
 
 //TODO: 添加对应的弹道生成函数
-void PlayerObject::Attack(int frame_count)
+void PlayerObject::Attack(int frame_count,std::vector<GameObject *>* bullets)
 {
     for(int i=0;i<6;i++)
     {
-        if(frame_count%(WeaponPackage[i]->cool_down*MAX_FRAME_PER_SECOND)==0)
-            WeaponPackage[i]->ShootBullet();
+        if(frame_count%int (WeaponPackage[i]->cool_down*MAX_FRAME_PER_SECOND)==0)
+            WeaponPackage[i]->ShootBullet(bullets);
     }
 }
 
@@ -243,6 +244,7 @@ void WeaponObject::Move(glm::vec2 &dir)
     }
 }
 
-void WeaponItem::ShootBullet() {
+void WeaponItem::ShootBullet(std::vector<GameObject *>* bullets)
+{
 
 }

@@ -113,6 +113,7 @@ public:
     void Reset(glm::vec2 position, glm::vec2 velocity);
     ~WeaponObject();
     void Move(glm::vec2 &dir);
+
 };
 
 class Item
@@ -444,6 +445,7 @@ public:
         ++level;
         if(level<8) context=itemIntroduction[itemID][level];
     }
+    void ShootBullet(std::vector<GameObject *>* bullets);
 };
 
 class PassiveItem:public Item
@@ -452,7 +454,7 @@ class PassiveItem:public Item
     //故此处结构有待调整
 public:
     //PassiveItem(play);
-
+    PassiveItem(int ID,std::shared_ptr<std::string> ItemName):Item(ID,ItemName){};
 };
 
 class EnemyObject : public GameObject
@@ -461,12 +463,17 @@ public:
     float speed = 8;  // 怪物移动速度
     float power = 100;  // 怪物攻击力
     float health = 100; // 怪物当前血量
+    //记录怪物重新被攻击的间隔
+    int can_hit[6];//两次攻击之间的间隔帧
+    int hit_count[6];//离受到下一次攻击还剩多少帧，为0时说明可以再一次受到攻击
+
     std::string sprite;
     // constructor(s)
     EnemyObject() = delete;
     EnemyObject(glm::vec2 pos, std::string sprite);
     // resets the ball to original state with given position and velocity
     void Reset(glm::vec2 position, glm::vec2 velocity);
+    void Set_hit(std::shared_ptr<WeaponItem>* weapons);
     ~EnemyObject();
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
@@ -511,8 +518,8 @@ public:
 
     int state;
 
-    std::vector<WeaponItem*> WeaponPackage;
-    std::vector<PassiveItem*> PassivePackage;
+    std::shared_ptr<WeaponItem> WeaponPackage[6];
+    std::shared_ptr<PassiveItem>PassivePackage[6];
 
     std::string sprites[4];
     // constructor(s)
@@ -527,6 +534,7 @@ public:
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
     bool CheckColl(GameObject &other);
+    void Attack(int frame_count,std::vector<GameObject *>* bullets);
 };
 
 
@@ -545,7 +553,9 @@ public:
     std::vector<std::shared_ptr<PassiveItem>> PassiveItemPool;
     std::vector<EnemyObject *> Enemy;
     std::vector<PickupObject *> Exp;
-
+    std::vector<GameObject *> Bullets[6];//六种武器的弹道
+    //std::vector<std::shared_ptr<>>
+    int frame_counter=0;//计时器，记录帧的变化
     // constructor/destructor
     Game(unsigned int width, unsigned int height)
             : State(GAME_START_MENU), Keys(), Width(width), Height(height), Button_left(false)

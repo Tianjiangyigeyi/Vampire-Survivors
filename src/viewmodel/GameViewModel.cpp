@@ -49,7 +49,8 @@ void GameViewModel::Update(float dt)
 {
     Process(dt);
     int total_dam = 0;
-    if (game->State == GAME_ACTIVE) {
+    if (game->State == GAME_ACTIVE)
+    {
         game->frame_counter++;
         if (game->frame_counter % 90 == 0) {
             glm::vec2 enemyPos, dir;
@@ -66,25 +67,38 @@ void GameViewModel::Update(float dt)
                 dir.y = -dir.y;
             } else if (len < 2 * game->Height + game->Width)
                 dir = glm::vec2(game->Width, len * 2.0 - game->Height * 3.0 - game->Width * 2.0);
-
             else
                 dir = glm::vec2(len * 2.0 - game->Height * 4.0 - game->Width * 3, game->Height);
 
             enemyPos = game->Player->Position + dir;
             EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
+            temp->Set_hit(game->Player->WeaponPackage);
             game->Enemy.push_back(temp);
+        }
+            for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
+            {
+                for(int i=0;i<6;i++)
+                {
+                    if((*it)->hit_count[i]>0) (*it)->hit_count[i]--;
+                }
+                for(int i=0;i<6;i++)
+                {
+                    //TODO:添加弹道类的碰撞检测
+                    for(auto iterator=game->Bullets[i].begin();iterator!=game->Bullets[i].end();iterator++)
+                    {
+                        if ((*it)->CheckCollision(**iterator))
+                        {
+                            if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage))
+                            {
+                                PickupObject *temp1 = new PickupObject((*it)->Position, "Experience");
+                                EnemyObject *temp2 = *it;
+                                game->Enemy.erase(it, it + 1);
+                                delete temp2;
 
-            for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++) {
-                if ((*it)->CheckCollision(*game->Player->the_weapon)) {
-                    (*it)->Destroyed = 90;
-                    if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage)) {
-                        PickupObject *temp1 = new PickupObject((*it)->Position, "Experience");
-                        EnemyObject *temp2 = *it;
-                        game->Enemy.erase(it, it + 1);
-                        delete temp2;
-
-                        game->Exp.push_back(temp1);
-                        continue;
+                                game->Exp.push_back(temp1);
+                                continue;
+                            }
+                        }
                     }
                 }
                 if ((*it)->CheckCollision(*game->Player)) {
@@ -98,12 +112,6 @@ void GameViewModel::Update(float dt)
             }
 
             for (auto it1 = game->Exp.begin(); it1 != game->Exp.end(); it1++) {
-//            if((*it1)->CheckCollision(*game->Player)){
-//                //PickupObject *temp3 = *it1;
-//                game->Exp.erase(it1, it1 + 1);
-//                //delete temp3;
-//                continue;
-//            }
                 if (game->Player->CheckColl(**it1)) {
                     glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x,
                                                game->Player->Position.y - (*it1)->Position.y);
@@ -124,5 +132,4 @@ void GameViewModel::Update(float dt)
 //    {
 //        game->State = GAME_OVER;
 //    }
-    }
 }
