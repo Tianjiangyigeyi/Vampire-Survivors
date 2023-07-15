@@ -91,6 +91,7 @@ void GameViewModel::Update(float dt)
                     PickupObject *temp1 = new PickupObject ((*it)->Position, "Experience");
                     EnemyObject *temp2 = *it;
                     game->Enemy.erase(it, it + 1);
+                    it--;
                     delete temp2;
 
                     game->Exp.push_back(temp1);
@@ -108,19 +109,11 @@ void GameViewModel::Update(float dt)
         }
 
         for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
-//            if((*it1)->CheckCollision(*game->Player)){
-//                //PickupObject *temp3 = *it1;
-//                game->Exp.erase(it1, it1 + 1);
-//                //delete temp3;
-//                continue;
-//            }
-            if(game->Player->CheckColl(**it1)){
-                glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x, game->Player->Position.y - (*it1)->Position.y);
-                dir1 = glm::normalize(dir1);
-                dir1 = glm::vec2(dir1.x * (*it1)->speed, dir1.y * (*it1)->speed);
-                (*it1)->Move(dir1);
-            }
             if((*it1)->CheckCollision(*game->Player)){
+                PickupObject *temp3 = *it1;
+                game->Exp.erase(it1, it1 + 1);
+                it1 --;
+                delete temp3;
                 game->Player->exp += 1;
                 if(game->Player->exp >= game->Player->next_exp){
                         game->Player->exp = 0;
@@ -136,8 +129,12 @@ void GameViewModel::Update(float dt)
 
     }
 
-//    if (!game->Player->health_adjust(total_dam))
-//    {
-//        game->State = GAME_OVER;
-//    }
+    for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
+        if(game->Player->CheckColl(**it1)){
+            glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x, game->Player->Position.y - (*it1)->Position.y);
+            dir1 = glm::normalize(dir1);
+            dir1 = glm::vec2(dir1.x * (*it1)->speed, dir1.y * (*it1)->speed);
+            (*it1)->Move(dir1);
+        }
+    }
 }

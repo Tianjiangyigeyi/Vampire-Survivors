@@ -169,7 +169,7 @@ bool PlayerObject::health_adjust(float health_damage){
         return false;
     }
     if(current_health<max_health) current_health += recovery;
-    std::cout << current_health << std::endl;
+    //std::cout << current_health << std::endl;
     return true;
 }
 
