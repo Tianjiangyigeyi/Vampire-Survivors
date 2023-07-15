@@ -117,6 +117,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     recovery = 1;
     exp = 0;
     next_exp = 100;
+    speed = 50;
     magnet = glm::vec2(Size.x*30, Size.x*30);
 }
 
