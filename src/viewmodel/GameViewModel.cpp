@@ -1,5 +1,4 @@
 #include "GameViewModel.h"
-int Ecount;
 
 void GameViewModel::Process(float dt)
 {
@@ -50,10 +49,9 @@ void GameViewModel::Update(float dt)
 {
     Process(dt);
     int total_dam = 0;
-    Ecount++;
-    if (Ecount >= 90)
+    game->timer++;
+    if (game->timer % 90==0)
     {
-        Ecount = 0;
         glm::vec2 enemyPos, dir;
         unsigned int len = rand() % (game->Height * 2 + game->Width * 2);
 
@@ -79,6 +77,9 @@ void GameViewModel::Update(float dt)
 
         enemyPos = game->Player->Position + dir;
         EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
+        temp->speed+=game->timer/MAX_FRAME_PER_SECOND/30;
+        temp->power+=game->timer/MAX_FRAME_PER_SECOND/30;
+        temp->health+=game->timer/MAX_FRAME_PER_SECOND/5;
         game->Enemy.push_back(temp);
 
         for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)

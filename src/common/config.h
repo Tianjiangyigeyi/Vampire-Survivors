@@ -557,6 +557,7 @@ public:
     std::vector<EnemyObject *> Enemy;
     std::vector<PickupObject *> Exp;
     std::vector<GameObject *> Bullets[6];//六种武器的弹道
+    int timer=0;
     //std::vector<std::shared_ptr<>>
     int frame_counter=0;//计时器，记录帧的变化
     // constructor/destructor
