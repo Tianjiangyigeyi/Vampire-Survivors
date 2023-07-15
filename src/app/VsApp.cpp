@@ -98,7 +98,7 @@ int VsApp::Run()
                 bool tmp = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
             if (notice == true)
             {
-                Notify(Keys, deltaTime);
+                Notify(Keys);
                 notice = false;
             } 
             // update game state

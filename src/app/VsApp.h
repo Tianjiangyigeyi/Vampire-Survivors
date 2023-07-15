@@ -31,7 +31,7 @@ public:
     void Attach(std::function<void(bool*)> observer) {
         observers.push_back(observer);
     }
-    void Notify(bool *Keys, float dt) {
+    void Notify(bool *Keys) {
         for (auto& observer : observers) {
             observer(Keys);
         }
