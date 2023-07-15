@@ -39,14 +39,6 @@ PickupObject::PickupObject(glm::vec2 pos,  std::string sprite)
     SetColl_Size(Size);
 }
 
-void EnemyObject::Set_hit(std::shared_ptr<WeaponItem> *weapons)
-{
-    for(int i=0;i<6;i++)
-    {
-        can_hit[i]=int(weapons[i]->duration*MAX_FRAME_PER_SECOND);
-        hit_count[i]=0;
-    }
-}
 
 // resets the ball to initial Stuck Position (if ball is outside window bounds)
 void PickupObject::Reset(glm::vec2 position, glm::vec2 velocity)
@@ -107,8 +99,6 @@ glm::vec2& GameObject::GetPosition()
 
 bool GameObject::CheckCollision(GameObject &other)
 {
-    //return ( (Position.x + Coll_Size.x/2) >= (other.Position.x - other.Coll_Size.x/2) && (Position.x - Coll_Size.x/2) <= (other.Position.x + other.Coll_Size.x/2 ) ) && ( (Position.y + Coll_Size.y/2 >= other.Position.y - other.Coll_Size.y/2) && (Position.y - Coll_Size.y/2 <= other.Position.y + other.Coll_Size.y/2) );
-    //return ( (Position.x + Coll_Size.x/2) >= (other.Position.x - other.Coll_Size.x/2) || (Position.x - Coll_Size.x/2) <= (other.Position.x + other.Coll_Size.x/2 ) ) && ( (Position.y + Coll_Size.y/2 >= other.Position.y - other.Coll_Size.y/2) || (Position.y - Coll_Size.y/2 <= other.Position.y + other.Coll_Size.y/2) );
     return Position.x + Coll_Size.x >= other.Position.x && Position.x <= other.Position.x + other.Coll_Size.x && Position.y + Coll_Size.y >= other.Position.y && Position.y <= other.Position.y + other.Coll_Size.y;
 }
 
@@ -122,7 +112,6 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     sprites[1] = sprite2;
     sprites[2] = sprite3;
     sprites[3] = sprite4;
-    exp=0;
     might = 50;
     max_health = current_health =  1000;
     recovery = 1;
@@ -149,16 +138,6 @@ PlayerObject::~PlayerObject()
 void PlayerObject::Upgrade()
 {
     
-}
-
-//TODO: 添加对应的弹道生成函数
-void PlayerObject::Attack(int frame_count,std::vector<GameObject *>* bullets)
-{
-    for(int i=0;i<weapon_count;i++)
-    {
-        if(frame_count%int (WeaponPackage[i]->cool_down*MAX_FRAME_PER_SECOND)==0)
-            WeaponPackage[i]->ShootBullet(bullets);
-    }
 }
 
 void PlayerObject::Move(glm::vec2 &dir)
@@ -246,9 +225,4 @@ void WeaponObject::Move(glm::vec2 &dir)
         }
 
     }
-}
-
-void WeaponItem::ShootBullet(std::vector<GameObject *>* bullets)
-{
-
 }

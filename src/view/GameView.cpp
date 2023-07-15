@@ -182,6 +182,7 @@ void GameView::Render()
         if(button_id == 1)
         {
             shouldswap = true;
+            v.~Voice();
             glfwSetWindowShouldClose(window, true);
             glfwTerminate();
         }
@@ -562,6 +563,9 @@ void GameView::Render()
 
         shouldswap = false;
         if(button_id == 0) {
+            game->Player->current_health = game->Player->max_health;
+            game->Player->exp = 0;
+            game->Player->next_exp = 100;
             reset_render();
             game->State = GAME_START_MENU;
         }

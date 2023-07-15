@@ -9,6 +9,8 @@ class GameViewModel
 public:
     std::shared_ptr<Game> game;
     GameViewModel() : game(std::make_shared<Game>(WINDOW_WIDTH, WINDOW_HEIGHT)) {}
+    // Game* game;
+    // GameViewModel(Game* g) : game(g) {}
     void Update(float dt);
     void SetKeys(bool *Keys);
     void Process(float dt);
