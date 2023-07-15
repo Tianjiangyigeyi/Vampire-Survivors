@@ -129,14 +129,9 @@ void GameView::Render()
         render_exp = false;
         // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
 
-        if(game->Player->exp >= 0.95 * game->Player->next_exp) {
-            game->Player->exp = 0;
-            // std::cout<<"----------------Level Up!------------------"<<std::endl;
-            game->Player->next_exp = game->Player->next_exp * 4;
-            game->State = GAME_LEVEL_UP;
+        if(game->Player->exp >= 0.95 * game->Player->next_exp)
             reset_render();
 
-        }
 
     }
 
@@ -471,7 +466,6 @@ void GameView::Render()
     }
 
     else if(game->State == GAME_LEVEL_UP) {
-        
         float cur_health = game->Player->current_health;
         float cur_max_health = game->Player->max_health;
         float cur_might = game->Player->might;
