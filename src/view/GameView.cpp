@@ -129,14 +129,8 @@ void GameView::Render()
         render_exp = false;
         // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
 
-        if(game->Player->exp >= 0.95 * game->Player->next_exp) {
-            game->Player->exp = 0;
-            // std::cout<<"----------------Level Up!------------------"<<std::endl;
-            game->Player->next_exp = game->Player->next_exp * 4;
-            game->State = GAME_LEVEL_UP;
-            reset_render();
-
-        }
+        if(game->Player->exp >= 0.95 * game->Player->next_exp) 
+            reset_render();        
 
     }
 
@@ -315,17 +309,13 @@ void GameView::Render()
         players_to_select[3] = new static_Player(std::string("Pasq"), 100, 200, 30, 40, 20);
 
 
-        std::cout<<"cursor_x: "<<cursor_x<<"cursor_y: "<<cursor_y<<"LeftButtonPressed: "<<LeftButtonPressed<<std::endl;
+        //std::cout<<"cursor_x: "<<cursor_x<<"cursor_y: "<<cursor_y<<"LeftButtonPressed: "<<LeftButtonPressed<<std::endl;
         for(int i = 0; i < 4; i++)
         {
             std::string tmp_name = "Sel_" + players_to_select[i]->name;
             People_select_button_map[i] = new Button((0.2*((i % 2) + 1) + 0.15)*WINDOW_WIDTH, 0.2*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT, tmp_name);
             People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-            if(i == 1){
-                std::cout<<"cursor_x: "<<cursor_x<<"cursor_y: "<<cursor_y<<"LeftButtonPressed: "<<LeftButtonPressed<<std::endl;
-                std::cout<<"Position: "<<People_select_button_map[i]->x<<" "<<People_select_button_map[i]->y<<People_select_button_map[i]->x + People_select_button_map[i]->width<<" "<<People_select_button_map[i]->y + People_select_button_map[i]->height<<std::endl;
-                std::cout<<"People_select_button_map[i]->pressed: "<<People_select_button_map[i]->pressed<<std::endl;
-            }
+
             areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
         }
   
@@ -634,7 +624,7 @@ void GameView::Render()
 
         Utility::ClearBckGnd(std::string("StartMenu"));
         Utility::generateBackgroundColorTexture(0.85*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, 0.13*WINDOW_WIDTH, 0.60*WINDOW_HEIGHT, 128, 128, 128, true, 0);
-        std::cout<<"In func RenderPeopleSelect after bckgnd"<<std::endl;
+        // std::cout<<"In func RenderPeopleSelect after bckgnd"<<std::endl;
         std::map<int, std::string> People_select_texts;
         People_select_texts[0] = "Name ";
         People_select_texts[1] = "HP ";
@@ -649,7 +639,7 @@ void GameView::Render()
         {
             People_select_TextBoxes[i] = new TextBox(0.86*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
             People_select_TextBoxes[i]->Render();
-            std::cout<<"In func RenderPeopleSelect after TextBox"<<std::endl;
+            // std::cout<<"In func RenderPeopleSelect after TextBox"<<std::endl;
         }
 
 

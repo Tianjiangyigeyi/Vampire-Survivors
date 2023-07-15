@@ -30,9 +30,7 @@ Texture2D ResourceManager::LoadTexture(const char *TextureFile, bool alpha, std:
 
 Texture2D ResourceManager::LoadTexture(const char *TextureFile, bool alpha, std::string name, int width, int height)
 {
-    std::cout<<"??" << std::endl;
     Textures[name] = loadTextureFromFile(TextureFile, alpha, width, height);
-    std::cout<<"??" << std::endl;
     return Textures[name];
 }
 
@@ -131,7 +129,6 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha, int
 
     // std::cout << bwidth << " " << bheight << " " << width <<std::endl;
     texture.Generate(width, height, scaledData);
-    std::cout<<"here" << std::endl;
     stbi_image_free(data); 
     return texture;
 }

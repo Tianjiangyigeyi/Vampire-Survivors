@@ -10,7 +10,6 @@ int main(int argc, char const *argv[])
     // std::cout<<"argc: "<<argc<<std::endl;
     if(strcmp(argv[1], "0") == 0) {
         std::string path = "1-1.wav";
-        std::cout<<"path: "<<path<<std::endl;
         PlaySound(TEXT(path.c_str()), NULL, SND_FILENAME | SND_ASYNC | SND_LOOP);
         Sleep(1000000);
     }
