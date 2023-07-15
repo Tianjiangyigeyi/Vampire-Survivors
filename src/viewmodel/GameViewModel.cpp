@@ -77,7 +77,7 @@ void GameViewModel::Update(float dt)
 
         enemyPos = game->Player->Position + dir;
         EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
-        temp->speed+=game->timer/MAX_FRAME_PER_SECOND/30;
+        //temp->speed+=game->timer/MAX_FRAME_PER_SECOND/3000;
         temp->power+=game->timer/MAX_FRAME_PER_SECOND/30;
         temp->health+=game->timer/MAX_FRAME_PER_SECOND/5;
         game->Enemy.push_back(temp);
@@ -103,10 +103,10 @@ void GameViewModel::Update(float dt)
             {
                 if((*it)->power>total_dam)  total_dam = (*it)->power;
             }
-            glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
-            dir1 = glm::normalize(dir1);
-            dir1 = glm::vec2(dir1.x * (*it)->speed, dir1.y * (*it)->speed);
-            (*it)->Move(dir1);
+//            glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
+//            dir1 = glm::normalize(dir1);
+//            dir1 = glm::vec2(dir1.x * (*it)->speed, dir1.y * (*it)->speed);
+//            (*it)->Move(dir1);
         }
 
         for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
@@ -128,6 +128,14 @@ void GameViewModel::Update(float dt)
             game->State = GAME_OVER;
         }
 
+    }
+
+    for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
+    {
+        glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
+        dir1 = glm::normalize(dir1);
+        dir1 = glm::vec2(dir1.x * (*it)->speed, dir1.y * (*it)->speed);
+        (*it)->Move(dir1);
     }
 
     for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){

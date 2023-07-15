@@ -118,6 +118,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     exp = 0;
     next_exp = 100;
     speed = 50;
+    armor = 60;
     magnet = glm::vec2(Size.x*30, Size.x*30);
 }
 
@@ -165,6 +166,8 @@ void PlayerObject::Move(glm::vec2 &dir)
 }
 
 bool PlayerObject::health_adjust(float health_damage){
+    if(health_damage >= armor) health_damage -= armor;
+    else    health_damage = 0;
     current_health -= health_damage;
     if(current_health <= 0){
         return false;

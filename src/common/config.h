@@ -461,7 +461,7 @@ public:
 class EnemyObject : public GameObject
 {
 public:
-    float speed = 8;  // 怪物移动速度
+    float speed = 0.1;  // 怪物移动速度
     float power = 100;  // 怪物攻击力
     float health = 100; // 怪物当前血量
     //记录怪物重新被攻击的间隔
@@ -505,7 +505,7 @@ public:
     float max_health;   // 最大生命
     float recovery;     // 生命恢复
     float current_health; // 当前生命
-    float armor;//护甲
+    float armor;//护甲a
     float cooldown;//武器攻击间隔
     float area;//aoe武器攻击范围
     float duration;//武器持续攻击时间
