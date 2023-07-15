@@ -116,7 +116,7 @@ PlayerObject::PlayerObject(glm::vec2 pos, std::string sprite1, std::string sprit
     max_health = current_health =  1000;
     recovery = 1;
     exp = 0;
-    next_exp = 20;
+    next_exp = 10;
     speed = 50;
     armor = 60;
     magnet = glm::vec2(Size.x*30, Size.x*30);
@@ -139,7 +139,7 @@ PlayerObject::~PlayerObject()
 
 void PlayerObject::Upgrade(int id)
 {
-    next_exp = next_exp + 10;
+    next_exp = next_exp + 5;
     switch(id) {
         case 1:
             max_health += 100;

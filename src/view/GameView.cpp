@@ -129,7 +129,7 @@ void GameView::Render()
         render_exp = false;
         // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
 
-        if(game->Player->exp >= game->Player->next_exp) {
+        if(game->Player->exp >= 0.95 * game->Player->next_exp) {
             game->Player->exp = 0;
             // std::cout<<"----------------Level Up!------------------"<<std::endl;
             game->Player->next_exp = game->Player->next_exp * 4;
