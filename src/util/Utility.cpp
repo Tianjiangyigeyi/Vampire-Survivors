@@ -56,7 +56,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/buttons/done.png", false, "done", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
 
     ResourceManager::LoadTexture("assets/background/2-2.png", false, "2-2", WINDOW_WIDTH*0.5, WINDOW_HEIGHT*0.8);
-    ResourceManager::LoadTexture("assets/background/1-2.png", false, "b1-2", WINDOW_WIDTH, WINDOW_HEIGHT);
+    ResourceManager::LoadTexture("assets/background/1-2.png", false, "b1-2", WINDOW_WIDTH, WINDOW_HEIGHT*0.9);
     ResourceManager::LoadTexture("assets/background/bkg-2.png", false, "bkg2", WINDOW_WIDTH, WINDOW_HEIGHT);
     ResourceManager::LoadTexture("assets/background/gg.png", false, "bgg", 0.4*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT);
     ResourceManager::LoadTexture("assets/background/opt.png", false, "opt", WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.75);
