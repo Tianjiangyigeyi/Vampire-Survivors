@@ -335,7 +335,7 @@ void Utility::DestroyRenderer()
 
 void Utility::generateBackgroundColorTexture(int x, int y, unsigned int width, unsigned int height, float r, float g, float b, bool should_gen, int id)
 {
-    if(width< =0 || width >= 2000)
+    if(width< 0 || width >= 20000)
         width = 100;
     // 创建Texture2D对象
     static std::map<int, Texture2D> background_color_textures;
