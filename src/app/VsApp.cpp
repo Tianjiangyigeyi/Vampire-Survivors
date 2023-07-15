@@ -1,11 +1,8 @@
 #include "VsApp.h"
-// #include "../common/config.cpp"
-// GLFWwindow *R.window;
 
 
+// 为了满足OpenGL的C特性，它不得不设为全局变量
 Renders R;
-
-// 为了满足OpenGL的C特性，它们不得不设为全局变量
 
 VsApp::VsApp()
 {
