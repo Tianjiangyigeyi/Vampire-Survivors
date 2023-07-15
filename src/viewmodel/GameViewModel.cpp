@@ -77,9 +77,10 @@ void GameViewModel::Update(float dt)
 
         enemyPos = game->Player->Position + dir;
         EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
-        //temp->speed+=game->timer/MAX_FRAME_PER_SECOND/3000;
-        temp->power+=game->timer/MAX_FRAME_PER_SECOND/30;
-        temp->health+=game->timer/MAX_FRAME_PER_SECOND/5;
+        temp->speed+=game->timer/MAX_FRAME_PER_SECOND/300;
+        if(temp->speed>0.3) temp->speed=0.3;
+        temp->power+=game->timer/MAX_FRAME_PER_SECOND/300;
+        temp->health+=game->timer/MAX_FRAME_PER_SECOND/10;
         game->Enemy.push_back(temp);
 
         for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
