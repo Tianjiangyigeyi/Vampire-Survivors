@@ -89,10 +89,7 @@ int VsApp::Run()
                 Sleep(1.0f / MAX_FRAME_PER_SECOND - deltaTime);
                 deltaTime = 1.0f / MAX_FRAME_PER_SECOND;
             }
-            else
-            {
-                std::cout << deltaTime << std::endl;
-            }
+
             glfwPollEvents();
             if(render_in_game) 
                 bool tmp = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
@@ -165,7 +162,6 @@ void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
     {
 
         LeftButtonPressed = true;
-        std::cout << cursor_x << " " << cursor_y << std::endl;
     }
 }
 

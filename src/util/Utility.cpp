@@ -98,7 +98,6 @@ void Utility::Init(std::shared_ptr<Game> game)
     game->BG_Height = ResourceManager::GetTexture("background").Height;
     
     game->BG_Width = ResourceManager::GetTexture("background").Width;
-    //std::cout << BG_Height <<  "  " << BG_Width << std::endl;
     glm::vec2 playerPos = glm::vec2(
         game->BG_Width / 2.0f, game->BG_Height / 2.0f);
     game->Player = new PlayerObject(playerPos, "player4", "player1", "player2", "player3");
@@ -321,7 +320,6 @@ void Utility::ResetCamera(glm::vec2 pos, glm::vec2 center, float scale)
     right = center.x + pos.x;
     bottom = center.y + pos.y;
     top = pos.y - center.y;
-    // std::cout << left << " " << right << " " << bottom << " " << top << std::endl;
     float factorX = (right - left) / 2.0f * (1.0f - 1.0f / scale);
     float factorY = (bottom - top) / 2.0f * (1.0f - 1.0f / scale);
     glm::mat4 projection = glm::ortho(left + factorX, right - factorX, bottom - factorY, top + factorY, -1.0f, 1.0f);

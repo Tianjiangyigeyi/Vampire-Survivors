@@ -16,7 +16,6 @@ void Button::Check_Hover_Press(float cursor_x, float cursor_y, bool button_left)
 
     if(cursor_x >= x && cursor_x <= x + width && cursor_y >= y && cursor_y <= y + height)
     {
-        // std::cout<<"---In Button---"<<std::endl;
         v.play(1, 0);
     }
     
