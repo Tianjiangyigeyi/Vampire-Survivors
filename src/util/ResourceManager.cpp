@@ -127,7 +127,6 @@ Texture2D ResourceManager::loadTextureFromFile(const char *file, bool alpha, int
     unsigned char* scaledData = new unsigned char[width * height * nrChannels];
     stbir_resize_uint8(data, bwidth, bheight, 0, scaledData, width, height, 0, nrChannels);
 
-    // std::cout << bwidth << " " << bheight << " " << width <<std::endl;
     texture.Generate(width, height, scaledData);
     stbi_image_free(data); 
     return texture;

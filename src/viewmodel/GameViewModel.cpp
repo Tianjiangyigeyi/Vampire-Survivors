@@ -77,8 +77,8 @@ void GameViewModel::Update(float dt)
 
         enemyPos = game->Player->Position + dir;
         EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
-        temp->speed+=game->timer/MAX_FRAME_PER_SECOND/300;
-        if(temp->speed>0.3) temp->speed=0.3;
+        temp->speed+=game->timer/MAX_FRAME_PER_SECOND/900;
+        if(temp->speed>0.2) temp->speed=0.2;
         temp->power+=game->timer/MAX_FRAME_PER_SECOND/300;
         temp->health+=game->timer/MAX_FRAME_PER_SECOND/10;
         game->Enemy.push_back(temp);
@@ -104,23 +104,24 @@ void GameViewModel::Update(float dt)
             {
                 if((*it)->power>total_dam)  total_dam = (*it)->power;
             }
-//            glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it)->Position.x, game->Player->Position.y - (*it)->Position.y);
-//            dir1 = glm::normalize(dir1);
-//            dir1 = glm::vec2(dir1.x * (*it)->speed, dir1.y * (*it)->speed);
-//            (*it)->Move(dir1);
         }
 
+        int expcount = 0;
         for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
             if((*it1)->CheckCollision(*game->Player)){
                 PickupObject *temp3 = *it1;
                 game->Exp.erase(it1, it1 + 1);
                 it1 --;
                 delete temp3;
-                game->Player->exp += 1;
-                // if(game->Player->exp >= game->Player->next_exp){
-                //         game->Player->exp = 0;
-                //     }
+                expcount += 1;
             }
+        }
+        game->Player->exp += expcount;
+        if(game->Player->exp  >= game->Player->next_exp){
+            game->Player->exp = 0;
+            game->Player->next_exp = game->Player->next_exp * 4;
+            game->State = GAME_LEVEL_UP;
+            //reset_render();
         }
 
         if(total_dam)   game->Player->Destroyed = 90;
