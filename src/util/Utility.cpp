@@ -25,7 +25,6 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", true, "player3");
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio4.png", true, "player4");
     ResourceManager::LoadTexture("assets/background/Start_Menu_bck.png", true, "StartMenu", WINDOW_WIDTH, WINDOW_HEIGHT);
-    // ResourceManager::LoadTexture("assets/buttons/StartM_start_normal.jpg", false, "StartM_start_normal", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.1);
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra0.png", true, "Weapon_tra0");
     ResourceManager::LoadTexture("assets/Weapon trajectory/Sprite-Whip_tra1.png", true, "Weapon_tra1");
     ResourceManager::LoadTexture("assets/Pickups/Sprite-Experience_Gem.png", true, "Experience");
@@ -63,7 +62,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/background/opt.png", false, "opt", WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.75);
     ResourceManager::LoadTexture("assets/background/cre-bck.png", false, "bcre", WINDOW_WIDTH*0.4, WINDOW_HEIGHT*0.6);
     ResourceManager::LoadTexture("assets/Menu/head.png", false, "head", WINDOW_WIDTH, WINDOW_HEIGHT*0.1);
-    ResourceManager::LoadTexture("assets/background/lev-up.png", false, "lev-up", WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.75);
+    ResourceManager::LoadTexture("assets/background/lev-up.png", false, "lev-up", WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.85);
     ResourceManager::LoadTexture("assets/background/result.png", false, "result", WINDOW_WIDTH*0.4, WINDOW_HEIGHT*0.7);
 
     char load_path[18]="assets/Font/0.png";

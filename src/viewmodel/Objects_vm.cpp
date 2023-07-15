@@ -148,6 +148,12 @@ void PlayerObject::Upgrade(int id)
         case 2:
             might += 25;
             break;
+        case 3:
+            armor += 10;
+            break;
+        case 4:
+            speed += 10;
+            break;
     }
 
     

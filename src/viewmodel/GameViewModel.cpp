@@ -116,9 +116,9 @@ void GameViewModel::Update(float dt)
                 it1 --;
                 delete temp3;
                 game->Player->exp += 1;
-                if(game->Player->exp >= game->Player->next_exp){
-                        game->Player->exp = 0;
-                    }
+                // if(game->Player->exp >= game->Player->next_exp){
+                //         game->Player->exp = 0;
+                //     }
             }
         }
 

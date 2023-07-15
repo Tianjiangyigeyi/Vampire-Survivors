@@ -40,8 +40,6 @@ void reset_render()
 
 void GameView::Render()
 {
-    static int cblood = 0;
-    static int cexp = 0;
     if (game->State == GAME_ACTIVE)
     {
         
@@ -117,9 +115,6 @@ void GameView::Render()
 
         if(button_id == 0)
         {
-            cblood = game->Player->current_health;
-            cexp = game->Player->exp;
-
             game->State = GAME_PAUSE;
             reset_render();
 
@@ -134,7 +129,8 @@ void GameView::Render()
         render_exp = false;
         // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
 
-        if(game->Player->exp >=  0.95 * game->Player->next_exp) {
+        if(game->Player->exp >= game->Player->next_exp) {
+            game->Player->exp = 0;
             // std::cout<<"----------------Level Up!------------------"<<std::endl;
             game->Player->next_exp = game->Player->next_exp * 4;
             game->State = GAME_LEVEL_UP;
@@ -491,33 +487,48 @@ void GameView::Render()
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
-        Utility::DrawBackground(std::string("lev-up"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.12));
+        Utility::DrawBackground(std::string("lev-up"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.11));
 
         Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
         Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
 
-        Button HealthUp(0.37*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT, std::string("Hea-up"));
+        Button HealthUp(0.37*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Hea-up"));
         HealthUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        Button SpeedUp(0.37*WINDOW_WIDTH, 0.47*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT, std::string("Spd-up"));
+        Button SpeedUp(0.37*WINDOW_WIDTH, 0.35*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Spd-up"));
         SpeedUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        Button Cfm(0.43*WINDOW_WIDTH, 0.7*WINDOW_HEIGHT, 0.14*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
+        Button ArmorUp(0.37*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Hea-up"));
+        ArmorUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Button SpUp(0.37*WINDOW_WIDTH, 0.65*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Spd-up"));
+        SpUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+
+        Button Cfm(0.43*WINDOW_WIDTH, 0.85*WINDOW_HEIGHT, 0.14*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
         Cfm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
 
         std::string heal = "Health Up to 2 times of original";
         std::string spd = "Might Up to 15 div 10 times of original";
+        std::string arm = "Armor add to 5";
+        std::string sp = "Speed Up to 11 div 10 times";
 
-        TextBox Health(0.42*WINDOW_WIDTH, 0.32*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), heal);
-        TextBox Speed(0.42*WINDOW_WIDTH, 0.49*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), spd);
+        TextBox Health(0.42*WINDOW_WIDTH, 0.22*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), heal);
+        TextBox Speed(0.42*WINDOW_WIDTH, 0.37*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), spd);
+        TextBox Armor(0.42*WINDOW_WIDTH, 0.52*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), arm);
+        TextBox SpeUp(0.42*WINDOW_WIDTH, 0.67*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), sp);
+
         Health.Render();
         Speed.Render();
+        Armor.Render();
+        SpeUp.Render();
 
         areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
         areas_to_check.push_back(glm::vec4(HealthUp.x, HealthUp.y, HealthUp.width, HealthUp.height));
         areas_to_check.push_back(glm::vec4(SpeedUp.x, SpeedUp.y, SpeedUp.width, SpeedUp.height));
+        areas_to_check.push_back(glm::vec4(ArmorUp.x, ArmorUp.y, ArmorUp.width, ArmorUp.height));
+        areas_to_check.push_back(glm::vec4(SpUp.x, SpUp.y, SpUp.width, SpUp.height));
         areas_to_check.push_back(glm::vec4(Cfm.x, Cfm.y, Cfm.width, Cfm.height));
 
         shouldswap = false;
-        game->Player->exp = 0;
+        
 
         if(button_id == 0) {
             v.play(2, 1);
@@ -529,12 +540,12 @@ void GameView::Render()
             game->State = GAME_ACTIVE;
         }
 
-        if(button_id == 1 || button_id == 2 ) {
+        if(button_id == 1 || button_id == 2 || button_id == 3 || button_id == 4) {
             game->Player->Upgrade(button_id);
             reset_render();
         }
 
-        if(button_id == 3) {
+        if(button_id == 5) {
             v.play(2, 1);
             reset_render();
             game->State = GAME_ACTIVE;
@@ -614,8 +625,6 @@ void GameView::Render()
 
     else if(game->State == GAME_PEOPLE_SELECT)
     {
-        static bool selected = false;
-
 
         areas_to_check.clear();
         players_to_select[0] = new static_Player(std::string("Antonio"), 100, 200, 100, 100, 50);
