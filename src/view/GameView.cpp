@@ -136,7 +136,6 @@ void GameView::Render()
 
         if(game->Player->exp >=  0.95 * game->Player->next_exp) {
             // std::cout<<"----------------Level Up!------------------"<<std::endl;
-            game->Player->Upgrade();
             game->Player->next_exp = game->Player->next_exp * 4;
             game->State = GAME_LEVEL_UP;
             reset_render();
@@ -529,17 +528,10 @@ void GameView::Render()
 
             game->State = GAME_ACTIVE;
         }
-        if(button_id == 1) {
-    
-            reset_render();
-            game->Player->max_health *= 2;
-            game->Player->current_health = game->Player->max_health;
 
-        }
-        if(button_id == 2) {
-            std::cout<<"SpeedUp"<<game->Player->speed<<std::endl;
+        if(button_id == 1 || button_id == 2 ) {
+            game->Player->Upgrade(button_id);
             reset_render();
-            game->Player->might *= 1.5;
         }
 
         if(button_id == 3) {

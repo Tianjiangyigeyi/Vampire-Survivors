@@ -6,7 +6,6 @@ double cursor_x, cursor_y;
 bool LeftButtonPressed = false;
 bool* Keys;
 bool notice = false;
-
 bool shouldswap = true;
 
 std::vector<glm::vec4> areas_to_check;
@@ -96,21 +95,7 @@ int VsApp::Run()
             }
             glfwPollEvents();
             if(render_in_game) 
-            {
-                // v.stop_play(0, 1);
-                
-                // static int j = 0;
-                // for(int i= 0;i<areas_to_check.size();i++)
-                // {
-                //     std::cout<<"area_to_check:";
-                //     std::cout<<areas_to_check[i].x<<" "<<areas_to_check[i].y<<" "<<areas_to_check[i].z<<" "<<areas_to_check[i].w<<std::endl;
-                // }
-                // std::cout<<cursor_x<<" "<<cursor_y<<" "<<LeftButtonPressed<<std::endl;
                 bool tmp = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
-                // std::cout<<button_id<<std::endl;
-                // std::cout<<j<<std::endl;
-                // j++;
-            }
             if (notice == true)
             {
                 Notify(Keys, deltaTime);

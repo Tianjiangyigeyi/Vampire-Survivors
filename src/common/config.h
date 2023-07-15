@@ -532,7 +532,7 @@ public:
     void InitWeapon(std::string Weapon_tra0, std::string Weapon_tra1);
     // resets the ball to original state with given position and velocity
     void Reset(glm::vec2 position, glm::vec2 velocity);
-    void Upgrade();
+    void Upgrade(int id);
     ~PlayerObject();
     void Move(glm::vec2 &dir);
     bool health_adjust(float health_damage);
