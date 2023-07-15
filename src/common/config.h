@@ -24,7 +24,6 @@
 // To be select in the select menu
 #define MAX_INT 2147483647
 
-
 class static_Player{
 public:
     std::string name;
@@ -669,6 +668,23 @@ public:
     void stop_play(int id, int type);
 
 };
-//static Voice v;
+
+class Renders
+{
+public:
+    bool shouldswap;
+    std::vector<glm::vec4> areas_to_check;
+    int button_id;
+
+    double cursor_x, cursor_y;
+    bool LeftButtonPressed;
+    bool* Keys;
+    bool notice;
+
+    GLFWwindow *window;
+
+
+    Renders() : shouldswap(true), LeftButtonPressed(false), notice(false){};
+};
 
 #endif

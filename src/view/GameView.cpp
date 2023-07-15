@@ -4,38 +4,20 @@
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 
-extern double cursor_x, cursor_y;
-extern bool LeftButtonPressed;
+// extern GLFWwindow *R.window;
 
-extern GLFWwindow *window;
-
-extern bool shouldswap;
-
-extern std::vector<glm::vec4> areas_to_check;
-extern int button_id;
-extern bool render_in_game;
-
+extern Renders R;
 Voice v;
 
-std::map<int , Button*> People_select_button_map;
-std::map<int , Button*> Weapon_select_button_map;
-std::map<int , Button*> Map_select_button_map;
-std::map<int , Button*> Prop_select_button_map;
-
-std::map<int, static_Player*> players_to_select;
-int player_id = 0;
-int map_id;
-int weapon_id;
-int prop_id;
 
 void reset_render() 
 {
-    button_id = MAX_INT;
-    shouldswap = true;
-    areas_to_check.clear();
-    cursor_x = 0;
-    cursor_y = 0;
-    LeftButtonPressed = false;
+    R.button_id = MAX_INT;
+    R.shouldswap = true;
+    R.areas_to_check.clear();
+    R.cursor_x = 0;
+    R.cursor_y = 0;
+    R.LeftButtonPressed = false;
 }
 
 void GameView::Render()
@@ -71,9 +53,8 @@ void GameView::Render()
             exp = game->Player->exp;
             render_exp = true;
         }
-        areas_to_check.clear();
-        render_in_game = true;
-        shouldswap = true;
+        R.areas_to_check.clear();
+        R.shouldswap = true;
         // 每次渲染必须reset相机位置, scale是缩放的比例
         float scale = 0.5;
         Utility::ResetCamera(game->Player->Position, glm::vec2(game->Width / 2.0f, game->Height / 2.0f), scale);
@@ -104,16 +85,16 @@ void GameView::Render()
         // std::cout<<"player pos: "<<posx<<" "<<posy<<std::endl;
 
         // Button ExitGame( posx-0.3*WINDOW_WIDTH/scale, posy - 0.4*WINDOW_HEIGHT/scale, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Exit"));
-        // ExitGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed);
+        // ExitGame.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed);
         // // std::cout<<"ExitGame pos: "<<ExitGame.x<<" "<<ExitGame.y<<std::endl;
 
         Button PauseGame(0.4*WINDOW_WIDTH/scale + posx, posy-0.46*WINDOW_HEIGHT/scale, 0.16*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT/scale, std::string("1-3"));
-        PauseGame.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        PauseGame.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
-        // areas_to_check.push_back(glm::vec4(scale* (ExitGame.x-posx)+0.5*WINDOW_WIDTH, scale*(ExitGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (ExitGame.x+ExitGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (ExitGame.y+ExitGame.height-posy)+0.5*WINDOW_HEIGHT));
-        areas_to_check.push_back(glm::vec4(scale* (PauseGame.x-posx)+0.5*WINDOW_WIDTH, scale*(PauseGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (PauseGame.x+PauseGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (PauseGame.y+PauseGame.height-posy)+0.5*WINDOW_HEIGHT));
+        // R.areas_to_check.push_back(glm::vec4(scale* (ExitGame.x-posx)+0.5*WINDOW_WIDTH, scale*(ExitGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (ExitGame.x+ExitGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (ExitGame.y+ExitGame.height-posy)+0.5*WINDOW_HEIGHT));
+        R.areas_to_check.push_back(glm::vec4(scale* (PauseGame.x-posx)+0.5*WINDOW_WIDTH, scale*(PauseGame.y-posy)+0.5*WINDOW_HEIGHT, scale * (PauseGame.x+PauseGame.width-posx)+0.5*WINDOW_WIDTH,  scale * (PauseGame.y+PauseGame.height-posy)+0.5*WINDOW_HEIGHT));
 
-        if(button_id == 0)
+        if(R.button_id == 0)
         {
             game->State = GAME_PAUSE;
             reset_render();
@@ -129,14 +110,19 @@ void GameView::Render()
         render_exp = false;
         // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
 
-        if(game->Player->exp >= 0.95 * game->Player->next_exp)
+        if(game->Player->exp >=  game->Player->next_exp)
             reset_render();
     }
 
     else if (game->State == GAME_START_MENU) 
     {
+        static bool music_change = true;
+        if(music_change) {
+            v.play(0, 1);
+            music_change = false;
+        }
         // std::cout<<"------In func GAME_START_MENU-------"<<std::endl;
-        shouldswap = false;
+        R.shouldswap = false;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
@@ -147,41 +133,41 @@ void GameView::Render()
         Button achieves_button(game->Width * 0.64, game->Height * 0.67, game->Width * 0.1, game->Height * 0.07, std::string("achs"));
         Button credits_button(game->Width * 0.45, game->Height * 0.8, game->Width * 0.1, game->Height * 0.07, std::string("cres"));
 
-        start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        exit_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed,true);
-        setting_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        achieves_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        credits_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        start_button.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        exit_button.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed,true);
+        setting_button.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        achieves_button.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        credits_button.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
-        areas_to_check.push_back(glm::vec4(start_button.x, start_button.y, start_button.width, start_button.height));
-        areas_to_check.push_back(glm::vec4(exit_button.x, exit_button.y, exit_button.width, exit_button.height));
-        areas_to_check.push_back(glm::vec4(setting_button.x, setting_button.y, setting_button.width, setting_button.height));
-        areas_to_check.push_back(glm::vec4(achieves_button.x, achieves_button.y, achieves_button.width, achieves_button.height));
-        areas_to_check.push_back(glm::vec4(credits_button.x, credits_button.y, credits_button.width, credits_button.height));
+        R.areas_to_check.push_back(glm::vec4(start_button.x, start_button.y, start_button.width, start_button.height));
+        R.areas_to_check.push_back(glm::vec4(exit_button.x, exit_button.y, exit_button.width, exit_button.height));
+        R.areas_to_check.push_back(glm::vec4(setting_button.x, setting_button.y, setting_button.width, setting_button.height));
+        R.areas_to_check.push_back(glm::vec4(achieves_button.x, achieves_button.y, achieves_button.width, achieves_button.height));
+        R.areas_to_check.push_back(glm::vec4(credits_button.x, credits_button.y, credits_button.width, credits_button.height));
 
-        shouldswap = false;
-        if(button_id == 2)
+        R.shouldswap = false;
+        if(R.button_id == 2)
         {
             reset_render();
             game->State = GAME_SETTING_MENU;
             //game->State = GAME_OVER;
         }
 
-        if(button_id == 1)
+        if(R.button_id == 1)
         {
-            shouldswap = true;
+            R.shouldswap = true;
             v.~Voice();
-            glfwSetWindowShouldClose(window, true);
+            glfwSetWindowShouldClose(R.window, true);
             glfwTerminate();
         }
 
-        if(button_id == 0)
+        if(R.button_id == 0)
         {
             reset_render();
             game->State = GAME_SELECT_MENU;
         }
 
-        if(button_id == 4)
+        if(R.button_id == 4)
         {
             reset_render();
             game->State = GAME_CREDITS;
@@ -199,59 +185,59 @@ void GameView::Render()
         Utility::DrawBackground(std::string("opt"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.12));
 
         Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
-        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.sound)
             Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Sound->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Sound->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.music)
             Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Music->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);  
+        Music->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);  
 
         if(v.vfx)
             VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        VFX->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        VFX->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.vis)
             Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Vis->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Vis->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.dam)
             Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Dam->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Dam->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
 
-        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
-        areas_to_check.push_back(glm::vec4(Sound->x, Sound->y, Sound->width, Sound->height));
-        areas_to_check.push_back(glm::vec4(Music->x, Music->y, Music->width, Music->height));
-        areas_to_check.push_back(glm::vec4(VFX->x, VFX->y, VFX->width, VFX->height));
-        areas_to_check.push_back(glm::vec4(Vis->x, Vis->y, Vis->width, Vis->height));
-        areas_to_check.push_back(glm::vec4(Dam->x, Dam->y, Dam->width, Dam->height));
+        R.areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        R.areas_to_check.push_back(glm::vec4(Sound->x, Sound->y, Sound->width, Sound->height));
+        R.areas_to_check.push_back(glm::vec4(Music->x, Music->y, Music->width, Music->height));
+        R.areas_to_check.push_back(glm::vec4(VFX->x, VFX->y, VFX->width, VFX->height));
+        R.areas_to_check.push_back(glm::vec4(Vis->x, Vis->y, Vis->width, Vis->height));
+        R.areas_to_check.push_back(glm::vec4(Dam->x, Dam->y, Dam->width, Dam->height));
     
         
-        shouldswap = false;
-        if(button_id == 0) {
+        R.shouldswap = false;
+        if(R.button_id == 0) {
             reset_render();
             game->State = GAME_START_MENU;
         }
-        if(button_id == 1) {
+        if(R.button_id == 1) {
          
             reset_render();
             v.sound = !v.sound;
             
         }
-        if(button_id == 2) {
+        if(R.button_id == 2) {
         
             reset_render();
             v.music = !v.music;
@@ -263,16 +249,16 @@ void GameView::Render()
             
             }
         }
-        if(button_id == 3) {
+        if(R.button_id == 3) {
  
             reset_render();
             v.vfx = !v.vfx;
         }
-        if(button_id == 4) {
+        if(R.button_id == 4) {
             reset_render();
             v.vis = !v.vis;
         }
-        if(button_id == 5) {
+        if(R.button_id == 5) {
             reset_render();
             v.dam = !v.dam;
         }
@@ -281,8 +267,12 @@ void GameView::Render()
 
     else if(game->State == GAME_SELECT_MENU)
     {
+        
+        std::map<int , Button*> People_select_button_map;
+        std::map<int, static_Player*> players_to_select;
+        static int player_id = 0;
         // std::cout<<"------In func GAME_SELECT_MENU-------"<<std::endl;
-        shouldswap = false;
+        R.shouldswap = false;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("b1-2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
@@ -312,37 +302,37 @@ void GameView::Render()
         {
             std::string tmp_name = "Sel_" + players_to_select[i]->name;
             People_select_button_map[i] = new Button((0.2*((i % 2) + 1) + 0.15)*WINDOW_WIDTH, 0.2*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT, tmp_name);
-            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-            areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
+            People_select_button_map[i]->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+            R.areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
         }
   
 
         Button Confirm(0.4*WINDOW_WIDTH, 0.85*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
+        Confirm.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        R.areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
 
         Button Back(0.8*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
-        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        R.areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
 
-        if(button_id != MAX_INT && button_id != 4 && button_id != 5) {
-            // std::cout<<"button_id: "<<button_id<<std::endl;
-            shouldswap = true;
-            player_id = button_id;
-            areas_to_check.clear();
-            button_id = MAX_INT;
+        if(R.button_id != MAX_INT && R.button_id != 4 && R.button_id != 5) {
+            // std::cout<<"R.button_id: "<<R.button_id<<std::endl;
+            R.shouldswap = true;
+            player_id = R.button_id;
+            R.areas_to_check.clear();
+            R.button_id = MAX_INT;
         }
 
-        if(button_id == 4) 
+        if(R.button_id == 4) 
         {
             reset_render();
             game->State = GAME_ACTIVE;
             
         }
 
-        if(button_id == 5) 
+        if(R.button_id == 5) 
         {
-            // std::cout<<"button_id == 5"<<std::endl;
+            // std::cout<<"R.button_id == 5"<<std::endl;
             reset_render();
             game->State = GAME_START_MENU;
         }
@@ -351,7 +341,7 @@ void GameView::Render()
 
     else if(game->State == GAME_OVER)
     {
-        shouldswap = false;
+        R.shouldswap = false;
         v.stop_play(2, 1);
         v.play(5, 0);
 
@@ -361,10 +351,10 @@ void GameView::Render()
         Utility::DrawBackground(std::string("bgg"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.35));
 
         Button start_button(game->Width * 0.4, game->Height * 0.6, game->Width * 0.2, game->Height * 0.1, std::string("quit"));
-        start_button.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(start_button.x, start_button.y, start_button.width, start_button.height));
-        // std::cout<<"button_id: "<<button_id<<std::endl;
-        if (button_id == 1)
+        start_button.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        R.areas_to_check.push_back(glm::vec4(start_button.x, start_button.y, start_button.width, start_button.height));
+        // std::cout<<"R.button_id: "<<R.button_id<<std::endl;
+        if (R.button_id == 1)
         {
             // std::cout<<"State from GAME_OVER to GAME_START_MENU"<<std::endl;
             game->State = GAME_RESULT;
@@ -385,59 +375,59 @@ void GameView::Render()
         Utility::DrawBackground(std::string("opt"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.12));
 
         Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
-        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.sound)
             Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Sound->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Sound->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.music)
             Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Music->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);  
+        Music->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);  
 
         if(v.vfx)
             VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        VFX->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        VFX->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.vis)
             Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Vis->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Vis->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.dam)
             Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
             Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
-        Dam->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Dam->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
 
-        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
-        areas_to_check.push_back(glm::vec4(Sound->x, Sound->y, Sound->width, Sound->height));
-        areas_to_check.push_back(glm::vec4(Music->x, Music->y, Music->width, Music->height));
-        areas_to_check.push_back(glm::vec4(VFX->x, VFX->y, VFX->width, VFX->height));
-        areas_to_check.push_back(glm::vec4(Vis->x, Vis->y, Vis->width, Vis->height));
-        areas_to_check.push_back(glm::vec4(Dam->x, Dam->y, Dam->width, Dam->height));
+        R.areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        R.areas_to_check.push_back(glm::vec4(Sound->x, Sound->y, Sound->width, Sound->height));
+        R.areas_to_check.push_back(glm::vec4(Music->x, Music->y, Music->width, Music->height));
+        R.areas_to_check.push_back(glm::vec4(VFX->x, VFX->y, VFX->width, VFX->height));
+        R.areas_to_check.push_back(glm::vec4(Vis->x, Vis->y, Vis->width, Vis->height));
+        R.areas_to_check.push_back(glm::vec4(Dam->x, Dam->y, Dam->width, Dam->height));
     
         
-        shouldswap = false;
-        if(button_id == 0) {
+        R.shouldswap = false;
+        if(R.button_id == 0) {
             reset_render();
             game->State = GAME_ACTIVE;
         }
-        if(button_id == 1) {
+        if(R.button_id == 1) {
          
             reset_render();
             v.sound = !v.sound;
             
         }
-        if(button_id == 2) {
+        if(R.button_id == 2) {
         
             reset_render();
             v.music = !v.music;
@@ -448,16 +438,16 @@ void GameView::Render()
                 v.play(2, 1);
             }
         }
-        if(button_id == 3) {
+        if(R.button_id == 3) {
  
             reset_render();
             v.vfx = !v.vfx;
         }
-        if(button_id == 4) {
+        if(R.button_id == 4) {
             reset_render();
             v.vis = !v.vis;
         }
-        if(button_id == 5) {
+        if(R.button_id == 5) {
             reset_render();
             v.dam = !v.dam;
         }
@@ -467,34 +457,35 @@ void GameView::Render()
         float cur_health = game->Player->current_health;
         float cur_max_health = game->Player->max_health;
         float cur_might = game->Player->might;
-
+    
         v.stop_play(2, 1);
         v.play(4, 0);
+
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("bkg2"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
         Utility::DrawBackground(std::string("lev-up"), glm::vec2(WINDOW_WIDTH*0.35, WINDOW_HEIGHT*0.11));
 
         Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
-        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         Button HealthUp(0.37*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Hea-up"));
-        HealthUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        HealthUp.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
         Button SpeedUp(0.37*WINDOW_WIDTH, 0.35*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Spd-up"));
-        SpeedUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        SpeedUp.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
         Button ArmorUp(0.37*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Hea-up"));
-        ArmorUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        ArmorUp.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
         Button SpUp(0.37*WINDOW_WIDTH, 0.65*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.13*WINDOW_HEIGHT, std::string("Spd-up"));
-        SpUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        SpUp.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
 
         Button Cfm(0.43*WINDOW_WIDTH, 0.85*WINDOW_HEIGHT, 0.14*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
-        Cfm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Cfm.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
-        std::string heal = "Health Up to 2 times of original";
-        std::string spd = "Might Up to 15 div 10 times of original";
-        std::string arm = "Armor add to 5";
-        std::string sp = "Speed Up to 11 div 10 times";
+        std::string heal = "Health add by 20";
+        std::string spd = "Might add by 20";
+        std::string arm = "Armor add by 5";
+        std::string sp = "Speed add by 10";
 
         TextBox Health(0.42*WINDOW_WIDTH, 0.22*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), heal);
         TextBox Speed(0.42*WINDOW_WIDTH, 0.37*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), spd);
@@ -506,17 +497,17 @@ void GameView::Render()
         Armor.Render();
         SpeUp.Render();
 
-        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
-        areas_to_check.push_back(glm::vec4(HealthUp.x, HealthUp.y, HealthUp.width, HealthUp.height));
-        areas_to_check.push_back(glm::vec4(SpeedUp.x, SpeedUp.y, SpeedUp.width, SpeedUp.height));
-        areas_to_check.push_back(glm::vec4(ArmorUp.x, ArmorUp.y, ArmorUp.width, ArmorUp.height));
-        areas_to_check.push_back(glm::vec4(SpUp.x, SpUp.y, SpUp.width, SpUp.height));
-        areas_to_check.push_back(glm::vec4(Cfm.x, Cfm.y, Cfm.width, Cfm.height));
+        R.areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        R.areas_to_check.push_back(glm::vec4(HealthUp.x, HealthUp.y, HealthUp.width, HealthUp.height));
+        R.areas_to_check.push_back(glm::vec4(SpeedUp.x, SpeedUp.y, SpeedUp.width, SpeedUp.height));
+        R.areas_to_check.push_back(glm::vec4(ArmorUp.x, ArmorUp.y, ArmorUp.width, ArmorUp.height));
+        R.areas_to_check.push_back(glm::vec4(SpUp.x, SpUp.y, SpUp.width, SpUp.height));
+        R.areas_to_check.push_back(glm::vec4(Cfm.x, Cfm.y, Cfm.width, Cfm.height));
 
-        shouldswap = false;
+        R.shouldswap = false;
         
 
-        if(button_id == 0) {
+        if(R.button_id == 0) {
             v.play(2, 1);
             reset_render();
             game->Player->current_health = cur_health;
@@ -526,12 +517,12 @@ void GameView::Render()
             game->State = GAME_ACTIVE;
         }
 
-        if(button_id == 1 || button_id == 2 || button_id == 3 || button_id == 4) {
-            game->Player->Upgrade(button_id);
+        if(R.button_id == 1 || R.button_id == 2 || R.button_id == 3 || R.button_id == 4) {
+            game->Player->Upgrade(R.button_id);
             reset_render();
         }
 
-        if(button_id == 5) {
+        if(R.button_id == 5) {
             v.play(2, 1);
             reset_render();
             game->State = GAME_ACTIVE;
@@ -541,17 +532,17 @@ void GameView::Render()
 
     else if(game->State == GAME_CREDITS) 
     {
-        shouldswap = false;
+        R.shouldswap = false;
         Utility::ResetCamera(glm::vec2(game->Width / 2.0f, game->Height / 2.0f), glm::vec2(game->Width / 2.0f, game->Height / 2.0f), 1.0f);
         Utility::DrawBackground(std::string("StartMenu"), glm::vec2(0, WINDOW_HEIGHT*0.1));
         Utility::DrawBackground(std::string("head"));
         Utility::DrawBackground(std::string("bcre"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.12));
 
         Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
-        Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        R.areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
 
-        if(button_id == 0) {
+        if(R.button_id == 0) {
             reset_render();
             game->State = GAME_START_MENU;
         }
@@ -589,11 +580,11 @@ void GameView::Render()
         Utility::DrawBackground(std::string("result"), glm::vec2(WINDOW_WIDTH*0.3, WINDOW_HEIGHT*0.12));
 
         Button Done(0.4*WINDOW_WIDTH, 0.85*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("done"));
-        Done.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Done.x, Done.y, Done.width, Done.height));
+        Done.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        R.areas_to_check.push_back(glm::vec4(Done.x, Done.y, Done.width, Done.height));
 
-        shouldswap = false;
-        if(button_id == 0) {
+        R.shouldswap = false;
+        if(R.button_id == 0) {
 
             game->Player->current_health = 100;
             game->Player->max_health = 100;
@@ -611,8 +602,9 @@ void GameView::Render()
 
     else if(game->State == GAME_PEOPLE_SELECT)
     {
-
-        areas_to_check.clear();
+        std::map<int , Button*> People_select_button_map;
+        std::map<int, static_Player*> players_to_select;
+        R.areas_to_check.clear();
         players_to_select[0] = new static_Player(std::string("Antonio"), 100, 200, 100, 100, 50);
         players_to_select[1] = new static_Player(std::string("Arca"), 200, 100, 50, 60, 100);
         players_to_select[2] = new static_Player(std::string("Genn"), 150, 130, 40, 50,100);
@@ -641,41 +633,40 @@ void GameView::Render()
         {
             std::string tmp_name = "Sel_" + players_to_select[i]->name;
             People_select_button_map[i] = new Button(0.25*((i % 2) + 1)*WINDOW_WIDTH, 0.25*((i / 2) + 1)*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, tmp_name);
-            People_select_button_map[i]->DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-            areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
+            People_select_button_map[i]->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+            R.areas_to_check.push_back(glm::vec4(People_select_button_map[i]->x, People_select_button_map[i]->y, People_select_button_map[i]->width, People_select_button_map[i]->height));
 
         
         }
         for(int i = 0; i < 4; i++)
         {
             People_select_Changing_Boxes[i] = new TextBox(0.91*WINDOW_WIDTH, (0.05 + 0.06*i)*WINDOW_HEIGHT, 0.1*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, glm::vec3(255,255,255), People_select_texts[i]);
-            if(button_id != MAX_INT && button_id != 4) {
-                player_id = button_id;
+            if(R.button_id != MAX_INT && R.button_id != 4) {
 
                 if(i == 0)
-                People_select_Changing_Boxes[0]->setText(players_to_select[button_id]->name);
+                People_select_Changing_Boxes[0]->setText(players_to_select[R.button_id]->name);
                 if(i == 1)
-                People_select_Changing_Boxes[1]->setText(std::to_string(players_to_select[button_id]->max_health));
+                People_select_Changing_Boxes[1]->setText(std::to_string(players_to_select[R.button_id]->max_health));
                 if(i == 2)
-                People_select_Changing_Boxes[2]->setText(std::to_string(players_to_select[button_id]->attack));
+                People_select_Changing_Boxes[2]->setText(std::to_string(players_to_select[R.button_id]->attack));
                 if(i == 3)
-                People_select_Changing_Boxes[3]->setText(std::to_string(players_to_select[button_id]->speed));
+                People_select_Changing_Boxes[3]->setText(std::to_string(players_to_select[R.button_id]->speed));
             }
             People_select_Changing_Boxes[i]->Render();
         }
 
         Button Confirm(0.4*WINDOW_WIDTH, 0.8*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
-        Confirm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
-        areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
+        Confirm.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
+        R.areas_to_check.push_back(glm::vec4(Confirm.x, Confirm.y, Confirm.width, Confirm.height));
 
-        if(button_id == 4) {
+        if(R.button_id == 4) {
 
-            areas_to_check.clear();
-            button_id = MAX_INT;
+            R.areas_to_check.clear();
+            R.button_id = MAX_INT;
             game->State = GAME_PEOPLE_SELECT;
             
         }
-        shouldswap = false;
+        R.shouldswap = false;
         
 
     }

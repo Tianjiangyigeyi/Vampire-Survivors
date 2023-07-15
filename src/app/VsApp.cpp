@@ -1,19 +1,9 @@
 #include "VsApp.h"
 // #include "../common/config.cpp"
-GLFWwindow *window;
+// GLFWwindow *R.window;
 
-double cursor_x, cursor_y;
-bool LeftButtonPressed = false;
-bool* Keys;
-bool notice = false;
-bool shouldswap = true;
 
-std::vector<glm::vec4> areas_to_check;
-int button_id = MAX_INT;
-
-bool render_in_game = false;
-extern Voice v;
-
+Renders R;
 
 // 为了满足OpenGL的C特性，它们不得不设为全局变量
 
@@ -26,7 +16,8 @@ VsApp::VsApp()
 // 由于我们只有一个窗口，省略了window层，将窗口的生成一并放入app层中
 bool VsApp::Init()
 {
-    Keys = new bool[1024];
+    R.Keys = new bool[1024];
+    
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
@@ -36,23 +27,23 @@ bool VsApp::Init()
 #endif
     glfwWindowHint(GLFW_RESIZABLE, false);
 
-    window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "vampire survivor!", nullptr, nullptr);
+    R.window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "vampire survivor!", nullptr, nullptr);
 
     // bind
     p_view->SetGamePointer(p_viewmodel->GetGamePointer());
     Attach(std::bind(&GameViewModel::SetKeys, *p_viewmodel, std::placeholders::_1));
 
-    glfwMakeContextCurrent(window);
+    glfwMakeContextCurrent(R.window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
         std::cout << "Failed to initialize GLAD" << std::endl;
         return false;
     }
 
-    glfwSetKeyCallback(window, key_callback);
-    glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+    glfwSetKeyCallback(R.window, key_callback);
+    glfwSetFramebufferSizeCallback(R.window, framebuffer_size_callback);
 
-    glfwSetMouseButtonCallback(window, mouse_button_callback);
+    glfwSetMouseButtonCallback(R.window, mouse_button_callback);
 
     // OpenGL  cnfiguration
     // --------------------
@@ -69,16 +60,14 @@ bool VsApp::Init()
 
 int VsApp::Run()
 {
-    
-    v.play(0, 1);
     // deltaTime variables
     // -------------------
     float deltaTime = 0.0f;
     float lastFrame = 0.0f;
 
-    while (!glfwWindowShouldClose(window))
+    while (!glfwWindowShouldClose(R.window))
     {
-        if(shouldswap){
+        if(R.shouldswap){
             // calculate delta time
             // --------------------
             float currentFrame = glfwGetTime();
@@ -91,12 +80,11 @@ int VsApp::Run()
             }
 
             glfwPollEvents();
-            if(render_in_game) 
-                bool tmp = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
-            if (notice == true)
+            check_should_render(R.areas_to_check, R.cursor_x, R.cursor_y, R.LeftButtonPressed);
+            if (R.notice == true)
             {
-                Notify(Keys);
-                notice = false;
+                Notify(R.Keys);
+                R.notice = false;
             } 
             // update game state
             // -----------------
@@ -107,11 +95,11 @@ int VsApp::Run()
             glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
             glClear(GL_COLOR_BUFFER_BIT);
             p_view->Render();
-            glfwSwapBuffers(window);
+            glfwSwapBuffers(R.window);
 
         } else {
             
-            shouldswap = check_should_render(areas_to_check, cursor_x, cursor_y, LeftButtonPressed);
+            R.shouldswap = check_should_render(R.areas_to_check, R.cursor_x, R.cursor_y, R.LeftButtonPressed);
             glfwPollEvents();
 
         }
@@ -130,7 +118,7 @@ VsApp::~VsApp()
 {
     // 智能指针可以自然析构
     // delete vampireSurvivor;
-    delete Keys;
+    delete R.Keys;
 }
 
 void key_callback(GLFWwindow *window, int key, int scancode, int action, int mode)
@@ -139,29 +127,29 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action, int mod
     if (key >= 0 && key < 1024)
     {
         if (action == GLFW_PRESS)
-            Keys[key] = true;
+            R.Keys[key] = true;
         else if (action == GLFW_RELEASE)
-            Keys[key] = false;
+            R.Keys[key] = false;
     }
     // Notify observers
-    notice = true;
+    R.notice = true;
 }
 
 void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
-    // make sure the viewport matches the new window dimensions; note that width and
+    // make sure the viewport matches the new R.window dimensions; note that width and
     // height will be significantly larger than specified on retina displays.
     glViewport(0, 0, width, height);
 }
 
 void mouse_button_callback(GLFWwindow *window, int button, int action, int mods)
 {
-    glfwGetCursorPos(window, &cursor_x, &cursor_y);
+    glfwGetCursorPos(R.window, &R.cursor_x, &R.cursor_y);
 
     if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
     {
 
-        LeftButtonPressed = true;
+        R.LeftButtonPressed = true;
     }
 }
 
@@ -174,12 +162,12 @@ bool check_should_render(std::vector<glm::vec4> areas, double cursor_x, double c
         {
             if (button_left)
             {
-                button_id = id;
+                R.button_id = id;
                 return true;
             }
         }
         id ++;
     }
-    button_id  = MAX_INT;
+    R.button_id  = MAX_INT;
     return false;
 }
