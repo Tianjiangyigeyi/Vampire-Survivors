@@ -389,9 +389,7 @@ void GameView::Render()
             reset_render();
         }
 
-        // for (auto it = game->Exp.begin(); it != game->Exp.end(); it++) {
-        //     (*it)->Draw();
-        // }
+     
     }
 
     
@@ -484,6 +482,10 @@ void GameView::Render()
     }
 
     else if(game->State == GAME_LEVEL_UP) {
+        
+        float cur_health = game->Player->current_health;
+        float cur_max_health = game->Player->max_health;
+        float cur_might = game->Player->might;
 
         v.stop_play(2, 1);
         v.play(4, 0);
@@ -495,12 +497,52 @@ void GameView::Render()
         Button Back(0.25*WINDOW_WIDTH, 0.01*WINDOW_HEIGHT, 0.1*WINDOW_WIDTH, 0.08*WINDOW_HEIGHT, std::string("1-2"));
         Back.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
 
+        Button HealthUp(0.37*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT, std::string("Hea-up"));
+        HealthUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Button SpeedUp(0.37*WINDOW_WIDTH, 0.47*WINDOW_HEIGHT, 0.26*WINDOW_WIDTH, 0.15*WINDOW_HEIGHT, std::string("Spd-up"));
+        SpeedUp.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+        Button Cfm(0.43*WINDOW_WIDTH, 0.7*WINDOW_HEIGHT, 0.14*WINDOW_WIDTH, 0.1*WINDOW_HEIGHT, std::string("Confirm_button"));
+        Cfm.DrawButton(cursor_x, cursor_y, LeftButtonPressed, true);
+
+        std::string heal = "Health Up to 2 times of original";
+        std::string spd = "Might Up to 15 div 10 times of original";
+
+        TextBox Health(0.42*WINDOW_WIDTH, 0.32*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), heal);
+        TextBox Speed(0.42*WINDOW_WIDTH, 0.49*WINDOW_HEIGHT, 0.2*WINDOW_WIDTH, 0.045*WINDOW_HEIGHT, glm::vec3(127,127,127), spd);
+        Health.Render();
+        Speed.Render();
+
         areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
+        areas_to_check.push_back(glm::vec4(HealthUp.x, HealthUp.y, HealthUp.width, HealthUp.height));
+        areas_to_check.push_back(glm::vec4(SpeedUp.x, SpeedUp.y, SpeedUp.width, SpeedUp.height));
+        areas_to_check.push_back(glm::vec4(Cfm.x, Cfm.y, Cfm.width, Cfm.height));
 
         shouldswap = false;
         game->Player->exp = 0;
 
         if(button_id == 0) {
+            v.play(2, 1);
+            reset_render();
+            game->Player->current_health = cur_health;
+            game->Player->max_health = cur_max_health;
+            game->Player->might = cur_might;
+
+            game->State = GAME_ACTIVE;
+        }
+        if(button_id == 1) {
+    
+            reset_render();
+            game->Player->max_health *= 2;
+            game->Player->current_health = game->Player->max_health;
+
+        }
+        if(button_id == 2) {
+            std::cout<<"SpeedUp"<<game->Player->speed<<std::endl;
+            reset_render();
+            game->Player->might *= 1.5;
+        }
+
+        if(button_id == 3) {
             v.play(2, 1);
             reset_render();
             game->State = GAME_ACTIVE;
@@ -563,11 +605,16 @@ void GameView::Render()
 
         shouldswap = false;
         if(button_id == 0) {
-            game->Player->current_health = game->Player->max_health;
+
+            game->Player->current_health = 100;
+            game->Player->max_health = 100;
+            game->Player->might = 50;
+
             game->Player->exp = 0;
             game->Player->next_exp = 100;
             reset_render();
             game->State = GAME_START_MENU;
+            
         }
 
 

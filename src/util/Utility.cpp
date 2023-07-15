@@ -39,6 +39,8 @@ void Utility::Init(std::shared_ptr<Game> game)
     ResourceManager::LoadTexture("assets/Menu/Ant-ski.png", true, "Ant-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
     ResourceManager::LoadTexture("assets/Menu/Gen-ski.png", false, "Gen-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
     ResourceManager::LoadTexture("assets/Menu/Pas-ski.png", false, "Pas-ski", WINDOW_WIDTH * 0.4, WINDOW_HEIGHT * 0.15);
+    ResourceManager::LoadTexture("assets/Menu/health-up.png", false, "Hea-up", WINDOW_WIDTH * 0.26, WINDOW_HEIGHT * 0.1);
+    ResourceManager::LoadTexture("assets/Menu/speed-up.png", false, "Spd-up", WINDOW_WIDTH * 0.26, WINDOW_HEIGHT * 0.1);
 
 
     ResourceManager::LoadTexture("assets/buttons/1-1.jpg", false, "1-1", WINDOW_WIDTH * 0.1, WINDOW_HEIGHT * 0.12);
