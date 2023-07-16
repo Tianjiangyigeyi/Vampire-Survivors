@@ -52,36 +52,34 @@ void GameViewModel::Update(float dt)
     game->timer++;
     if (game->timer % 90==0)
     {
-        glm::vec2 enemyPos, dir;
-        unsigned int len = rand() % (game->Height * 2 + game->Width * 2);
-
-        std::string the_enemy = "enemy";
-
-        if (len < game->Height)
+        for(int i=0;i<1+game->timer/9000;i++)
         {
-            dir = glm::vec2(game->Width + ResourceManager::GetTexture(the_enemy).Width, len * 2.0 - game->Height);
-            dir.x = -dir.x;
+            glm::vec2 enemyPos, dir;
+            unsigned int len = rand() % (game->Height * 2 + game->Width * 2);
+
+            std::string the_enemy = "enemy";
+
+            if (len < game->Height) {
+                dir = glm::vec2(game->Width + ResourceManager::GetTexture(the_enemy).Width, len * 2.0 - game->Height);
+                dir.x = -dir.x;
+            } else if (len < game->Height + game->Width) {
+                dir = glm::vec2(len * 2.0 - game->Height * 2.0 - game->Width,
+                                game->Height + ResourceManager::GetTexture(the_enemy).Height);
+                dir.y = -dir.y;
+            } else if (len < 2 * game->Height + game->Width)
+                dir = glm::vec2(game->Width, len * 2.0 - game->Height * 3.0 - game->Width * 2.0);
+
+            else
+                dir = glm::vec2(len * 2.0 - game->Height * 4.0 - game->Width * 3, game->Height);
+
+            enemyPos = game->Player->Position + dir;
+            EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
+            temp->speed += game->timer / MAX_FRAME_PER_SECOND / 900;
+            if (temp->speed > 0.2) temp->speed = 0.2;
+            temp->power += game->timer / MAX_FRAME_PER_SECOND / 300;
+            temp->health += game->timer / MAX_FRAME_PER_SECOND / 15;
+            game->Enemy.push_back(temp);
         }
-
-        else if (len < game->Height + game->Width)
-        {
-            dir = glm::vec2(len * 2.0 - game->Height * 2.0 - game->Width, game->Height + ResourceManager::GetTexture(the_enemy).Height);
-            dir.y = -dir.y;
-        }
-
-        else if (len < 2 * game->Height + game->Width)
-            dir = glm::vec2(game->Width, len * 2.0 - game->Height * 3.0 - game->Width * 2.0);
-
-        else
-            dir = glm::vec2(len * 2.0 - game->Height * 4.0 - game->Width * 3, game->Height);
-
-        enemyPos = game->Player->Position + dir;
-        EnemyObject *temp = new EnemyObject(enemyPos, the_enemy);
-        temp->speed+=game->timer/MAX_FRAME_PER_SECOND/900;
-        if(temp->speed>0.2) temp->speed=0.2;
-        temp->power+=game->timer/MAX_FRAME_PER_SECOND/300;
-        temp->health+=game->timer/MAX_FRAME_PER_SECOND/10;
-        game->Enemy.push_back(temp);
 
         for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
         {
