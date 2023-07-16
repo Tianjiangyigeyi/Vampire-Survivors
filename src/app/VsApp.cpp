@@ -28,7 +28,7 @@ bool VsApp::Init()
 
     // bind
     p_view->SetGamePointer(p_viewmodel->GetGamePointer());
-    Attach(std::bind(&GameViewModel::SetKeys, *p_viewmodel, std::placeholders::_1));
+    Attach(std::bind(&GameView::SetKeys, *p_view, std::placeholders::_1));
 
     glfwMakeContextCurrent(R.window);
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))

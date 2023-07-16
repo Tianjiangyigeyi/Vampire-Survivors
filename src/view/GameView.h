@@ -14,6 +14,7 @@ public:
     // Game *game;
     // GameView(Game *g) : game(g) {}
     void Render();
+    void SetKeys(bool *Keys);
     void SetGamePointer(std::shared_ptr<Game> pg)
     {
         game = pg;

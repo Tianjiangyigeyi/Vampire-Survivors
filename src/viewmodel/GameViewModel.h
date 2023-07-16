@@ -12,8 +12,6 @@ public:
     // Game* game;
     // GameViewModel(Game* g) : game(g) {}
     void Update(float dt);
-    void SetKeys(bool *Keys);
-    void Process(float dt);
     std::shared_ptr<Game> GetGamePointer()
     {
         return game;

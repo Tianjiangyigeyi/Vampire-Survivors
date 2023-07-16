@@ -661,3 +661,37 @@ void GameView::Render()
 
 
 }
+
+
+void GameView::SetKeys(bool *Keys)
+{
+    if (game->State == GAME_ACTIVE)
+    {
+        float velocity = PLAYER_VELOCITY / MAX_FRAME_PER_SECOND;
+        // move playerboard
+        if (Keys[GLFW_KEY_A])
+        {
+            if (game->Player->Position.x >= 0.0f)
+                game->dir.x -= 1;
+        }
+        if (Keys[GLFW_KEY_D])
+        {
+            if (game->Player->Position.x <= game->BG_Width - ResourceManager::GetTexture(game->Player->Sprite).Width)
+                game->dir.x += 1;
+        }
+        if (Keys[GLFW_KEY_W])
+        {
+            if (game->Player->Position.y >= 0.0f)
+                game->dir.y -= 1;
+        }
+        if (Keys[GLFW_KEY_S])
+        {
+            if (game->Player->Position.y <= game->BG_Height - ResourceManager::GetTexture(game->Player->Sprite).Height)
+                game->dir.y += 1;
+        }
+        if (game->dir != glm::vec2(0.0f, 0.0f))
+        {
+            game->dir = glm::normalize(game->dir) * velocity;
+        }
+    }
+}

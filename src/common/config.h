@@ -20,7 +20,7 @@
 // The height of the screen
 #define WINDOW_HEIGHT 800
 // max fps
-#define MAX_FRAME_PER_SECOND 30
+#define MAX_FRAME_PER_SECOND 5
 // To be select in the select menu
 #define MAX_INT 2147483647
 
@@ -545,7 +545,7 @@ class Game
 {
 public:
     GameState State;
-    bool Keys[1024];
+    glm::vec2 dir;
     bool Button_left;
     unsigned int Width, Height;
     unsigned int BG_Width, BG_Height;
@@ -561,7 +561,7 @@ public:
     int frame_counter=0;//计时器，记录帧的变化
     // constructor/destructor
     Game(unsigned int width, unsigned int height)
-            : State(GAME_START_MENU), Keys(), Width(width), Height(height), Button_left(false)
+            : State(GAME_START_MENU), dir(glm::vec2(0.0f, 0.0f)), Width(width), Height(height), Button_left(false)
     {
 
     }

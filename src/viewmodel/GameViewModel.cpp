@@ -1,53 +1,13 @@
 #include "GameViewModel.h"
 
-void GameViewModel::Process(float dt)
+void GameViewModel::Update(float dt)
 {
     if (game->State == GAME_ACTIVE)
     {
-        float velocity = PLAYER_VELOCITY * dt;
-        glm::vec2 dir = glm::vec2(0.0f, 0.0f);
-        // move playerboard
-        if (game->Keys[GLFW_KEY_A])
-        {
-            if (game->Player->Position.x >= 0.0f)
-                dir.x -= 1;
-        }
-        if (game->Keys[GLFW_KEY_D])
-        {
-            if (game->Player->Position.x <= game->BG_Width - ResourceManager::GetTexture(game->Player->Sprite).Width)
-                dir.x += 1;
-        }
-        if (game->Keys[GLFW_KEY_W])
-        {
-            if (game->Player->Position.y >= 0.0f)
-                dir.y -= 1;
-        }
-        if (game->Keys[GLFW_KEY_S])
-        {
-            if (game->Player->Position.y <= game->BG_Height - ResourceManager::GetTexture(game->Player->Sprite).Height)
-                dir.y += 1;
-        }
-        if (dir != glm::vec2(0.0f, 0.0f))
-        {
-            dir = glm::normalize(dir) * velocity;
-        }
-        game->Player->Move(dir);
-        game->Player->the_weapon->Move(dir);
+        game->Player->Move(game->dir);
+        game->Player->the_weapon->Move(game->dir);
+        game->dir = glm::vec2(0.0f, .0f);
     }
-}
-
-void GameViewModel::SetKeys(bool *Keys)
-{
-    game->Keys[GLFW_KEY_W] = Keys[GLFW_KEY_W];
-    game->Keys[GLFW_KEY_A] = Keys[GLFW_KEY_A];
-    game->Keys[GLFW_KEY_S] = Keys[GLFW_KEY_S];
-    game->Keys[GLFW_KEY_D] = Keys[GLFW_KEY_D];
-    game->Keys[GLFW_KEY_ESCAPE] = Keys[GLFW_KEY_ESCAPE];
-}
-
-void GameViewModel::Update(float dt)
-{
-    Process(dt);
     int total_dam = 0;
     game->timer++;
     if (game->timer % 90==0)
@@ -88,7 +48,7 @@ void GameViewModel::Update(float dt)
                 (*it)->Destroyed = 90;
                 if (!(*it)->health_adjust(game->Player->might + game->Player->the_weapon->base_damage))
                 {
-                    PickupObject *temp1 = new PickupObject ((*it)->Position, "Experience");
+                    PickupObject *temp1 = new PickupObject((*it)->Position, "Experience");
                     EnemyObject *temp2 = *it;
                     game->Enemy.erase(it, it + 1);
                     it--;
@@ -100,34 +60,38 @@ void GameViewModel::Update(float dt)
             }
             if ((*it)->CheckCollision(*game->Player))
             {
-                if((*it)->power>total_dam)  total_dam = (*it)->power;
+                if ((*it)->power > total_dam)
+                    total_dam = (*it)->power;
             }
         }
 
         int expcount = 0;
-        for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
-            if((*it1)->CheckCollision(*game->Player)){
+        for (auto it1 = game->Exp.begin(); it1 != game->Exp.end(); it1++)
+        {
+            if ((*it1)->CheckCollision(*game->Player))
+            {
                 PickupObject *temp3 = *it1;
                 game->Exp.erase(it1, it1 + 1);
-                it1 --;
+                it1--;
                 delete temp3;
                 expcount += 1;
             }
         }
         game->Player->exp += expcount;
-        if(game->Player->exp  >= game->Player->next_exp){
+        if (game->Player->exp >= game->Player->next_exp)
+        {
             game->Player->exp = 0;
             game->Player->next_exp = game->Player->next_exp * 4;
             game->State = GAME_LEVEL_UP;
-            //reset_render();
+            // reset_render();
         }
 
-        if(total_dam)   game->Player->Destroyed = 90;
+        if (total_dam)
+            game->Player->Destroyed = 90;
         if (!game->Player->health_adjust(total_dam))
         {
             game->State = GAME_OVER;
         }
-
     }
 
     for (auto it = game->Enemy.begin(); it != game->Enemy.end(); it++)
@@ -138,8 +102,10 @@ void GameViewModel::Update(float dt)
         (*it)->Move(dir1);
     }
 
-    for(auto it1 = game->Exp.begin(); it1!=game->Exp.end(); it1++){
-        if(game->Player->CheckColl(**it1)){
+    for (auto it1 = game->Exp.begin(); it1 != game->Exp.end(); it1++)
+    {
+        if (game->Player->CheckColl(**it1))
+        {
             glm::vec2 dir1 = glm::vec2(game->Player->Position.x - (*it1)->Position.x, game->Player->Position.y - (*it1)->Position.y);
             dir1 = glm::normalize(dir1);
             dir1 = glm::vec2(dir1.x * (*it1)->speed, dir1.y * (*it1)->speed);
