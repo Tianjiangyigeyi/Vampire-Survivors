@@ -4,9 +4,10 @@ void GameViewModel::Update(float dt)
 {
     if (game->State == GAME_ACTIVE)
     {
+        game->dir *= PLAYER_VELOCITY * dt;
         game->Player->Move(game->dir);
         game->Player->the_weapon->Move(game->dir);
-        game->dir = glm::vec2(0.0f, .0f);
+        // game->dir = glm::vec2(0.0f, 0.0f);
     }
     int total_dam = 0;
     game->timer++;
