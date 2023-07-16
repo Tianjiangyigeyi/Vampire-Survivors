@@ -4,21 +4,9 @@
 #include <mmsystem.h>
 #pragma comment(lib,"winmm.lib")
 
-// extern GLFWwindow *R.window;
-
 extern Renders R;
 Voice v;
 
-
-void reset_render() 
-{
-    R.button_id = MAX_INT;
-    R.shouldswap = true;
-    R.areas_to_check.clear();
-    R.cursor_x = 0;
-    R.cursor_y = 0;
-    R.LeftButtonPressed = false;
-}
 
 void GameView::Render()
 {
@@ -97,7 +85,7 @@ void GameView::Render()
         if(R.button_id == 0)
         {
             game->State = GAME_PAUSE;
-            reset_render();
+            R.flush();
 
         }
 
@@ -111,7 +99,7 @@ void GameView::Render()
         // std::cout<<"exp: "<<game->Player->exp<<" next_exp: "<<game->Player->next_exp<<std::endl;
 
         if(game->Player->exp >=  game->Player->next_exp)
-            reset_render();
+            R.flush();
     }
 
     else if (game->State == GAME_START_MENU) 
@@ -148,7 +136,7 @@ void GameView::Render()
         R.shouldswap = false;
         if(R.button_id == 2)
         {
-            reset_render();
+            R.flush();
             game->State = GAME_SETTING_MENU;
             //game->State = GAME_OVER;
         }
@@ -163,13 +151,13 @@ void GameView::Render()
 
         if(R.button_id == 0)
         {
-            reset_render();
+            R.flush();
             game->State = GAME_SELECT_MENU;
         }
 
         if(R.button_id == 4)
         {
-            reset_render();
+            R.flush();
             game->State = GAME_CREDITS;
         }
         
@@ -228,18 +216,18 @@ void GameView::Render()
         
         R.shouldswap = false;
         if(R.button_id == 0) {
-            reset_render();
+            R.flush();
             game->State = GAME_START_MENU;
         }
         if(R.button_id == 1) {
          
-            reset_render();
+            R.flush();
             v.sound = !v.sound;
             
         }
         if(R.button_id == 2) {
         
-            reset_render();
+            R.flush();
             v.music = !v.music;
             if(!v.music) {
                 v.stop_play(0, 1);
@@ -251,15 +239,15 @@ void GameView::Render()
         }
         if(R.button_id == 3) {
  
-            reset_render();
+            R.flush();
             v.vfx = !v.vfx;
         }
         if(R.button_id == 4) {
-            reset_render();
+            R.flush();
             v.vis = !v.vis;
         }
         if(R.button_id == 5) {
-            reset_render();
+            R.flush();
             v.dam = !v.dam;
         }
 
@@ -325,7 +313,7 @@ void GameView::Render()
 
         if(R.button_id == 4) 
         {
-            reset_render();
+            R.flush();
             game->State = GAME_ACTIVE;
             
         }
@@ -333,7 +321,7 @@ void GameView::Render()
         if(R.button_id == 5) 
         {
             // std::cout<<"R.button_id == 5"<<std::endl;
-            reset_render();
+            R.flush();
             game->State = GAME_START_MENU;
         }
         
@@ -358,7 +346,7 @@ void GameView::Render()
         {
             // std::cout<<"State from GAME_OVER to GAME_START_MENU"<<std::endl;
             game->State = GAME_RESULT;
-            reset_render();
+            R.flush();
         }
 
      
@@ -418,18 +406,18 @@ void GameView::Render()
         
         R.shouldswap = false;
         if(R.button_id == 0) {
-            reset_render();
+            R.flush();
             game->State = GAME_ACTIVE;
         }
         if(R.button_id == 1) {
          
-            reset_render();
+            R.flush();
             v.sound = !v.sound;
             
         }
         if(R.button_id == 2) {
         
-            reset_render();
+            R.flush();
             v.music = !v.music;
             if(!v.music) {
                 v.stop_play(2, 1);
@@ -440,15 +428,15 @@ void GameView::Render()
         }
         if(R.button_id == 3) {
  
-            reset_render();
+            R.flush();
             v.vfx = !v.vfx;
         }
         if(R.button_id == 4) {
-            reset_render();
+            R.flush();
             v.vis = !v.vis;
         }
         if(R.button_id == 5) {
-            reset_render();
+            R.flush();
             v.dam = !v.dam;
         }
     }
@@ -509,7 +497,7 @@ void GameView::Render()
 
         if(R.button_id == 0) {
             v.play(2, 1);
-            reset_render();
+            R.flush();
             game->Player->current_health = cur_health;
             game->Player->max_health = cur_max_health;
             game->Player->might = cur_might;
@@ -519,12 +507,12 @@ void GameView::Render()
 
         if(R.button_id == 1 || R.button_id == 2 || R.button_id == 3 || R.button_id == 4) {
             game->Player->Upgrade(R.button_id);
-            reset_render();
+            R.flush();
         }
 
         if(R.button_id == 5) {
             v.play(2, 1);
-            reset_render();
+            R.flush();
             game->State = GAME_ACTIVE;
         }
 
@@ -543,7 +531,7 @@ void GameView::Render()
         R.areas_to_check.push_back(glm::vec4(Back.x, Back.y, Back.width, Back.height));
 
         if(R.button_id == 0) {
-            reset_render();
+            R.flush();
             game->State = GAME_START_MENU;
         }
 
@@ -592,7 +580,7 @@ void GameView::Render()
 
             game->Player->exp = 0;
             game->Player->next_exp = 100;
-            reset_render();
+            R.flush();
             game->State = GAME_START_MENU;
             
         }

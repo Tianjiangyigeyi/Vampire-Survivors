@@ -685,6 +685,14 @@ public:
 
 
     Renders() : shouldswap(true), LeftButtonPressed(false), notice(false){};
+    void flush() {
+        button_id = MAX_INT;
+        shouldswap = true;
+        areas_to_check.clear();
+        cursor_x = 0;
+        cursor_y = 0;
+        LeftButtonPressed = false;
+    }
 };
 
 #endif
