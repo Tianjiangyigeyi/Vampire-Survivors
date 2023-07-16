@@ -176,33 +176,33 @@ void GameView::Render()
         Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.sound)
-            Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Sound = new Button(0.55*WINDOW_WIDTH, 0.23*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Sound = new Button(0.55*WINDOW_WIDTH, 0.23*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Sound->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.music)
-            Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Music = new Button(0.55*WINDOW_WIDTH, 0.331*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Music = new Button(0.55*WINDOW_WIDTH, 0.331*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Music->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);  
 
         if(v.vfx)
-            VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            VFX = new Button(0.55*WINDOW_WIDTH, 0.432*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            VFX = new Button(0.55*WINDOW_WIDTH, 0.432*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         VFX->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.vis)
-            Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Vis = new Button(0.55*WINDOW_WIDTH, 0.533*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Vis = new Button(0.55*WINDOW_WIDTH, 0.533*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Vis->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.dam)
-            Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Dam = new Button(0.55*WINDOW_WIDTH, 0.634*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Dam = new Button(0.55*WINDOW_WIDTH, 0.634*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Dam->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
 
@@ -366,33 +366,33 @@ void GameView::Render()
         Back.DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.sound)
-            Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Sound = new Button(0.55*WINDOW_WIDTH, 0.23*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Sound = new Button(0.55*WINDOW_WIDTH, 0.2*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Sound = new Button(0.55*WINDOW_WIDTH, 0.23*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Sound->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.music)
-            Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Music = new Button(0.55*WINDOW_WIDTH, 0.331*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Music = new Button(0.55*WINDOW_WIDTH, 0.3*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Music = new Button(0.55*WINDOW_WIDTH, 0.331*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Music->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);  
 
         if(v.vfx)
-            VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            VFX = new Button(0.55*WINDOW_WIDTH, 0.432*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            VFX = new Button(0.55*WINDOW_WIDTH, 0.4*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            VFX = new Button(0.55*WINDOW_WIDTH, 0.432*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         VFX->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.vis)
-            Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Vis = new Button(0.55*WINDOW_WIDTH, 0.533*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Vis = new Button(0.55*WINDOW_WIDTH, 0.5*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Vis = new Button(0.55*WINDOW_WIDTH, 0.533*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Vis->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
         if(v.dam)
-            Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
+            Dam = new Button(0.55*WINDOW_WIDTH, 0.634*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("sure"));
         else
-            Dam = new Button(0.55*WINDOW_WIDTH, 0.6*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
+            Dam = new Button(0.55*WINDOW_WIDTH, 0.634*WINDOW_HEIGHT, 0.03*WINDOW_WIDTH, 0.05*WINDOW_HEIGHT, std::string("not"));
         Dam->DrawButton(R.cursor_x, R.cursor_y, R.LeftButtonPressed, true);
 
 
