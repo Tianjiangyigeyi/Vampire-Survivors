@@ -17,9 +17,7 @@ void Utility::Init(std::shared_ptr<Game> game)
     // 设置专用于渲染的控制
     Renderer = new SpriteRenderer(ResourceManager::GetShader("sprite"));
     ResourceManager::LoadTexture("assets/background/forest/dummy1.png", true, "background", WINDOW_WIDTH*4.0, WINDOW_HEIGHT*4.0);
-    ResourceManager::LoadTexture("assets/awesomeface.png", true, "face");
     ResourceManager::LoadTexture("assets/Enemies/Sprite-BAT1.png", true, "enemy");
-    ResourceManager::LoadTexture("assets/block_solid.png", false, "block_solid");
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio1.png", true, "player1");
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio2.png", true, "player2");
     ResourceManager::LoadTexture("assets/Player/Antonio/Animated-Antonio3.png", true, "player3");
